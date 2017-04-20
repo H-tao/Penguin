@@ -1,0 +1,692 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>584</width>
+    <height>418</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QSplitter" name="splitter_2">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="childrenCollapsible">
+       <bool>false</bool>
+      </property>
+      <widget class="QSplitter" name="splitter">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>260</height>
+        </size>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="childrenCollapsible">
+        <bool>false</bool>
+       </property>
+       <widget class="QTabWidget" name="tabWidget">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="currentIndex">
+         <number>0</number>
+        </property>
+        <widget class="QWidget" name="tab">
+         <attribute name="title">
+          <string>Tab 1</string>
+         </attribute>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <widget class="QTextEdit" name="textEdit">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="tab_2">
+         <attribute name="title">
+          <string>Tab 2</string>
+         </attribute>
+        </widget>
+       </widget>
+       <widget class="QLineEdit" name="filePathLineText">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>250</width>
+          <height>21</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>21</height>
+         </size>
+        </property>
+        <property name="baseSize">
+         <size>
+          <width>250</width>
+          <height>21</height>
+         </size>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QScrollArea" name="scrollArea">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>250</width>
+         <height>80</height>
+        </size>
+       </property>
+       <property name="widgetResizable">
+        <bool>true</bool>
+       </property>
+       <widget class="QWidget" name="scrollAreaWidgetContents">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>564</width>
+          <height>78</height>
+         </rect>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>584</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_F">
+    <property name="title">
+     <string>文件(&amp;F)</string>
+    </property>
+    <widget class="QMenu" name="menu_G">
+     <property name="title">
+      <string>日志(&amp;G)</string>
+     </property>
+     <addaction name="action_22"/>
+     <addaction name="action_23"/>
+     <addaction name="separator"/>
+     <addaction name="action_24"/>
+     <addaction name="action_25"/>
+     <addaction name="separator"/>
+     <addaction name="action_29"/>
+     <addaction name="action_28"/>
+    </widget>
+    <addaction name="action_2"/>
+    <addaction name="action"/>
+    <addaction name="separator"/>
+    <addaction name="action_6"/>
+    <addaction name="action_4"/>
+    <addaction name="action_5"/>
+    <addaction name="separator"/>
+    <addaction name="action_8"/>
+    <addaction name="action_9"/>
+    <addaction name="action_10"/>
+    <addaction name="separator"/>
+    <addaction name="action_12"/>
+    <addaction name="action_13"/>
+    <addaction name="action_14"/>
+    <addaction name="separator"/>
+    <addaction name="action_16"/>
+    <addaction name="menu_G"/>
+    <addaction name="separator"/>
+    <addaction name="action_19"/>
+    <addaction name="separator"/>
+    <addaction name="action_21"/>
+   </widget>
+   <widget class="QMenu" name="menu_E">
+    <property name="title">
+     <string>编辑(&amp;E)</string>
+    </property>
+    <widget class="QMenu" name="menu">
+     <property name="title">
+      <string>记事本(&amp;O)</string>
+     </property>
+     <addaction name="action_44"/>
+     <addaction name="action_45"/>
+     <addaction name="action_46"/>
+    </widget>
+    <addaction name="action_30"/>
+    <addaction name="action_PTF"/>
+    <addaction name="action_31"/>
+    <addaction name="action_32"/>
+    <addaction name="separator"/>
+    <addaction name="action_34"/>
+    <addaction name="action_35"/>
+    <addaction name="separator"/>
+    <addaction name="action_37"/>
+    <addaction name="separator"/>
+    <addaction name="menu"/>
+    <addaction name="separator"/>
+    <addaction name="action_41"/>
+    <addaction name="action_42"/>
+    <addaction name="action_43"/>
+    <addaction name="action_L"/>
+   </widget>
+   <widget class="QMenu" name="menu_V">
+    <property name="title">
+     <string>查看(&amp;V)</string>
+    </property>
+    <widget class="QMenu" name="menu_2">
+     <property name="title">
+      <string>布局(&amp;L)</string>
+     </property>
+     <addaction name="action_67"/>
+     <addaction name="separator"/>
+     <addaction name="action_69"/>
+    </widget>
+    <widget class="QMenu" name="menu_3">
+     <property name="title">
+      <string>全屏(&amp;F)</string>
+     </property>
+     <addaction name="action_70"/>
+     <addaction name="action_71"/>
+    </widget>
+    <widget class="QMenu" name="menu_4">
+     <property name="title">
+      <string>工具栏(&amp;T)</string>
+     </property>
+     <addaction name="action_72"/>
+     <addaction name="action_73"/>
+     <addaction name="action_74"/>
+     <addaction name="action_76"/>
+     <addaction name="separator"/>
+     <addaction name="action_75"/>
+    </widget>
+    <addaction name="menu_4"/>
+    <addaction name="action_48"/>
+    <addaction name="action_49"/>
+    <addaction name="separator"/>
+    <addaction name="action_51"/>
+    <addaction name="separator"/>
+    <addaction name="action_53"/>
+    <addaction name="action_54"/>
+    <addaction name="action_55"/>
+    <addaction name="separator"/>
+    <addaction name="menu_2"/>
+    <addaction name="separator"/>
+    <addaction name="action_59"/>
+    <addaction name="action_60"/>
+    <addaction name="action_61"/>
+    <addaction name="separator"/>
+    <addaction name="menu_3"/>
+    <addaction name="action_64"/>
+    <addaction name="separator"/>
+    <addaction name="action_66"/>
+   </widget>
+   <widget class="QMenu" name="menu_T">
+    <property name="title">
+     <string>工具(&amp;T)</string>
+    </property>
+    <addaction name="action_78"/>
+   </widget>
+   <widget class="QMenu" name="menu_H">
+    <property name="title">
+     <string>帮助(&amp;H)</string>
+    </property>
+    <addaction name="action_X"/>
+   </widget>
+   <widget class="QMenu" name="menu_W">
+    <property name="title">
+     <string>窗口(&amp;W)</string>
+    </property>
+    <widget class="QMenu" name="menu_5">
+     <property name="title">
+      <string>文件管理系统(&amp;F)</string>
+     </property>
+     <addaction name="openFileSystemAction"/>
+     <addaction name="closeFileSystemAction"/>
+     <addaction name="showFileSystemAction"/>
+     <addaction name="concealFileSystemAction"/>
+    </widget>
+    <addaction name="action_79"/>
+    <addaction name="action_80"/>
+    <addaction name="action_81"/>
+    <addaction name="action_82"/>
+    <addaction name="menu_5"/>
+   </widget>
+   <widget class="QMenu" name="menu_B">
+    <property name="title">
+     <string>选项卡(&amp;B)</string>
+    </property>
+    <addaction name="action_83"/>
+    <addaction name="action_84"/>
+    <addaction name="action_85"/>
+    <addaction name="action_86"/>
+    <addaction name="action_87"/>
+   </widget>
+   <addaction name="menu_F"/>
+   <addaction name="menu_E"/>
+   <addaction name="menu_V"/>
+   <addaction name="menu_T"/>
+   <addaction name="menu_B"/>
+   <addaction name="menu_W"/>
+   <addaction name="menu_H"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="action">
+   <property name="text">
+    <string>打开(&amp;O)</string>
+   </property>
+  </action>
+  <action name="action_2">
+   <property name="text">
+    <string>新建(&amp;N)</string>
+   </property>
+  </action>
+  <action name="action_4">
+   <property name="text">
+    <string>重新连接(&amp;C)</string>
+   </property>
+  </action>
+  <action name="action_5">
+   <property name="text">
+    <string>重新连接所有(&amp;L)</string>
+   </property>
+  </action>
+  <action name="action_6">
+   <property name="text">
+    <string>断开(&amp;D)</string>
+   </property>
+  </action>
+  <action name="action_8">
+   <property name="text">
+    <string>另存为(&amp;A)</string>
+   </property>
+  </action>
+  <action name="action_9">
+   <property name="text">
+    <string>导入(&amp;I)</string>
+   </property>
+  </action>
+  <action name="action_10">
+   <property name="text">
+    <string>导出(&amp;E)</string>
+   </property>
+  </action>
+  <action name="action_12">
+   <property name="text">
+    <string>打印(&amp;P)</string>
+   </property>
+  </action>
+  <action name="action_13">
+   <property name="text">
+    <string>打印预览(&amp;V)</string>
+   </property>
+  </action>
+  <action name="action_14">
+   <property name="text">
+    <string>页面设置(&amp;U)</string>
+   </property>
+  </action>
+  <action name="action_16">
+   <property name="text">
+    <string>传输(&amp;T)</string>
+   </property>
+  </action>
+  <action name="action_19">
+   <property name="text">
+    <string>属性(&amp;R)</string>
+   </property>
+  </action>
+  <action name="action_21">
+   <property name="text">
+    <string>退出(&amp;X)</string>
+   </property>
+  </action>
+  <action name="action_22">
+   <property name="text">
+    <string>启动(&amp;S)</string>
+   </property>
+  </action>
+  <action name="action_23">
+   <property name="text">
+    <string>停止(&amp;T)</string>
+   </property>
+  </action>
+  <action name="action_24">
+   <property name="text">
+    <string>暂停(&amp;P)</string>
+   </property>
+  </action>
+  <action name="action_25">
+   <property name="text">
+    <string>继续(R)</string>
+   </property>
+  </action>
+  <action name="action_28">
+   <property name="text">
+    <string>打开日志文件夹(&amp;F)</string>
+   </property>
+  </action>
+  <action name="action_29">
+   <property name="text">
+    <string>打开日志文件(&amp;O)</string>
+   </property>
+  </action>
+  <action name="action_30">
+   <property name="text">
+    <string>复制(&amp;C)</string>
+   </property>
+  </action>
+  <action name="action_PTF">
+   <property name="text">
+    <string>复制为PTF格式(&amp;Y)</string>
+   </property>
+  </action>
+  <action name="action_31">
+   <property name="text">
+    <string>粘贴(&amp;P)</string>
+   </property>
+  </action>
+  <action name="action_32">
+   <property name="text">
+    <string>粘贴选择内容(&amp;E)</string>
+   </property>
+  </action>
+  <action name="action_34">
+   <property name="text">
+    <string>全选(&amp;A)</string>
+   </property>
+  </action>
+  <action name="action_35">
+   <property name="text">
+    <string>选择屏幕(&amp;S)</string>
+   </property>
+  </action>
+  <action name="action_37">
+   <property name="text">
+    <string>查找(&amp;F)</string>
+   </property>
+  </action>
+  <action name="action_41">
+   <property name="text">
+    <string>重置游标(&amp;R)</string>
+   </property>
+  </action>
+  <action name="action_42">
+   <property name="text">
+    <string>重置终端(&amp;T)</string>
+   </property>
+  </action>
+  <action name="action_43">
+   <property name="text">
+    <string>清屏(&amp;N)</string>
+   </property>
+  </action>
+  <action name="action_44">
+   <property name="text">
+    <string>选定区域(&amp;S)</string>
+   </property>
+  </action>
+  <action name="action_45">
+   <property name="text">
+    <string>全部(&amp;A)</string>
+   </property>
+  </action>
+  <action name="action_46">
+   <property name="text">
+    <string>当前屏幕(&amp;C)</string>
+   </property>
+  </action>
+  <action name="action_L">
+   <property name="text">
+    <string>滚动缓冲区清除(&amp;L)</string>
+   </property>
+  </action>
+  <action name="action_48">
+   <property name="text">
+    <string>卷动条(&amp;O)</string>
+   </property>
+  </action>
+  <action name="action_49">
+   <property name="text">
+    <string>状态栏(&amp;B)</string>
+   </property>
+  </action>
+  <action name="action_51">
+   <property name="text">
+    <string>会话选项卡(&amp;I)</string>
+   </property>
+  </action>
+  <action name="action_53">
+   <property name="text">
+    <string>撰写栏(&amp;C)</string>
+   </property>
+  </action>
+  <action name="action_54">
+   <property name="text">
+    <string>快速命令(&amp;Q)</string>
+   </property>
+  </action>
+  <action name="action_55">
+   <property name="text">
+    <string>隧道窗格(&amp;U)</string>
+   </property>
+  </action>
+  <action name="action_59">
+   <property name="text">
+    <string>简单(&amp;S)</string>
+   </property>
+  </action>
+  <action name="action_60">
+   <property name="text">
+    <string>透明(&amp;R)</string>
+   </property>
+  </action>
+  <action name="action_61">
+   <property name="text">
+    <string>总在最前面(&amp;A)</string>
+   </property>
+  </action>
+  <action name="action_64">
+   <property name="text">
+    <string>锁定屏幕</string>
+   </property>
+  </action>
+  <action name="action_66">
+   <property name="text">
+    <string>要在通知区域(&amp;G)</string>
+   </property>
+  </action>
+  <action name="action_67">
+   <property name="text">
+    <string>管理</string>
+   </property>
+  </action>
+  <action name="action_69">
+   <property name="text">
+    <string>另存为</string>
+   </property>
+  </action>
+  <action name="action_70">
+   <property name="text">
+    <string>全屏(&amp;F)</string>
+   </property>
+  </action>
+  <action name="action_71">
+   <property name="text">
+    <string>多窗格全屏(&amp;M)</string>
+   </property>
+  </action>
+  <action name="action_72">
+   <property name="text">
+    <string>菜单栏(&amp;M)</string>
+   </property>
+  </action>
+  <action name="action_73">
+   <property name="text">
+    <string>标准按钮(&amp;S)</string>
+   </property>
+  </action>
+  <action name="action_74">
+   <property name="text">
+    <string>地址栏(&amp;A)</string>
+   </property>
+  </action>
+  <action name="action_75">
+   <property name="text">
+    <string>锁定工具栏(&amp;B)</string>
+   </property>
+  </action>
+  <action name="action_76">
+   <property name="text">
+    <string>链接栏(&amp;L)</string>
+   </property>
+  </action>
+  <action name="action_X">
+   <property name="text">
+    <string>小企鹅帮助(&amp;X)</string>
+   </property>
+  </action>
+  <action name="action_78">
+   <property name="text">
+    <string>配色方案(&amp;C)</string>
+   </property>
+  </action>
+  <action name="action_79">
+   <property name="text">
+    <string>新建窗口(&amp;N)</string>
+   </property>
+  </action>
+  <action name="action_80">
+   <property name="text">
+    <string>全部关闭(&amp;C)</string>
+   </property>
+  </action>
+  <action name="action_81">
+   <property name="text">
+    <string>下一步(&amp;X)</string>
+   </property>
+  </action>
+  <action name="action_82">
+   <property name="text">
+    <string>前一页(&amp;V)</string>
+   </property>
+  </action>
+  <action name="action_83">
+   <property name="text">
+    <string>新选项卡(&amp;N)</string>
+   </property>
+  </action>
+  <action name="action_84">
+   <property name="text">
+    <string>关闭(&amp;C)</string>
+   </property>
+  </action>
+  <action name="action_85">
+   <property name="text">
+    <string>关闭所有选项卡(&amp;B)</string>
+   </property>
+  </action>
+  <action name="action_86">
+   <property name="text">
+    <string>重命名(&amp;R)</string>
+   </property>
+  </action>
+  <action name="action_87">
+   <property name="text">
+    <string>关闭其他选项卡(&amp;O)</string>
+   </property>
+  </action>
+  <action name="openFileSystemAction">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>打开</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+1</string>
+   </property>
+  </action>
+  <action name="closeFileSystemAction">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>关闭</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+2</string>
+   </property>
+  </action>
+  <action name="showFileSystemAction">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>显示</string>
+   </property>
+  </action>
+  <action name="concealFileSystemAction">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>隐藏</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>

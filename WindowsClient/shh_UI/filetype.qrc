@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/penguin_32px.ico</file>
+        <file>images/penguin_32px.png</file>
+    </qresource>
+</RCC>
