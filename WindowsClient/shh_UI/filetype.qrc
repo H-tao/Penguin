@@ -2,5 +2,8 @@
     <qresource prefix="/">
         <file>images/penguin_32px.ico</file>
         <file>images/penguin_32px.png</file>
+        <file>icons/bell.png</file>
+        <file>icons/book.png</file>
+        <file>icons/folder.png</file>
     </qresource>
 </RCC>

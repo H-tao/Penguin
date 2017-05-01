@@ -29,6 +29,7 @@ void MainWindow::uiDesignerStyle()
     setWindowIcon(QIcon(QStringLiteral(":/images/penguin_32px.ico")));
 }
 
+//文本框风格
 void MainWindow::setTextEditSytel()
 {
     //设置文本标签背景
@@ -40,16 +41,6 @@ void MainWindow::setTextEditSytel()
     ui->textEdit->setPalette(pal);
 }
 
-/*文件管理系统显示流程
-1、通过shell获取当前路径下的file文件列表，fileInfoList
-2、获取本地icon图标文件列表，iconInfoList
-3、扫描整个文件，当文件后缀和图标前缀匹配时，将图标路径返回，否则返回空路径
-if(fileInfoList.at(i).suffix() == iconInfoList.at(j).baseName())
-    return iconInfoList.at(j).filePath()
-4、判断图标路径是否为空，不为空就取icon图标文件并显示在文件管理系统，
-否则查看普通文件图标是否存在，存在则显示，不存在显示黄色背景并给予用户提示
-缺点：如果目录中文件数量过多或者图标数量过多，会拖慢系统进程
-*/
 //打开文件管理系统
 void MainWindow::on_openFileSystemAction_triggered()
 {
@@ -60,39 +51,9 @@ void MainWindow::on_openFileSystemAction_triggered()
         return;
     }
 
-    //水平布局管理器（父布局管理器），垂直布局管理器（子布局管理器）
-    //整个界面有水平和垂直两个布局管理，根布局为水平，子布局为垂直
-    //将label部件加入垂直布局管理器中
-    //再将一个或多个垂直布局管理器加入水平布局管理器
-    QWidget *containWidget = new QWidget;
-    QVBoxLayout *VBox = new QVBoxLayout(containWidget);
-    QHBoxLayout *HBox = new QHBoxLayout;
-    QHBoxLayout *HBox_1 = new QHBoxLayout;
-    for(int i = 1; i <= 15; ++i)
-    {
-        QLabel *label = new QLabel;
-//        //label的形式
-//        label->setText(tr("文件%1").arg(i+1));
-//        label->setStyleSheet("background-color: rgb(255, 170, 0);");
-//        //border-width: 1px;border-style: solid;border-color: rgb(255, 170, 0); StyleSheet参数,边框宽、类型、颜色
-        QImage *image = new QImage();
-        image->load(":/images/penguin_32px.png");
-        label->setPixmap(QPixmap::fromImage(*image));
-        label->resize(image->width(),image->height());
-        qDebug() << image->width() << " " << image->height();
-        if(i<11)      //当label数量大于10时，另外增加一个水平布局管理器
-        {
-            HBox->addWidget(label);
-        }
-        else
-            HBox_1->addWidget(label);
-    }
-    VBox->addLayout(HBox);
-    VBox->addLayout(HBox_1);
-    VBox->setSpacing(10);
-//    containWidget->setLayout(VBox);
+    FileSystemWidget *fileWidget = new FileSystemWidget;
     ui->scrollArea->setWidgetResizable(true);
-    ui->scrollArea->setWidget(containWidget);
+    ui->scrollArea->setWidget(fileWidget);
 
     isOpenFileSystem = true;
 }
