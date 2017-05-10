@@ -13,7 +13,6 @@ FileSystem::FileSystem(QWidget *parent) :
     listWidget = new QListWidget(this);
 //    qDebug() << listWidget->width();
     listWidget->resize(this->width(),this->height());
-    Working();
 }
 
 FileSystem::FileSystem(QListWidget *fileWidget,int a)

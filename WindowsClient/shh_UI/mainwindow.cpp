@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
+#include <QGridLayout>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -54,13 +55,15 @@ void MainWindow::on_openFileSystemAction_triggered()
     }
 
 //    FileSystemWidget *fileWidget = new FileSystemWidget(ui->fileSystemWidget);
-    QListWidget *LW = new QListWidget(ui->fileSystemWidget);
-    FileSystem *fileSystem = new FileSystem(LW,1);
+//    QListWidget *LW = new QListWidget(ui->fileSystemWidget);
+    FileSystem *fileSystem = new FileSystem(ui->fileSystemWidget);
+
 //    fileSystem->setParent(ui->fileSystemWidget);
 //    fileSystem->adjustSize();
-//    QVBoxLayout *HBox = new QVBoxLayout;
-//    HBox->addWidget(fileSystem);
-//    ui->fileSystemWidget->setLayout(HBox);
+    QGridLayout *HBox = new QGridLayout;
+    HBox->addWidget(fileSystem);
+    ui->fileSystemWidget->setLayout(HBox);
+    fileSystem->Working();
 
     fileSystem->PrintLW();
     qDebug() << fileSystem->width();
