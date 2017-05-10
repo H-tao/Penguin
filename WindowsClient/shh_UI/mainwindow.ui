@@ -57,7 +57,7 @@
         </property>
         <widget class="QWidget" name="tab">
          <attribute name="title">
-          <string>Tab 1</string>
+          <string> 本地Shell</string>
          </attribute>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
@@ -74,7 +74,7 @@
         </widget>
         <widget class="QWidget" name="tab_2">
          <attribute name="title">
-          <string>Tab 2</string>
+          <string> 本地Shell</string>
          </attribute>
         </widget>
        </widget>
@@ -105,33 +105,28 @@
         </property>
        </widget>
       </widget>
-      <widget class="QScrollArea" name="scrollArea">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>250</width>
-         <height>80</height>
-        </size>
-       </property>
-       <property name="widgetResizable">
-        <bool>true</bool>
-       </property>
-       <widget class="QWidget" name="scrollAreaWidgetContents">
-        <property name="geometry">
-         <rect>
-          <x>0</x>
-          <y>0</y>
-          <width>564</width>
-          <height>78</height>
-         </rect>
-        </property>
-       </widget>
-      </widget>
+     </widget>
+    </item>
+    <item>
+     <widget class="QFrame" name="fileSystemWidget">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>250</width>
+        <height>80</height>
+       </size>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Box</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
      </widget>
     </item>
    </layout>
@@ -162,7 +157,7 @@
      <addaction name="action_29"/>
      <addaction name="action_28"/>
     </widget>
-    <addaction name="action_2"/>
+    <addaction name="action_NewConnection"/>
     <addaction name="action"/>
     <addaction name="separator"/>
     <addaction name="action_6"/>
@@ -327,7 +322,7 @@
     <string>打开(&amp;O)</string>
    </property>
   </action>
-  <action name="action_2">
+  <action name="action_NewConnection">
    <property name="text">
     <string>新建(&amp;N)</string>
    </property>

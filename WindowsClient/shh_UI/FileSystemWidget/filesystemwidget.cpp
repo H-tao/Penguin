@@ -23,6 +23,13 @@ FileSystemWidget::FileSystemWidget(QWidget *parent) :
     testFileInfoList.append(fileInfo5);
     QFileInfo fileInfo6(":/icons/bell.book");
     testFileInfoList.append(fileInfo6);
+    QFileInfo fileInfo7(":/icons/bell.book");
+    testFileInfoList.append(fileInfo7);
+    QFileInfo fileInfo8(":/icons/bell.book");
+    testFileInfoList.append(fileInfo8);
+    QFileInfo fileInfo9(":/icons/bell.book");
+    testFileInfoList.append(fileInfo9);
+
     openFileSystem(testFileInfoList);
 }
 

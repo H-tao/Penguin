@@ -15,11 +15,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     EnhancedLabel/enhancedlabel.cpp \
-    FileSystemWidget/filesystemwidget.cpp
+    FileSystemWidget/filesystemwidget.cpp \
+    filesystem.cpp
 
 HEADERS  += mainwindow.h \
     EnhancedLabel/enhancedlabel.h \
-    FileSystemWidget/filesystemwidget.h
+    FileSystemWidget/filesystemwidget.h \
+    filesystem.h
 
 FORMS    += mainwindow.ui \
     dialog.ui \
@@ -28,7 +30,8 @@ FORMS    += mainwindow.ui \
     useloginauthentication.ui \
     new.ui \
     EnhancedLabel/enhancedlabel.ui \
-    FileSystemWidget/filesystemwidget.ui
+    FileSystemWidget/filesystemwidget.ui \
+    filesystem.ui
 
 RESOURCES += \
     filetype.qrc

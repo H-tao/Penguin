@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QHBoxLayout>
+#include <QVBoxLayout>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -14,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->closeFileSystemAction, SIGNAL(triggered(bool)), this, SLOT(on_closeFileSystemAction_triggered()));
     connect(ui->showFileSystemAction, SIGNAL(triggered(bool)), this, SLOT(on_showFileSystemAction_triggered()));
     connect(ui->concealFileSystemAction, SIGNAL(triggered(bool)), this, SLOT(on_concealFileSystemAction_triggered()));
-
+    connect(ui->action_NewConnection,SIGNAL(triggered(bool)),this,SLOT(on_newConnectionAction_triggered()));
 }
 
 MainWindow::~MainWindow()
@@ -51,9 +53,19 @@ void MainWindow::on_openFileSystemAction_triggered()
         return;
     }
 
-    FileSystemWidget *fileWidget = new FileSystemWidget;
-    ui->scrollArea->setWidgetResizable(true);
-    ui->scrollArea->setWidget(fileWidget);
+//    FileSystemWidget *fileWidget = new FileSystemWidget(ui->fileSystemWidget);
+    QListWidget *LW = new QListWidget(ui->fileSystemWidget);
+    FileSystem *fileSystem = new FileSystem(LW,1);
+//    fileSystem->setParent(ui->fileSystemWidget);
+//    fileSystem->adjustSize();
+//    QVBoxLayout *HBox = new QVBoxLayout;
+//    HBox->addWidget(fileSystem);
+//    ui->fileSystemWidget->setLayout(HBox);
+
+    fileSystem->PrintLW();
+    qDebug() << fileSystem->width();
+    qDebug() << ui->fileSystemWidget->width();
+//    fileSystem->resize(ui->fileSystemWidget->width(),ui->fileSystemWidget->height());
 
     isOpenFileSystem = true;
 }
@@ -69,7 +81,7 @@ void MainWindow::on_showFileSystemAction_triggered()
 {
     if(isShowFileSystem == false)
     {
-       ui->scrollArea->setVisible(true);
+       ui->fileSystemWidget->setVisible(true);
        //设置显示文件管理系统的值为真
        isShowFileSystem = true;
        return;
@@ -93,8 +105,14 @@ void MainWindow::on_concealFileSystemAction_triggered()
 
     if(isShowFileSystem == true)
     {
-        ui->scrollArea->setVisible(false);
+        ui->fileSystemWidget->setVisible(false);
         isShowFileSystem = false;
         return;
     }
+}
+
+void MainWindow::on_newConnectionAction_triggered()
+{
+    FileSystem *fileSystem = new FileSystem(this);
+    fileSystem->show();
 }
