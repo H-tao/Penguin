@@ -14,24 +14,19 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    EnhancedLabel/enhancedlabel.cpp \
-    FileSystemWidget/filesystemwidget.cpp \
-    filesystem.cpp
+    FileSystemWidget/filewidget.cpp \
+    ShellTextEdit/shelltextedit.cpp
 
 HEADERS  += mainwindow.h \
-    EnhancedLabel/enhancedlabel.h \
-    FileSystemWidget/filesystemwidget.h \
-    filesystem.h
+    FileSystemWidget/filewidget.h \
+    ShellTextEdit/shelltextedit.h
 
 FORMS    += mainwindow.ui \
     dialog.ui \
     feature.ui \
     filetransfer.ui \
     useloginauthentication.ui \
-    new.ui \
-    EnhancedLabel/enhancedlabel.ui \
-    FileSystemWidget/filesystemwidget.ui \
-    filesystem.ui
+    new.ui
 
 RESOURCES += \
     filetype.qrc

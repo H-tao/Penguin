@@ -3,6 +3,7 @@
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QGridLayout>
+#include <QScrollArea>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -11,13 +12,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     uiDesignerStyle();
     setTextEditSytel();
+    ui->fileSystemWidget->setVisible(false);
 
     //连接文件管理系统 打开、关闭、显示、隐藏 触发事件
     connect(ui->openFileSystemAction, SIGNAL(triggered(bool)), this, SLOT(on_openFileSystemAction_triggered()));
     connect(ui->closeFileSystemAction, SIGNAL(triggered(bool)), this, SLOT(on_closeFileSystemAction_triggered()));
     connect(ui->showFileSystemAction, SIGNAL(triggered(bool)), this, SLOT(on_showFileSystemAction_triggered()));
     connect(ui->concealFileSystemAction, SIGNAL(triggered(bool)), this, SLOT(on_concealFileSystemAction_triggered()));
-    connect(ui->action_NewConnection,SIGNAL(triggered(bool)),this,SLOT(on_newConnectionAction_triggered()));
+    connect(ui->newConnectionAction,SIGNAL(triggered(bool)),this,SLOT(on_newConnectionAction_triggered()));
 }
 
 MainWindow::~MainWindow()
@@ -54,29 +56,25 @@ void MainWindow::on_openFileSystemAction_triggered()
         return;
     }
 
-//    FileSystemWidget *fileWidget = new FileSystemWidget(ui->fileSystemWidget);
-//    QListWidget *LW = new QListWidget(ui->fileSystemWidget);
-    FileSystem *fileSystem = new FileSystem(ui->fileSystemWidget);
 
-//    fileSystem->setParent(ui->fileSystemWidget);
-//    fileSystem->adjustSize();
-    QGridLayout *HBox = new QGridLayout;
-    HBox->addWidget(fileSystem);
-    ui->fileSystemWidget->setLayout(HBox);
-    fileSystem->Working();
-
-    fileSystem->PrintLW();
-    qDebug() << fileSystem->width();
-    qDebug() << ui->fileSystemWidget->width();
-//    fileSystem->resize(ui->fileSystemWidget->width(),ui->fileSystemWidget->height());
-
+    ui->filePathLineText->setText("D:\\QtDecements\\build-shh_UI-Desktop_Qt_5_7_0_MinGW_32bit-Release\\release");
+    ui->filePathLineText->setAlignment(Qt::AlignLeft);
+    ui->filePathLineText->setEnabled(false);
+    ui->filePathLineText->setFocusPolicy(Qt::NoFocus);
+    FileWidget *fileWidget = new FileWidget(ui->fileSystemWidget);
+//    QGridLayout *Box = new QGridLayout;
+//    Box->addWidget(fileWidget);
+    ui->gridLayout->addWidget(fileWidget);
+    fileWidget->Working();
+//    qDebug() << fileWidget->width();
+//    qDebug() << ui->fileSystemWidget->width();
     isOpenFileSystem = true;
 }
 
 //关闭文件管理系统
 void MainWindow::on_closeFileSystemAction_triggered()
 {
-
+//    ui->gridLayout->removeWidget();
 }
 
 //显示文件管理系统
@@ -116,6 +114,6 @@ void MainWindow::on_concealFileSystemAction_triggered()
 
 void MainWindow::on_newConnectionAction_triggered()
 {
-    FileSystem *fileSystem = new FileSystem(this);
-    fileSystem->show();
+//    FileSystem *fileSystem = new FileSystem(this);
+//    fileSystem->show();
 }

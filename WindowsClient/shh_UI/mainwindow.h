@@ -5,8 +5,9 @@
 #include<QMessageBox>
 #include<QLabel>
 #include<QDebug>
-#include<FileSystemWidget/filesystemwidget.h>
-#include<filesystem.h>
+#include<FileSystemWidget/filewidget.h>
+
+class FileWidget;
 
 namespace Ui {
 class MainWindow;
