@@ -10,16 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    uiDesignerStyle();
-    setTextEditSytel();
-    ui->fileSystemWidget->setVisible(false);
-
-    //连接文件管理系统 打开、关闭、显示、隐藏 触发事件
-    connect(ui->openFileSystemAction, SIGNAL(triggered(bool)), this, SLOT(on_openFileSystemAction_triggered()));
-    connect(ui->closeFileSystemAction, SIGNAL(triggered(bool)), this, SLOT(on_closeFileSystemAction_triggered()));
-    connect(ui->showFileSystemAction, SIGNAL(triggered(bool)), this, SLOT(on_showFileSystemAction_triggered()));
-    connect(ui->concealFileSystemAction, SIGNAL(triggered(bool)), this, SLOT(on_concealFileSystemAction_triggered()));
-    connect(ui->newConnectionAction,SIGNAL(triggered(bool)),this,SLOT(on_newConnectionAction_triggered()));
+    initStyle();
 }
 
 MainWindow::~MainWindow()
@@ -27,26 +18,33 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+//初始化
+void MainWindow::initStyle()
+{
+    setUiDesignerStyle();   //设置UI界面风格
+//    connectAction();    //连接所有Action信号槽
+    ui->fileSystemWidget->setVisible(false);    //设置初始文件资源管理系统为不可见
+    ShellTextEdit *textEdit = new ShellTextEdit(ui->tab_1);
+    ui->firstTabLayout->addWidget(textEdit);
+    //由于QTabWidget默认有两个Tab，所有需移除tabWidget的第二个Tab
+    ui->tabWidget->removeTab(1);
+}
+
 //UI界面风格
-void MainWindow::uiDesignerStyle()
+void MainWindow::setUiDesignerStyle()
 {
     setWindowTitle("小企鹅终端模拟软件");
     setWindowIcon(QIcon(QStringLiteral(":/images/penguin_32px.ico")));
 }
 
-//文本框风格
-void MainWindow::setTextEditSytel()
+//连接所有Action信号槽
+void MainWindow::connectAction()
 {
-    //设置文本标签背景
-    ui->textEdit->setStyleSheet("background-color:drak");
-    //设置字体颜色
-    QPalette pal = ui->textEdit->palette();
-    //pal.setColor(QPalette::Background, QColor(0,0,0));
-    pal.setColor(QPalette::Text, QColor(250,250,250));
-    ui->textEdit->setPalette(pal);
+
 }
 
-//打开文件管理系统
+
+//打开文件管理系统Action
 void MainWindow::on_openFileSystemAction_triggered()
 {
     //如果文件管理系统已经打开
@@ -56,28 +54,27 @@ void MainWindow::on_openFileSystemAction_triggered()
         return;
     }
 
-
-    ui->filePathLineText->setText("D:\\QtDecements\\build-shh_UI-Desktop_Qt_5_7_0_MinGW_32bit-Release\\release");
+    ui->filePathLineText->setText("d:\\");
     ui->filePathLineText->setAlignment(Qt::AlignLeft);
     ui->filePathLineText->setEnabled(false);
     ui->filePathLineText->setFocusPolicy(Qt::NoFocus);
     FileWidget *fileWidget = new FileWidget(ui->fileSystemWidget);
 //    QGridLayout *Box = new QGridLayout;
 //    Box->addWidget(fileWidget);
-    ui->gridLayout->addWidget(fileWidget);
+    ui->fileSystemWidgetLayout->addWidget(fileWidget);
     fileWidget->Working();
-//    qDebug() << fileWidget->width();
-//    qDebug() << ui->fileSystemWidget->width();
+    ui->fileSystemWidget->setFrameShape(QFrame::NoFrame);
+    on_showFileSystemAction_triggered();
     isOpenFileSystem = true;
 }
 
-//关闭文件管理系统
+//关闭文件管理系统Action
 void MainWindow::on_closeFileSystemAction_triggered()
 {
 //    ui->gridLayout->removeWidget();
 }
 
-//显示文件管理系统
+//显示文件管理系统Action
 void MainWindow::on_showFileSystemAction_triggered()
 {
     if(isShowFileSystem == false)
@@ -93,12 +90,10 @@ void MainWindow::on_showFileSystemAction_triggered()
     {
         //提示对话框
         QMessageBox::information(this, tr("提示"), tr("文件管理系统已经显示！"), QMessageBox::Ok);
-        qDebug() << "``````";
-        return;
     }*/
 }
 
-//隐藏文件管理系统
+//隐藏文件管理系统Action
 void MainWindow::on_concealFileSystemAction_triggered()
 {
     if(isShowFileSystem == false)
@@ -112,8 +107,26 @@ void MainWindow::on_concealFileSystemAction_triggered()
     }
 }
 
+//建立新连接Action
 void MainWindow::on_newConnectionAction_triggered()
 {
-//    FileSystem *fileSystem = new FileSystem(this);
-//    fileSystem->show();
+
+}
+
+//增加新选项卡
+void MainWindow::on_addTabAction_triggered()
+{
+    ShellTextEdit *textEdit = new ShellTextEdit(ui->tabWidget);
+    ui->tabWidget->addTab(textEdit,"本地Shell");
+    qDebug() << ui->tabWidget->count();
+}
+
+//关闭当前选项卡
+void MainWindow::on_closeCurrentTabAction_triggered()
+{
+    if(ui->tabWidget->count() >= 1)
+        ui->tabWidget->removeTab(ui->tabWidget->currentIndex());
+    //选项卡全部关闭则关闭小企鹅
+    if(ui->tabWidget->count() == 0)
+        close();
 }
