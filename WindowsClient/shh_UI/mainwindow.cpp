@@ -1,16 +1,16 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QScrollArea>
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     initStyle();
+    con=new ConWidegt;
 }
 
 MainWindow::~MainWindow()
@@ -24,7 +24,7 @@ void MainWindow::initStyle()
     setUiDesignerStyle();   //设置UI界面风格
 //    connectAction();    //连接所有Action信号槽
     ui->fileSystemWidget->setVisible(false);    //设置初始文件资源管理系统为不可见
-    ShellTextEdit *textEdit = new ShellTextEdit(ui->tab_1);
+    textEdit = new ShellTextEdit(ui->tab_1);
     ui->firstTabLayout->addWidget(textEdit);
     //由于QTabWidget默认有两个Tab，所有需移除tabWidget的第二个Tab
     ui->tabWidget->removeTab(1);
@@ -33,7 +33,7 @@ void MainWindow::initStyle()
 //UI界面风格
 void MainWindow::setUiDesignerStyle()
 {
-    setWindowTitle("小企鹅终端模拟软件");
+    setWindowTitle(tr("小企鹅终端模拟软件"));
     setWindowIcon(QIcon(QStringLiteral(":/images/penguin_32px.ico")));
 }
 
@@ -110,7 +110,22 @@ void MainWindow::on_concealFileSystemAction_triggered()
 //建立新连接Action
 void MainWindow::on_newConnectionAction_triggered()
 {
-
+    con->exec();
+    if (con->get_flag()==true)
+    {
+        sshPara=new QSsh::SshConnectionParameters();
+        sshPara->port=con->get_port();
+        sshPara->host=con->get_host();
+        sshPara.userName = "ghost";
+        sshPara.password = "ghost";
+        sshPara.timeout = 500;
+        sshPara.authenticationType = QSsh::SshConnectionParameters::AuthenticationTypePassword;
+        sshCon= new QSsh::SshConnection(sshPara);
+        connect(sshCon,&QSsh::SshConnection::connected,this,&MainWindow::sshcon);
+        connect(sshCon,&QSsh::SshConnection::dataAvailable,[this](const QString & mse){textEdit->append(mse);});
+        connect(sshCon,&QSsh::SshConnection::disconnected,[this](){textEdit->append("SSH disconnect");});
+        sshCon->connectToHost();
+    }
 }
 
 //增加新选项卡
@@ -129,4 +144,15 @@ void MainWindow::on_closeCurrentTabAction_triggered()
     //选项卡全部关闭则关闭小企鹅
     if(ui->tabWidget->count() == 0)
         close();
+}
+void MainWindow::sshcon()
+{
+    shell=sshCon->createRemoteShell();
+    connect(shell.data(),&QSsh::SshRemoteProcess::started,[this](){textEdit->append("SshRemoteProcess start succsess");});
+    connect(shell.data(),&QSsh::SshRemoteProcess::readyReadStandardOutput,[this](){textEdit->append(QString(this->shell.data()->readAllStandardOutput()));});
+    connect(shell.data(),&QSsh::SshRemoteProcess::readyRead,[this](){textEdit->append(QString(this->shell.data()->readAllStandardOutput()));});
+    connect(shell.data(),&QSsh::SshRemoteProcess::readyReadStandardError,[this](){textEdit->append(QString(this->shell.data()->readAll()));});
+    connect(shell.data(),&QSsh::SshRemoteProcess::closed,[this](){textEdit->append("SshRemoteProcess stop");});
+    shell.data()->start();
+
 }

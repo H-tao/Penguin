@@ -15,11 +15,13 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     FileSystemWidget/filewidget.cpp \
-    ShellTextEdit/shelltextedit.cpp
+    ShellTextEdit/shelltextedit.cpp \
+    conwidegt.cpp
 
 HEADERS  += mainwindow.h \
     FileSystemWidget/filewidget.h \
-    ShellTextEdit/shelltextedit.h
+    ShellTextEdit/shelltextedit.h \
+    conwidegt.h
 
 FORMS    += mainwindow.ui \
     dialog.ui \

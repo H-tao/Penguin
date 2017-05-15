@@ -1,4 +1,4 @@
-#ifndef MAINWINDOW_H
+﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
@@ -7,7 +7,8 @@
 #include<QDebug>
 #include<FileSystemWidget/filewidget.h>
 #include<ShellTextEdit/shelltextedit.h>
-
+#include<conwidegt.h>
+#include<ssh/sshconnection.h>
 class ShellTextEdit;
 class FileWidget;
 
@@ -26,7 +27,7 @@ public:
     void initStyle();
     void setUiDesignerStyle();
     void connectAction();
-    
+
 private slots:
     //文件资源管理系统部分槽
     void on_openFileSystemAction_triggered();   //打开文件系统动作
@@ -37,12 +38,23 @@ private slots:
     void on_addTabAction_triggered();   //增加新选项卡动作
     void on_closeCurrentTabAction_triggered();  //关闭当前选项卡动作
 
+    //ssh
+    void sshcon();
 private:
     Ui::MainWindow *ui;
 
     //文件资源管理系统部分变量
     bool isOpenFileSystem = false;
     bool isShowFileSystem = false;
+
+    ShellTextEdit *textEdit;
+    //窗口部分
+    ConWidegt *con;
+
+    //ssh连接
+    QSsh::SshConnectionParameters *sshPara;
+    QSsh::SshConnection *sshCon;
+    QSsh::SshRemoteProcess *shell;
 };
 
 #endif // MAINWINDOW_H
