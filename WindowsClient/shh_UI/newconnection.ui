@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>newDialog</class>
- <widget class="QDialog" name="newDialog">
+ <class>NewConnection</class>
+ <widget class="QDialog" name="NewConnection">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,10 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>新建会话</string>
-  </property>
-  <property name="sizeGripEnabled">
-   <bool>false</bool>
+   <string>Dialog</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
@@ -35,7 +32,7 @@
   <widget class="QTextEdit" name="statusTextEdit">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>140</x>
      <y>160</y>
      <width>161</width>
      <height>71</height>
@@ -45,7 +42,7 @@
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>40</x>
+     <x>60</x>
      <y>30</y>
      <width>219</width>
      <height>22</height>
@@ -77,45 +74,10 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="layoutWidget">
+  <widget class="QWidget" name="layoutWidget_2">
    <property name="geometry">
     <rect>
-     <x>40</x>
-     <y>60</y>
-     <width>219</width>
-     <height>22</height>
-    </rect>
-   </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_2">
-    <item>
-     <widget class="QLabel" name="protocolLabel">
-      <property name="text">
-       <string>协议(P)：</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <spacer name="horizontalSpacer_2">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>18</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item>
-     <widget class="QLineEdit" name="protocolLineEdit"/>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QWidget" name="layoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
+     <x>60</x>
      <y>90</y>
      <width>219</width>
      <height>22</height>
@@ -147,10 +109,45 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="layoutWidget">
+  <widget class="QWidget" name="layoutWidget_3">
    <property name="geometry">
     <rect>
-     <x>40</x>
+     <x>60</x>
+     <y>60</y>
+     <width>219</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <item>
+     <widget class="QLabel" name="protocolLabel">
+      <property name="text">
+       <string>协议(P)：</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <spacer name="horizontalSpacer_2">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>18</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QLineEdit" name="protocolLineEdit"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="layoutWidget_4">
+   <property name="geometry">
+    <rect>
+     <x>60</x>
      <y>120</y>
      <width>144</width>
      <height>22</height>
@@ -189,10 +186,10 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="layoutWidget">
+  <widget class="QWidget" name="layoutWidget_5">
    <property name="geometry">
     <rect>
-     <x>40</x>
+     <x>60</x>
      <y>160</y>
      <width>75</width>
      <height>22</height>
@@ -227,7 +224,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>newDialog</receiver>
+   <receiver>NewConnection</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -243,7 +240,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>newDialog</receiver>
+   <receiver>NewConnection</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

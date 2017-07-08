@@ -109,10 +109,12 @@ void MainWindow::on_concealFileSystemAction_triggered()
 //建立新连接Action
 void MainWindow::on_newConnectionAction_triggered()
 {
-
+    NewConnection newCon;
+    newCon.exec();
+    newCon.show();
 }
 
-//增加新选项卡
+//增加新选项卡Action
 void MainWindow::on_addTabAction_triggered()
 {
     ShellTextEdit *textEdit = new ShellTextEdit(ui->tabWidget);
@@ -120,7 +122,7 @@ void MainWindow::on_addTabAction_triggered()
     qDebug() << ui->tabWidget->count();
 }
 
-//关闭当前选项卡
+//关闭当前选项卡Action
 void MainWindow::on_closeCurrentTabAction_triggered()
 {
     if(ui->tabWidget->count() >= 1)

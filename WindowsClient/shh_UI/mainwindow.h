@@ -8,6 +8,8 @@
 #include<FileSystemWidget/filewidget.h>
 #include<ShellTextEdit/shelltextedit.h>
 #include<ssh/sshconnection.h>
+#include<newconnection.h>
+
 class ShellTextEdit;
 class FileWidget;
 

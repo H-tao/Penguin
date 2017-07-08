@@ -18,13 +18,15 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     FileSystemWidget/filewidget.cpp \
     ShellTextEdit/shelltextedit.cpp \
-    shell.cpp
+    shell.cpp \
+    newconnection.cpp
 
 
 HEADERS  += mainwindow.h \
     FileSystemWidget/filewidget.h \
     ShellTextEdit/shelltextedit.h \
-    shell.h
+    shell.h \
+    newconnection.h
 
 
 FORMS    += mainwindow.ui \
@@ -32,7 +34,7 @@ FORMS    += mainwindow.ui \
     feature.ui \
     filetransfer.ui \
     useloginauthentication.ui \
-    new.ui
+    newconnection.ui
 
 RESOURCES += \
     filetype.qrc
