@@ -53,6 +53,8 @@ Shell::Shell(const QSsh::SshConnectionParameters &parameters, QObject *parent)
     i++;
 }
 
+int Shell::i = 0;
+
 Shell::~Shell()
 {
     delete m_connection;

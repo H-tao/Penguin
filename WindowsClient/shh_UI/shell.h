@@ -55,8 +55,8 @@ public:
     void run();
     int getNo(){return no;}
     MainWindow *ptr;
-    Shell(const QSsh::SshConnectionParameters &parameters, QObject *parent = 0);
-    static int i=0;//窗口和SHELL的编号
+    static int i;//窗口和SHELL的编号
+
 private slots:
     void handleConnected();
     void handleConnectionError();
