@@ -18,15 +18,23 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     FileSystemWidget/filewidget.cpp \
     ShellTextEdit/shelltextedit.cpp \
+<<<<<<< HEAD
+    shell.cpp
+=======
     shell.cpp \
     newconnection.cpp
+>>>>>>> e50478e7ee76e0782b519896a38ec4589b4a9357
 
 
 HEADERS  += mainwindow.h \
     FileSystemWidget/filewidget.h \
     ShellTextEdit/shelltextedit.h \
+<<<<<<< HEAD
+    shell.h
+=======
     shell.h \
     newconnection.h
+>>>>>>> e50478e7ee76e0782b519896a38ec4589b4a9357
 
 
 FORMS    += mainwindow.ui \

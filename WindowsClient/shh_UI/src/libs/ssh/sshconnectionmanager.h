@@ -27,64 +27,39 @@
 **
 **
 **************************************************************************/
-#ifndef SHELL_H
-#define SHELL_H
 
-#include <QObject>
-#include <QSharedPointer>
-<<<<<<< HEAD
-#include<mainwindow.h>
-=======
+#ifndef SSHCONNECTIONMANAGER_H
+#define SSHCONNECTIONMANAGER_H
 
->>>>>>> e50478e7ee76e0782b519896a38ec4589b4a9357
+#include "ssh_global.h"
+
+#include <QScopedPointer>
+
 namespace QSsh {
 class SshConnection;
 class SshConnectionParameters;
-class SshRemoteProcess;
-}
+namespace Internal { class SshConnectionManagerPrivate; }
 
-QT_BEGIN_NAMESPACE
-class QByteArray;
-class QFile;
-class QString;
-QT_END_NAMESPACE
-
-class Shell : public QObject
+class QSSH_EXPORT SshConnectionManager
 {
-    Q_OBJECT
+    friend class Internal::SshConnectionManagerPrivate;
 public:
-<<<<<<< HEAD
-    Shell(int winNo,const QSsh::SshConnectionParameters &parameters,QObject *parent = 0);
-    ~Shell();
+    static SshConnectionManager &instance();
 
-    void run();
-    int getNo(){return no;}
-    MainWindow *ptr;
-=======
-    Shell(const QSsh::SshConnectionParameters &parameters, QObject *parent = 0);
-    ~Shell();
-
-    void run();
-
->>>>>>> e50478e7ee76e0782b519896a38ec4589b4a9357
-private slots:
-    void handleConnected();
-    void handleConnectionError();
-    void handleRemoteStdout();
-    void handleRemoteStderr();
-    void handleShellMessage(const QString &message);
-    void handleChannelClosed(int exitStatus);
-    void handleShellStarted();
-    void handleStdin();
+    SshConnection *acquireConnection(const SshConnectionParameters &sshParams);
+    void releaseConnection(SshConnection *connection);
+    // Make sure the next acquireConnection with the given parameters will return a new connection.
+    void forceNewConnection(const SshConnectionParameters &sshParams);
 
 private:
-    QSsh::SshConnection *m_connection;
-    QSharedPointer<QSsh::SshRemoteProcess> m_shell;
-    QFile * const m_stdin;
-<<<<<<< HEAD
-    int no;
-=======
->>>>>>> e50478e7ee76e0782b519896a38ec4589b4a9357
+    explicit SshConnectionManager();
+    virtual ~SshConnectionManager();
+    SshConnectionManager(const SshConnectionManager &);
+    SshConnectionManager &operator=(const SshConnectionManager &);
+
+    const QScopedPointer<Internal::SshConnectionManagerPrivate> d;
 };
 
-#endif // SHELL_H
+} // namespace QSsh
+
+#endif // SSHCONNECTIONMANAGER_H

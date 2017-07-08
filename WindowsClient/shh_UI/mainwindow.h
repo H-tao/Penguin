@@ -38,8 +38,13 @@ private slots:
     void on_newConnectionAction_triggered();    //建立新连接动作
     void on_addTabAction_triggered();   //增加新选项卡动作
     void on_closeCurrentTabAction_triggered();  //关闭当前选项卡动作
+//ssh部分
+    void outToShell(int winNo,QString);
 
+<<<<<<< HEAD
+=======
 \
+>>>>>>> e50478e7ee76e0782b519896a38ec4589b4a9357
 private:
     Ui::MainWindow *ui;
 
