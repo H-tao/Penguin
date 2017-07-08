@@ -10,7 +10,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     initStyle();
-    con=new ConWidegt;
 }
 
 MainWindow::~MainWindow()
@@ -110,22 +109,7 @@ void MainWindow::on_concealFileSystemAction_triggered()
 //建立新连接Action
 void MainWindow::on_newConnectionAction_triggered()
 {
-    con->exec();
-    if (con->get_flag()==true)
-    {
-        sshPara=new QSsh::SshConnectionParameters();
-        sshPara->port=con->get_port();
-        sshPara->host=con->get_host();
-        sshPara.userName = "ghost";
-        sshPara.password = "ghost";
-        sshPara.timeout = 500;
-        sshPara.authenticationType = QSsh::SshConnectionParameters::AuthenticationTypePassword;
-        sshCon= new QSsh::SshConnection(sshPara);
-        connect(sshCon,&QSsh::SshConnection::connected,this,&MainWindow::sshcon);
-        connect(sshCon,&QSsh::SshConnection::dataAvailable,[this](const QString & mse){textEdit->append(mse);});
-        connect(sshCon,&QSsh::SshConnection::disconnected,[this](){textEdit->append("SSH disconnect");});
-        sshCon->connectToHost();
-    }
+
 }
 
 //增加新选项卡
@@ -145,14 +129,4 @@ void MainWindow::on_closeCurrentTabAction_triggered()
     if(ui->tabWidget->count() == 0)
         close();
 }
-void MainWindow::sshcon()
-{
-    shell=sshCon->createRemoteShell();
-    connect(shell.data(),&QSsh::SshRemoteProcess::started,[this](){textEdit->append("SshRemoteProcess start succsess");});
-    connect(shell.data(),&QSsh::SshRemoteProcess::readyReadStandardOutput,[this](){textEdit->append(QString(this->shell.data()->readAllStandardOutput()));});
-    connect(shell.data(),&QSsh::SshRemoteProcess::readyRead,[this](){textEdit->append(QString(this->shell.data()->readAllStandardOutput()));});
-    connect(shell.data(),&QSsh::SshRemoteProcess::readyReadStandardError,[this](){textEdit->append(QString(this->shell.data()->readAll()));});
-    connect(shell.data(),&QSsh::SshRemoteProcess::closed,[this](){textEdit->append("SshRemoteProcess stop");});
-    shell.data()->start();
 
-}

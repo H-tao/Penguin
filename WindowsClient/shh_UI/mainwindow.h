@@ -7,7 +7,6 @@
 #include<QDebug>
 #include<FileSystemWidget/filewidget.h>
 #include<ShellTextEdit/shelltextedit.h>
-#include<conwidegt.h>
 #include<ssh/sshconnection.h>
 class ShellTextEdit;
 class FileWidget;
@@ -38,8 +37,7 @@ private slots:
     void on_addTabAction_triggered();   //增加新选项卡动作
     void on_closeCurrentTabAction_triggered();  //关闭当前选项卡动作
 
-    //ssh
-    void sshcon();
+\
 private:
     Ui::MainWindow *ui;
 
@@ -48,8 +46,7 @@ private:
     bool isShowFileSystem = false;
 
     ShellTextEdit *textEdit;
-    //窗口部分
-    ConWidegt *con;
+
 
     //ssh连接
     QSsh::SshConnectionParameters *sshPara;
