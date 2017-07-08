@@ -2,13 +2,15 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include<QMessageBox>
-#include<QLabel>
-#include<QDebug>
-#include<FileSystemWidget/filewidget.h>
-#include<ShellTextEdit/shelltextedit.h>
-#include<ssh/sshconnection.h>
-#include<newconnection.h>
+#include <QMessageBox>
+#include <QLabel>
+#include <QDebug>
+#include <FileSystemWidget/filewidget.h>
+#include <ShellTextEdit/shelltextedit.h>
+#include <ssh/sshconnection.h>
+#include <newconnection.h>
+#include <tabpage.h>
+#include <QVector>
 
 class ShellTextEdit;
 class FileWidget;
@@ -39,17 +41,20 @@ private slots:
     void on_addTabAction_triggered();   //增加新选项卡动作
     void on_closeCurrentTabAction_triggered();  //关闭当前选项卡动作
 //ssh部分
-    void outToShell(int winNo,QString);//
+    void outToShell(int winNo, QString arguement); //输出到
 
 
 private:
     Ui::MainWindow *ui;
+
+    QVector<TabPage*> tabPagePool;
 
     //文件资源管理系统部分变量
     bool isOpenFileSystem = false;
     bool isShowFileSystem = false;
 
     ShellTextEdit *textEdit;
+
 
 
     //ssh连接

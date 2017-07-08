@@ -21,11 +21,15 @@ MainWindow::~MainWindow()
 void MainWindow::initStyle()
 {
     setUiDesignerStyle();   //设置UI界面风格
-//    connectAction();    //连接所有Action信号槽
-    ui->fileSystemWidget->setVisible(false);    //设置初始文件资源管理系统为不可见
+    /*
     textEdit = new ShellTextEdit(ui->tab_1);
     ui->firstTabLayout->addWidget(textEdit);
-    //由于QTabWidget默认有两个Tab，所有需移除tabWidget的第二个Tab
+    */
+    TabPage *tabPage = new TabPage;
+    tabPagePool.append(tabPage);
+    ui->firstTabLayout->addWidget(tabPage);
+
+    //由于QTabWidget默认有两个Tab，所以需移除tabWidget的第二个Tab
     ui->tabWidget->removeTab(1);
 }
 
@@ -46,81 +50,52 @@ void MainWindow::connectAction()
 //打开文件管理系统Action
 void MainWindow::on_openFileSystemAction_triggered()
 {
-    //如果文件管理系统已经打开
-    if(isOpenFileSystem)
+    if(tabPagePool.at(ui->tabWidget->currentIndex()) == NULL)
     {
-        on_showFileSystemAction_triggered();
-        return;
+        //提示对话框
+        QMessageBox::information(this, tr("提示"), tr("指针为空！"), QMessageBox::Ok);
     }
 
-    ui->filePathLineText->setText("d:\\");
-    ui->filePathLineText->setAlignment(Qt::AlignLeft);
-    ui->filePathLineText->setEnabled(false);
-    ui->filePathLineText->setFocusPolicy(Qt::NoFocus);
-    FileWidget *fileWidget = new FileWidget(ui->fileSystemWidget);
-//    QGridLayout *Box = new QGridLayout;
-//    Box->addWidget(fileWidget);
-    ui->fileSystemWidgetLayout->addWidget(fileWidget);
-    fileWidget->Working();
-    ui->fileSystemWidget->setFrameShape(QFrame::NoFrame);
-    on_showFileSystemAction_triggered();
-    isOpenFileSystem = true;
+    tabPagePool.at(ui->tabWidget->currentIndex())->openFileSystem();
 }
 
 //关闭文件管理系统Action
 void MainWindow::on_closeFileSystemAction_triggered()
 {
-//    ui->gridLayout->removeWidget();
+    tabPagePool.at(ui->tabWidget->currentIndex())->closeFileSystem();
 }
 
 //显示文件管理系统Action
 void MainWindow::on_showFileSystemAction_triggered()
 {
-    if(isShowFileSystem == false)
-    {
-       ui->fileSystemWidget->setVisible(true);
-       //设置显示文件管理系统的值为真
-       isShowFileSystem = true;
-       return;
-    }
-    //如果已经文件管理系统打开
-/*
-    if(isShowFileSystem == true)
-    {
-        //提示对话框
-        QMessageBox::information(this, tr("提示"), tr("文件管理系统已经显示！"), QMessageBox::Ok);
-    }*/
+    tabPagePool.at(ui->tabWidget->currentIndex())->showFileSystem();
 }
 
 //隐藏文件管理系统Action
 void MainWindow::on_concealFileSystemAction_triggered()
 {
-    if(isShowFileSystem == false)
-        return;
-
-    if(isShowFileSystem == true)
-    {
-        ui->fileSystemWidget->setVisible(false);
-        isShowFileSystem = false;
-        return;
-    }
+    tabPagePool.at(ui->tabWidget->currentIndex())->concealFileSystem();
 }
 
 //建立新连接Action
 void MainWindow::on_newConnectionAction_triggered()
 {
-
     NewConnection newCon;
     newCon.exec();
     newCon.show();
-
 }
 
 //增加新选项卡Action
 void MainWindow::on_addTabAction_triggered()
 {
+    /* old
     ShellTextEdit *textEdit = new ShellTextEdit(ui->tabWidget);
     ui->tabWidget->addTab(textEdit,"本地Shell");
+    */
+
+    TabPage *tabPage = new TabPage(ui->tabWidget);
+    ui->tabWidget->addTab(tabPage,"本地Shell");
+    tabPagePool.append(tabPage);                        //加入TabPage池
     qDebug() << ui->tabWidget->count();
 }
 
@@ -134,7 +109,8 @@ void MainWindow::on_closeCurrentTabAction_triggered()
         close();
 }
 
-void MainWindow::outToShell(int winNo, QString)
+void MainWindow::outToShell(int winNo, QString arguement)
 {
-
+    ShellTextEdit *textEdit = reinterpret_cast<ShellTextEdit*>(ui->tabWidget->widget(winNo));
+    textEdit->append(arguement);    //将远端命令输出显示
 }
