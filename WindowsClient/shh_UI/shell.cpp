@@ -38,7 +38,6 @@
 
 #include <cstdlib>
 #include <iostream>
-<<<<<<< HEAD
 #include<mainwindow.h>
 using namespace QSsh;
 
@@ -51,19 +50,7 @@ Shell::Shell(int winNo,const QSsh::SshConnectionParameters &parameters, QObject 
     connect(m_connection,SIGNAL(connected()),ptr,SLOT(ptr->outToShell(this->getNo(),tr("成功连接"))));
     connect(m_connection, SIGNAL(dataAvailable(QString &mse)),ptr,SLOT(ptr->outToShell(this->getNo(),tr(mse))));
     connect(m_connection, SIGNAL(error(QSsh::SshError)),ptr,SLOT(ptr->outToShell(this->getNo(),tr(m_connection->errorString()))));
-=======
 
-using namespace QSsh;
-
-Shell::Shell(const QSsh::SshConnectionParameters &parameters, QObject *parent)
-    : QObject(parent),
-      m_connection(new SshConnection(parameters))
-    , m_stdin(new QFile(this))
-{
-    connect(m_connection, SIGNAL(connected()), SLOT(handleConnected()));
-    connect(m_connection, SIGNAL(dataAvailable(QString)), SLOT(handleShellMessage(QString)));
-    connect(m_connection, SIGNAL(error(QSsh::SshError)), SLOT(handleConnectionError()));
->>>>>>> e50478e7ee76e0782b519896a38ec4589b4a9357
 }
 
 Shell::~Shell()

@@ -32,11 +32,7 @@
 
 #include <QObject>
 #include <QSharedPointer>
-<<<<<<< HEAD
 #include<mainwindow.h>
-=======
-
->>>>>>> e50478e7ee76e0782b519896a38ec4589b4a9357
 namespace QSsh {
 class SshConnection;
 class SshConnectionParameters;
@@ -53,20 +49,14 @@ class Shell : public QObject
 {
     Q_OBJECT
 public:
-<<<<<<< HEAD
     Shell(int winNo,const QSsh::SshConnectionParameters &parameters,QObject *parent = 0);
     ~Shell();
 
     void run();
     int getNo(){return no;}
     MainWindow *ptr;
-=======
     Shell(const QSsh::SshConnectionParameters &parameters, QObject *parent = 0);
-    ~Shell();
 
-    void run();
-
->>>>>>> e50478e7ee76e0782b519896a38ec4589b4a9357
 private slots:
     void handleConnected();
     void handleConnectionError();
@@ -81,10 +71,8 @@ private:
     QSsh::SshConnection *m_connection;
     QSharedPointer<QSsh::SshRemoteProcess> m_shell;
     QFile * const m_stdin;
-<<<<<<< HEAD
     int no;
-=======
->>>>>>> e50478e7ee76e0782b519896a38ec4589b4a9357
+
 };
 
 #endif // SHELL_H

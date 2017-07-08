@@ -109,13 +109,11 @@ void MainWindow::on_concealFileSystemAction_triggered()
 //建立新连接Action
 void MainWindow::on_newConnectionAction_triggered()
 {
-<<<<<<< HEAD
 
-=======
     NewConnection newCon;
     newCon.exec();
     newCon.show();
->>>>>>> e50478e7ee76e0782b519896a38ec4589b4a9357
+
 }
 
 //增加新选项卡Action
@@ -136,3 +134,7 @@ void MainWindow::on_closeCurrentTabAction_triggered()
         close();
 }
 
+void MainWindow::outToShell(int winNo, QString)
+{
+
+}
