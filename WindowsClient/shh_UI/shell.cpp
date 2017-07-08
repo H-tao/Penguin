@@ -41,16 +41,16 @@
 #include<mainwindow.h>
 using namespace QSsh;
 
-Shell::Shell(int winNo,const QSsh::SshConnectionParameters &parameters, QObject *parent)
+Shell::Shell(const QSsh::SshConnectionParameters &parameters, QObject *parent)
     : QObject(parent),
       m_connection(new SshConnection(parameters))
-    , m_stdin(new QFile(this)),no(winNo)
+    , m_stdin(new QFile(this)),no(i)
 {
     ptr=(MainWindow*)parent;
     connect(m_connection,SIGNAL(connected()),ptr,SLOT(ptr->outToShell(this->getNo(),tr("成功连接"))));
     connect(m_connection, SIGNAL(dataAvailable(QString &mse)),ptr,SLOT(ptr->outToShell(this->getNo(),tr(mse))));
     connect(m_connection, SIGNAL(error(QSsh::SshError)),ptr,SLOT(ptr->outToShell(this->getNo(),tr(m_connection->errorString()))));
-
+    i++;
 }
 
 Shell::~Shell()

@@ -49,14 +49,14 @@ class Shell : public QObject
 {
     Q_OBJECT
 public:
-    Shell(int winNo,const QSsh::SshConnectionParameters &parameters,QObject *parent = 0);
+    Shell(const QSsh::SshConnectionParameters &parameters,QObject *parent = 0);
     ~Shell();
 
     void run();
     int getNo(){return no;}
     MainWindow *ptr;
     Shell(const QSsh::SshConnectionParameters &parameters, QObject *parent = 0);
-
+    static int i=0;//窗口和SHELL的编号
 private slots:
     void handleConnected();
     void handleConnectionError();
