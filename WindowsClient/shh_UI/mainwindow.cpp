@@ -111,6 +111,9 @@ void MainWindow::on_closeCurrentTabAction_triggered()
 
 void MainWindow::outToShell(int winNo, QString arguement)
 {
-    ShellTextEdit *textEdit = reinterpret_cast<ShellTextEdit*>(ui->tabWidget->widget(winNo));
-    textEdit->append(arguement);    //将远端命令输出显示
+    tabPagePool.at(winNo)->textEdit->append(arguement);
+    /*
+    TabPage *tabPage = reinterpret_cast<TabPage*>(ui->tabWidget->widget(winNo));   //TODO
+    tabPage->textEdit->append(arguement);    //将远端命令输出显示
+*/
 }

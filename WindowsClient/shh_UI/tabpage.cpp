@@ -6,6 +6,7 @@ TabPage::TabPage(QWidget *parent) :
     ui(new Ui::TabPage)
 {
     ui->setupUi(this);
+    initStyle();
 }
 
 TabPage::~TabPage()
@@ -15,8 +16,10 @@ TabPage::~TabPage()
 
 void TabPage::initStyle()
 {
+    /****** 用public指针指向私有成员，外部访问可通使用指针 *******/
     ui->fileSystemWidget->setVisible(false);    //设置初始用于显示文件资源管理系统的窗口为不可见
-    textEdit = new ShellTextEdit(ui->textWidget);
+    ui->filePathLineText->setVisible(false);
+    textEdit = new ShellTextEdit(ui->textWidget);   //新增TextEdit
     ui->textWidgetLayout->addWidget(textEdit);
     filePathLineEdit = ui->filePathLineText;
 }
@@ -35,6 +38,7 @@ void TabPage::openFileSystem()
     ui->filePathLineText->setAlignment(Qt::AlignLeft);
     ui->filePathLineText->setEnabled(false);
     ui->filePathLineText->setFocusPolicy(Qt::NoFocus);
+    ui->filePathLineText->setVisible(true);
 
     fileWidget = new FileWidget(ui->fileSystemWidget);
     ui->fileSystemWidgetLayout->addWidget(fileWidget);
