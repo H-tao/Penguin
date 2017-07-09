@@ -47,10 +47,13 @@ Shell::Shell(const QSsh::SshConnectionParameters &parameters, QObject *parent)
     , m_stdin(new QFile(this)),no(i)
 {
     ptr=(MainWindow*)parent;
-    connect(m_connection,SIGNAL(connected()),ptr,SLOT(ptr->outToShell(this->getNo(),tr("成功连接"))));
-    connect(m_connection, SIGNAL(dataAvailable(QString &mse)),ptr,SLOT(ptr->outToShell(this->getNo(),tr(mse))));
-    connect(m_connection, SIGNAL(error(QSsh::SshError)),ptr,SLOT(ptr->outToShell(this->getNo(),tr(m_connection->errorString()))));
-    i++;
+    connect(m_connection,SIGNAL(connected()),this,SLOT(shellConnect()));
+    connect(this,SIGNAL(connect(int,QString)),ptr,SLOT(outToShell(int,QString)));
+    connect(m_connection,SIGNAL(dataAvailable(QString)),this,SLOT(shellData(QString));
+    connect(this,SIGNAL(dataReady(int,QString)),ptr,SLOT(outToShell(int,QString)));
+    connect(m_connection, SIGNAL(error(QSsh::SshError)),\this,SLOT(shellError());
+    connect(this,SIGNAL(error(int,QString)),ptr,SLOT(outToShell(int,QString));
+            i++;
 }
 
 int Shell::i = 0;
@@ -124,4 +127,15 @@ void Shell::handleStdin()
 {
     m_shell->write(m_stdin->readLine());
 }
-
+void Shell::shellConnect()
+{
+    emit connect(no,"连接成功");
+}
+void Shell::shellData(QString mse)
+{
+        emit dataReady(no,mse);
+}
+void Shell::shellError()
+{
+    emit error(no,mse);
+}

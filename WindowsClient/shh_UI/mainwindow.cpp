@@ -4,6 +4,7 @@
 #include <QVBoxLayout>
 #include <QGridLayout>
 #include <QScrollArea>
+#include<QDebug>
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -83,6 +84,7 @@ void MainWindow::on_newConnectionAction_triggered()
     NewConnection newCon;
     newCon.exec();
     newCon.show();
+    qDebug()<<newCon.objectName();
 }
 
 //增加新选项卡Action

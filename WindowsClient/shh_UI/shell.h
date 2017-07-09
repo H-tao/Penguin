@@ -67,12 +67,19 @@ private slots:
     void handleShellStarted();
     void handleStdin();
 
+    void shellConnect();
+    void shellData(QString);
+    void shellError();
 private:
     QSsh::SshConnection *m_connection;
     QSharedPointer<QSsh::SshRemoteProcess> m_shell;
     QFile * const m_stdin;
     int no;
 
+signals:
+    void connect(int,QString);
+    void dataReady(int,QString);
+    void error(int,QString);
 };
 
 #endif // SHELL_H
