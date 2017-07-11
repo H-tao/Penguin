@@ -81,10 +81,23 @@ void MainWindow::on_concealFileSystemAction_triggered()
 //建立新连接Action
 void MainWindow::on_newConnectionAction_triggered()
 {
-    NewConnection newCon;
-    newCon.exec();
-    newCon.show();
-    qDebug()<<newCon.objectName();
+    NewConnection *newCon;
+    newCon=new NewConnection();
+    newCon->exec();
+    newCon->show();
+    QSsh::SshConnectionParameters *sshPara;
+    sshPara=new QSsh::SshConnectionParameters();
+    sshPara->host="39.108.78.252";
+    sshPara->port=22;
+    sshPara->userName="thishzw";
+    sshPara->password="Hzw5820212";
+    sshPara->authenticationType=QSsh::SshConnectionParameters::AuthenticationByPassword;
+    sshPara->timeout=500;
+    shell=new Shell(*sshPara,this);
+    shell->run();
+    qDebug()<<sshPara->host;
+    //获得数据
+    delete newCon;
 }
 
 //增加新选项卡Action

@@ -14,7 +14,11 @@ class NewConnection : public QDialog
 public:
     explicit NewConnection(QWidget *parent = 0);
     ~NewConnection();
-
+    QString host;
+    QString name;
+    QString protocol;
+    int port;
+    QString information;
 private:
     Ui::NewConnection *ui;
 };

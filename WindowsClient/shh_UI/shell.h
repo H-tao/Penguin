@@ -43,6 +43,7 @@ QT_BEGIN_NAMESPACE
 class QByteArray;
 class QFile;
 class QString;
+class MainWindow;
 QT_END_NAMESPACE
 
 class Shell : public QObject
@@ -54,6 +55,7 @@ public:
 
     void run();
     int getNo(){return no;}
+
     MainWindow *ptr;
     static int i;//窗口和SHELL的编号
 
@@ -77,7 +79,7 @@ private:
     int no;
 
 signals:
-    void connect(int,QString);
+    void connection(int,QString);
     void dataReady(int,QString);
     void error(int,QString);
 };

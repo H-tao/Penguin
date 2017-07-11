@@ -11,10 +11,10 @@
 #include <newconnection.h>
 #include <tabpage.h>
 #include <QVector>
-
+#include<shell.h>
 class ShellTextEdit;
 class FileWidget;
-
+class Shell;
 namespace Ui {
 class MainWindow;
 }
@@ -50,15 +50,10 @@ private:
     Ui::MainWindow *ui;
 
     QVector<TabPage*> tabPagePool;      //TabPage池
-
     ShellTextEdit *textEdit;
 
-
-
-    //ssh连接
-    QSsh::SshConnectionParameters *sshPara;
-    QSsh::SshConnection *sshCon;
-    QSsh::SshRemoteProcess *shell;
+    //ssh连接(单个测试)
+    Shell *shell;
 };
 
 #endif // MAINWINDOW_H
