@@ -33,6 +33,7 @@
 #include <QObject>
 #include <QSharedPointer>
 #include<mainwindow.h>
+#include<QByteArray>
 namespace QSsh {
 class SshConnection;
 class SshConnectionParameters;
@@ -52,30 +53,22 @@ class Shell : public QObject
 public:
     Shell(const QSsh::SshConnectionParameters &parameters,QObject *parent = 0);
     ~Shell();
-
     void run();
     int getNo(){return no;}
-
+int Shell::i=0;
     MainWindow *ptr;
-    static int i;//窗口和SHELL的编号
 
 private slots:
     void handleConnected();
-    void handleConnectionError();
-    void handleRemoteStdout();
-    void handleRemoteStderr();
-    void handleShellMessage(const QString &message);
     void handleChannelClosed(int exitStatus);
-    void handleShellStarted();
-    void handleStdin();
-
+    void handleIn(QString &mse);
     void shellConnect();
+    void shellOut();
     void shellData(QString);
     void shellError();
 private:
     QSsh::SshConnection *m_connection;
     QSharedPointer<QSsh::SshRemoteProcess> m_shell;
-    QFile * const m_stdin;
     int no;
 
 signals:
@@ -83,5 +76,4 @@ signals:
     void dataReady(int,QString);
     void error(int,QString);
 };
-
 #endif // SHELL_H

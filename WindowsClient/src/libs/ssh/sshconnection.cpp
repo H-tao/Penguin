@@ -46,7 +46,7 @@
 #include <QNetworkProxy>
 #include <QRegExp>
 #include <QTcpSocket>
-
+#include<QDebug>
 /*!
     \class QSsh::SshConnection
 

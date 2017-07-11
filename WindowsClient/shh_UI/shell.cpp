@@ -43,20 +43,25 @@ using namespace QSsh;
 
 Shell::Shell(const QSsh::SshConnectionParameters &parameters, QObject *parent)
     : QObject(parent),
-      m_connection(new SshConnection(parameters))
-    , m_stdin(new QFile(this)),no(i)
+      m_connection(new SshConnection(parameters)),no(i)
 {
     ptr=(MainWindow*)parent;
-    connect(m_connection,SIGNAL(connected()),this,SLOT(shellConnect()));
-    connect(this,SIGNAL(connection(int,QString)),ptr,SLOT(outToShell(int,QString)));
+
+//    connect(m_connection, SIGNAL(connected()), SLOT(handleConnected()));
+//    connect(m_connection,SIGNAL(connected()),this,SLOT(shellConnect()));
+//    connect(this,SIGNAL(connection(int,QString)),ptr,SLOT(outToShell(int,QString)));
+//    connect(m_connection,SIGNAL(dataAvailable(QString)),this,SLOT(shellData(QString)));
+//    connect(this,SIGNAL(dataReady(int,QString)),ptr,SLOT(outToShell(int,QString)));
+//    connect(m_connection, SIGNAL(error(QSsh::SshError)),this,SLOT(shellError()));
+//    connect(this,SIGNAL(error(int,QString)),ptr,SLOT(outToShell(int,QString)));
+//            i++;
+    connect(m_connection,SIGNAL(connected()),SLOT(handleConnected()));
     connect(m_connection,SIGNAL(dataAvailable(QString)),this,SLOT(shellData(QString)));
     connect(this,SIGNAL(dataReady(int,QString)),ptr,SLOT(outToShell(int,QString)));
     connect(m_connection, SIGNAL(error(QSsh::SshError)),this,SLOT(shellError()));
     connect(this,SIGNAL(error(int,QString)),ptr,SLOT(outToShell(int,QString)));
-            i++;
+    i++;
 }
-
-int Shell::i = 0;
 
 Shell::~Shell()
 {
@@ -65,77 +70,50 @@ Shell::~Shell()
 
 void Shell::run()
 {
-    if (!m_stdin->open(stdin, QIODevice::ReadOnly | QIODevice::Unbuffered)) {
-        std::cerr << "Error: Cannot read from standard input." << std::endl;
-        qApp->exit(EXIT_FAILURE);
-        return;
-    }
-
     m_connection->connectToHost();
-}
-
-void Shell::handleConnectionError()
-{
-    std::cerr << "SSH connection error: " << qPrintable(m_connection->errorString()) << std::endl;
-    qApp->exit(EXIT_FAILURE);
-    //错误输出
-}
-
-void Shell::handleShellMessage(const QString &message)
-{
-    std::cout << qPrintable(message);
-    //输出信息
 }
 
 void Shell::handleConnected()
 {
-    m_shell = m_connection->createRemoteShell();
-    connect(m_shell.data(), SIGNAL(started()), SLOT(handleShellStarted()));
-    connect(m_shell.data(), SIGNAL(readyReadStandardOutput()), SLOT(handleRemoteStdout()));
-    connect(m_shell.data(), SIGNAL(readyReadStandardError()), SLOT(handleRemoteStderr()));
-    connect(m_shell.data(), SIGNAL(closed(int)), SLOT(handleChannelClosed(int)));
-    m_shell->start();
+//    m_shell = m_connection->createRemoteShell();
+//    connect(m_shell.data(), SIGNAL(readyRead()), this,SLOT(handleRemoteStdout()));
+//    connect(m_shell.data(), SIGNAL(closed(int)), this,SLOT(handleChannelClosed(int)));
+//    m_shell->start();
+
+    m_shell=m_connection->createRemoteShell();   m_shell->start();
+    connect(m_shell.data(),SIGNAL(readyRead()),this,SLOT(shellOut()));
+    connect(m_shell.data(), SIGNAL(closed(int)), this,SLOT(handleChannelClosed(int)));
+
+    qDebug()<<"123";
+    emit connection(this->getNo(),"连接成功\n");
 }
 
-void Shell::handleShellStarted()
+void Shell::shellOut()
 {
-    QSocketNotifier * const notifier = new QSocketNotifier(0, QSocketNotifier::Read, this);
-    connect(notifier, SIGNAL(activated(int)), SLOT(handleStdin()));
+    ptr->outToShell(this->getNo(),m_shell->readAll()+"\n");
 }
-
-void Shell::handleRemoteStdout()
-{
-    std::cout << m_shell->readAllStandardOutput().data() << std::flush;
-    //输出信息
-}
-
-void Shell::handleRemoteStderr()
-{
-    std::cerr << m_shell->readAllStandardError().data() << std::flush;
-    //输出错误信息
-}
-
 void Shell::handleChannelClosed(int exitStatus)
 {
-    std::cerr << "Shell closed. Exit status was " << exitStatus << ", exit code was "
-        << m_shell->exitCode() << "." << std::endl;
+
     qApp->exit(exitStatus == SshRemoteProcess::NormalExit && m_shell->exitCode() == 0
         ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
-void Shell::handleStdin()
+void Shell::handleIn(QString &mse)
 {
-    m_shell->write(m_stdin->readLine());
+        QByteArray ba = mse.toLatin1();
+       char *mm = ba.data();
+    m_shell->write(mm);
 }
 void Shell::shellConnect()
 {
-    emit connection(no,"连接成功");
+    emit connection(this->getNo(),"连接成功");
 }
 void Shell::shellData(QString mse)
 {
-        emit dataReady(no,mse);
+        emit dataReady(this->getNo(),mse);
 }
 void Shell::shellError()
 {
-    emit error(no,this->m_connection->errorString());
+    emit error(this->getNo(),this->m_connection->errorString());
 }

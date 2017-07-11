@@ -41,7 +41,7 @@ private slots:
     void on_newConnectionAction_triggered();    //建立新连接动作
     void on_addTabAction_triggered();   //增加新选项卡动作
     void on_closeCurrentTabAction_triggered();  //关闭当前选项卡动作
-
+public slots:
     /********** SSH部分 *********/
     void outToShell(int winNo, QString arguement); //输出到
 
