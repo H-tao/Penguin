@@ -205,6 +205,7 @@
      <string>帮助(&amp;H)</string>
     </property>
     <addaction name="action_X"/>
+    <addaction name="actionTest"/>
    </widget>
    <widget class="QMenu" name="menu_W">
     <property name="title">
@@ -605,6 +606,11 @@
    </property>
    <property name="text">
     <string>隐藏</string>
+   </property>
+  </action>
+  <action name="actionTest">
+   <property name="text">
+    <string>test</string>
    </property>
   </action>
  </widget>

@@ -12,6 +12,7 @@
 #include <tabpage.h>
 #include <QVector>
 #include<shell.h>
+#include<QThread>
 class ShellTextEdit;
 class FileWidget;
 class Shell;
@@ -41,6 +42,8 @@ private slots:
     void on_newConnectionAction_triggered();    //建立新连接动作
     void on_addTabAction_triggered();   //增加新选项卡动作
     void on_closeCurrentTabAction_triggered();  //关闭当前选项卡动作
+    void on_actionTest_triggered();
+
 public slots:
     /********** SSH部分 *********/
     void outToShell(int winNo, QString arguement); //输出到

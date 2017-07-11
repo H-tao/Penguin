@@ -46,15 +46,8 @@ Shell::Shell(const QSsh::SshConnectionParameters &parameters, QObject *parent)
       m_connection(new SshConnection(parameters)),no(i)
 {
     ptr=(MainWindow*)parent;
+    writeable=false;
 
-//    connect(m_connection, SIGNAL(connected()), SLOT(handleConnected()));
-//    connect(m_connection,SIGNAL(connected()),this,SLOT(shellConnect()));
-//    connect(this,SIGNAL(connection(int,QString)),ptr,SLOT(outToShell(int,QString)));
-//    connect(m_connection,SIGNAL(dataAvailable(QString)),this,SLOT(shellData(QString)));
-//    connect(this,SIGNAL(dataReady(int,QString)),ptr,SLOT(outToShell(int,QString)));
-//    connect(m_connection, SIGNAL(error(QSsh::SshError)),this,SLOT(shellError()));
-//    connect(this,SIGNAL(error(int,QString)),ptr,SLOT(outToShell(int,QString)));
-//            i++;
     connect(m_connection,SIGNAL(connected()),SLOT(handleConnected()));
     connect(m_connection,SIGNAL(dataAvailable(QString)),this,SLOT(shellData(QString)));
     connect(this,SIGNAL(dataReady(int,QString)),ptr,SLOT(outToShell(int,QString)));
@@ -75,17 +68,13 @@ void Shell::run()
 
 void Shell::handleConnected()
 {
-//    m_shell = m_connection->createRemoteShell();
-//    connect(m_shell.data(), SIGNAL(readyRead()), this,SLOT(handleRemoteStdout()));
-//    connect(m_shell.data(), SIGNAL(closed(int)), this,SLOT(handleChannelClosed(int)));
-//    m_shell->start();
 
-    m_shell=m_connection->createRemoteShell();   m_shell->start();
+    m_shell=m_connection->createRemoteShell();
+    m_shell->start();
+    connect(m_shell.data(),SIGNAL(started()),this,SLOT(shellConnect()));
+    connect(this,SIGNAL(connection(int,QString)),ptr,SLOT(outToShell(int,QString)));
     connect(m_shell.data(),SIGNAL(readyRead()),this,SLOT(shellOut()));
     connect(m_shell.data(), SIGNAL(closed(int)), this,SLOT(handleChannelClosed(int)));
-
-    qDebug()<<"123";
-    emit connection(this->getNo(),"连接成功\n");
 }
 
 void Shell::shellOut()
@@ -101,13 +90,8 @@ void Shell::handleChannelClosed(int exitStatus)
 
 void Shell::handleIn(QString &mse)
 {
-        QByteArray ba = mse.toLatin1();
-       char *mm = ba.data();
-    m_shell->write(mm);
-}
-void Shell::shellConnect()
-{
-    emit connection(this->getNo(),"连接成功");
+   if(writeable)
+       m_shell->write("help\n\r");
 }
 void Shell::shellData(QString mse)
 {
@@ -116,4 +100,10 @@ void Shell::shellData(QString mse)
 void Shell::shellError()
 {
     emit error(this->getNo(),this->m_connection->errorString());
+}
+void Shell::shellConnect()
+{
+
+    emit connection(this->getNo(),"成功连接");
+    writeable=true;
 }

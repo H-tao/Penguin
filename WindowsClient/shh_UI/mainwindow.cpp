@@ -97,6 +97,8 @@ void MainWindow::on_newConnectionAction_triggered()
     shell->run();
     qDebug()<<sshPara->host;
     //获得数据
+
+
     delete newCon;
 }
 
@@ -131,4 +133,11 @@ void MainWindow::outToShell(int winNo, QString arguement)
     TabPage *tabPage = reinterpret_cast<TabPage*>(ui->tabWidget->widget(winNo));   //TODO
     tabPage->textEdit->append(arguement);    //将远端命令输出显示
 */
+}
+
+void MainWindow::on_actionTest_triggered()
+{
+    QString i="123";
+    shell->handleIn(i);
+    //测试用函数
 }
