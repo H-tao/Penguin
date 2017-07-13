@@ -56,8 +56,11 @@ public:
     void run();
     int getNo(){return no;}
  static int i;
+ static int debug;//测试用
     MainWindow *ptr;
  void handleIn(QString &mse);
+ void disconnect();
+ void reconnect();
 private slots:
     void handleConnected();
     void handleChannelClosed(int exitStatus);
@@ -65,15 +68,17 @@ private slots:
     void shellOut();
     void shellData(QString);
     void shellError();
+     void recon();
 private:
     QSsh::SshConnection *m_connection;
-    QSharedPointer<QSsh::SshRemoteProcess> m_shell;
+    QSharedPointer<QSsh::SshRemoteProcess > m_shell;
     int no;
     bool writeable;
 signals:
     void connection(int,QString);
     void dataReady(int,QString);
     void error(int,QString);
+    void discon(int,QString);
 };
 
 #endif // SHELL_H

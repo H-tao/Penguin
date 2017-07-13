@@ -41,6 +41,7 @@
 #include<mainwindow.h>
 using namespace QSsh;
 int Shell::i=0;
+int Shell::debug=0;
 Shell::Shell(const QSsh::SshConnectionParameters &parameters, QObject *parent)
     : QObject(parent),
       m_connection(new SshConnection(parameters)),no(i)
@@ -58,6 +59,7 @@ Shell::Shell(const QSsh::SshConnectionParameters &parameters, QObject *parent)
 
 Shell::~Shell()
 {
+    i--;
     delete m_connection;
 }
 
@@ -75,6 +77,7 @@ void Shell::handleConnected()
     connect(this,SIGNAL(connection(int,QString)),ptr,SLOT(outToShell(int,QString)));
     connect(m_shell.data(),SIGNAL(readyRead()),this,SLOT(shellOut()));
     connect(m_shell.data(), SIGNAL(closed(int)), this,SLOT(handleChannelClosed(int)));
+    connect(this,SIGNAL(discon(int,QString)),ptr,SLOT(outToShell(int,QString)));
 }
 
 void Shell::shellOut()
@@ -103,7 +106,31 @@ void Shell::shellError()
 }
 void Shell::shellConnect()
 {
-
-    emit connection(this->getNo(),"成功连接");
+    emit connection(this->getNo(),"成功建立Shell");;
     writeable=true;
+}
+void Shell::disconnect()
+{
+    m_connection->disconnectFromHost();
+    emit discon(this->getNo(),"连接断开");
+}
+void Shell::reconnect()
+{
+    disconnect();
+    QSsh::SshConnectionParameters ssh= m_connection->connectionParameters();
+    delete m_connection;
+    m_connection=new QSsh::SshConnection(ssh,this);
+    writeable=false;
+    connect(m_connection,SIGNAL(connected()),this,SLOT(recon()));
+    connect(m_connection,SIGNAL(dataAvailable(QString)),this,SLOT(shellData(QString)));
+    connect(m_connection, SIGNAL(error(QSsh::SshError)),this,SLOT(shellError()));
+    run();
+}
+void Shell::recon()
+{
+    m_shell=m_connection->createRemoteShell();
+    m_shell->start();
+    connect(m_shell.data(),SIGNAL(started()),this,SLOT(shellConnect()));
+    connect(m_shell.data(),SIGNAL(readyRead()),this,SLOT(shellOut()));
+    connect(m_shell.data(), SIGNAL(closed(int)), this,SLOT(handleChannelClosed(int)));
 }

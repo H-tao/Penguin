@@ -44,6 +44,10 @@ private slots:
     void on_closeCurrentTabAction_triggered();  //关闭当前选项卡动作
     void on_actionTest_triggered();
 
+    void on_action_6_triggered();
+
+    void on_action_4_triggered();
+
 public slots:
     /********** SSH部分 *********/
     void outToShell(int winNo, QString arguement); //输出到

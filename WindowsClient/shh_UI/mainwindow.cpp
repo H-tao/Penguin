@@ -139,3 +139,18 @@ void MainWindow::on_actionTest_triggered()
     shellPool.at(shellPool.size()-1)->handleIn(i);
     //测试用函数
 }
+
+void MainWindow::on_action_6_triggered()//断开连接
+{
+   int winNo=ui->tabWidget->currentIndex();
+   shellPool.at(winNo)->disconnect();
+   delete shellPool.at(winNo);
+}
+
+void MainWindow::on_action_4_triggered()
+{
+   int winNo=ui->tabWidget->currentIndex();
+   if(winNo>shellPool.size()-1 && winNo>tabPagePool.size()-1)
+       return ;
+   shellPool.at(winNo)->reconnect();
+}
