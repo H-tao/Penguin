@@ -93,11 +93,9 @@ void MainWindow::on_newConnectionAction_triggered()
     sshPara->password="Hzw5820212";
     sshPara->authenticationType=QSsh::SshConnectionParameters::AuthenticationByPassword;
     sshPara->timeout=500;
-    shell=new Shell(*sshPara,this);
-    shell->run();
-    qDebug()<<sshPara->host;
+    shellPool.append(new Shell(*sshPara,this));
+    shellPool.at(shellPool.size()-1)->run();
     //获得数据
-
 
     delete newCon;
 }
@@ -137,7 +135,7 @@ void MainWindow::outToShell(int winNo, QString arguement)
 
 void MainWindow::on_actionTest_triggered()
 {
-    QString i="123";
-    shell->handleIn(i);
+    QString i="help\n";
+    shellPool.at(shellPool.size()-1)->handleIn(i);
     //测试用函数
 }

@@ -55,7 +55,7 @@ public:
     ~Shell();
     void run();
     int getNo(){return no;}
-int Shell::i=0;
+ static int i;
     MainWindow *ptr;
  void handleIn(QString &mse);
 private slots:
@@ -75,4 +75,5 @@ signals:
     void dataReady(int,QString);
     void error(int,QString);
 };
+
 #endif // SHELL_H

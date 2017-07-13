@@ -51,12 +51,9 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
-
+    QVector<Shell*> shellPool;
     QVector<TabPage*> tabPagePool;      //TabPage池
     ShellTextEdit *textEdit;
-
-    //ssh连接(单个测试)
-    Shell *shell;
 };
 
 #endif // MAINWINDOW_H

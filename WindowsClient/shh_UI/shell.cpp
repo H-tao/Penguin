@@ -40,7 +40,7 @@
 #include <iostream>
 #include<mainwindow.h>
 using namespace QSsh;
-
+int Shell::i=0;
 Shell::Shell(const QSsh::SshConnectionParameters &parameters, QObject *parent)
     : QObject(parent),
       m_connection(new SshConnection(parameters)),no(i)
@@ -91,7 +91,7 @@ void Shell::handleChannelClosed(int exitStatus)
 void Shell::handleIn(QString &mse)
 {
    if(writeable)
-       m_shell->write("help\n\r");
+       m_shell->write(mse.toLatin1());
 }
 void Shell::shellData(QString mse)
 {
