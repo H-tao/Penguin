@@ -83,18 +83,33 @@ void MainWindow::on_newConnectionAction_triggered()
 {
     NewConnection *newCon;
     newCon=new NewConnection();
-    newCon->exec();
-    newCon->show();
-    QSsh::SshConnectionParameters *sshPara;
-    sshPara=new QSsh::SshConnectionParameters();
-    sshPara->host="39.108.78.252";
-    sshPara->port=22;
-    sshPara->userName="thishzw";
-    sshPara->password="Hzw5820212";
-    sshPara->authenticationType=QSsh::SshConnectionParameters::AuthenticationByPassword;
-    sshPara->timeout=500;
-    shellPool.append(new Shell(*sshPara,this));
-    shellPool.at(shellPool.size()-1)->run();
+    if(newCon->exec()==QDialog::Accepted)
+    {
+        if(shellPool.size()>=tabPagePool.size())
+            on_addTabAction_triggered();
+        QSsh::SshConnectionParameters *sshPara;
+        newCon->setText();
+        sshPara=new QSsh::SshConnectionParameters();
+        sshPara->host=newCon->getHost();
+        sshPara->port=newCon->getPort();
+        sshPara->userName=newCon->getuUserName();
+        sshPara->password=newCon->getPassword();
+        sshPara->authenticationType=QSsh::SshConnectionParameters::AuthenticationByPassword;
+        sshPara->timeout=500;
+        shellPool.append(new Shell(*sshPara,this));
+        shellPool.at(shellPool.size()-1)->run();
+        //获得数据
+    }
+//    QSsh::SshConnectionParameters *sshPara;
+//    sshPara=new QSsh::SshConnectionParameters();
+//    sshPara->host="39.108.78.252";
+//    sshPara->port=22;
+//    sshPara->userName="thishzw";
+//    sshPara->password="Hzw5820212";
+//    sshPara->authenticationType=QSsh::SshConnectionParameters::AuthenticationByPassword;
+//    sshPara->timeout=500;
+//    shellPool.append(new Shell(*sshPara,this));
+//    shellPool.at(shellPool.size()-1)->run();
     //获得数据
 
     delete newCon;

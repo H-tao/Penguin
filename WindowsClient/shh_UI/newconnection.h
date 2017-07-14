@@ -14,13 +14,19 @@ class NewConnection : public QDialog
 public:
     explicit NewConnection(QWidget *parent = 0);
     ~NewConnection();
-    QString host;
-    QString name;
-    QString protocol;
-    int port;
-    QString information;
+    QString getHost(){return host;}
+    QString getuUserName(){return username;}
+    QString getPassword(){return password;}
+    QString getInformation(){return information;}
+    int getPort(){return port;}
+    void setText();
 private:
     Ui::NewConnection *ui;
+    QString host;
+    QString username;
+    QString password;
+    int port;
+    QString information;
 };
 
 #endif // NEWCONNECTION_H
