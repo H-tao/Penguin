@@ -40,11 +40,9 @@
 #include <iostream>
 #include<mainwindow.h>
 using namespace QSsh;
-int Shell::i=0;
-int Shell::debug=0;
-Shell::Shell(const QSsh::SshConnectionParameters &parameters, QObject *parent)
+Shell::Shell(const QSsh::SshConnectionParameters &parameters,int winNo, QObject *parent)
     : QObject(parent),
-      m_connection(new SshConnection(parameters)),no(i)
+      m_connection(new SshConnection(parameters)),no(winNo)
 {
     ptr=(MainWindow*)parent;
     writeable=false;
@@ -54,12 +52,10 @@ Shell::Shell(const QSsh::SshConnectionParameters &parameters, QObject *parent)
     connect(this,SIGNAL(dataReady(int,QString)),ptr,SLOT(outToShell(int,QString)));
     connect(m_connection, SIGNAL(error(QSsh::SshError)),this,SLOT(shellError()));
     connect(this,SIGNAL(error(int,QString)),ptr,SLOT(outToShell(int,QString)));
-    i++;
 }
 
 Shell::~Shell()
 {
-    i--;
     delete m_connection;
 }
 

@@ -51,12 +51,10 @@ class Shell : public QObject
 {
     Q_OBJECT
 public:
-    Shell(const QSsh::SshConnectionParameters &parameters,QObject *parent = 0);
+    Shell(const QSsh::SshConnectionParameters &parameters,int winNo,QObject *parent = 0);
     ~Shell();
     void run();
     int getNo(){return no;}
- static int i;
- static int debug;//测试用
     MainWindow *ptr;
  void handleIn(QString &mse);
  void disconnect();

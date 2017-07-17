@@ -85,8 +85,7 @@ void MainWindow::on_newConnectionAction_triggered()
     newCon=new NewConnection();
     if(newCon->exec()==QDialog::Accepted)
     {
-        if(shellPool.size()>=tabPagePool.size())
-            on_addTabAction_triggered();
+
         QSsh::SshConnectionParameters *sshPara;
         newCon->setText();
         sshPara=new QSsh::SshConnectionParameters();
@@ -96,8 +95,18 @@ void MainWindow::on_newConnectionAction_triggered()
         sshPara->password=newCon->getPassword();
         sshPara->authenticationType=QSsh::SshConnectionParameters::AuthenticationByPassword;
         sshPara->timeout=500;
-        shellPool.append(new Shell(*sshPara,this));
-        shellPool.at(shellPool.size()-1)->run();
+        if(shellPool.size()<=ui->tabWidget->currentIndex())
+        {
+                shellPool.append(new Shell(*sshPara,ui->tabWidget->currentIndex(),this));
+                qDebug()<<"55566";
+            //当前的页面无连接
+        }
+        else
+        {
+            shellPool.replace(ui->tabWidget->currentIndex(),new Shell(*sshPara,ui->tabWidget->currentIndex(),this));
+            qDebug()<<"6666";
+        }
+            shellPool.at(ui->tabWidget->currentIndex())->run();
         //获得数据
     }
 //    QSsh::SshConnectionParameters *sshPara;
