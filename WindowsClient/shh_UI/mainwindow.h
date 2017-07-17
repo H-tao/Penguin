@@ -51,7 +51,7 @@ private slots:
 public slots:
     /********** SSH部分 *********/
     void outToShell(int winNo, QString arguement); //输出到
-
+    void showInfoFromRemote(QString arguement);
 
 private:
     Ui::MainWindow *ui;

@@ -108,6 +108,15 @@ void MainWindow::on_newConnectionAction_triggered()
         }
             shellPool.at(ui->tabWidget->currentIndex())->run();
         //获得数据
+
+        //改变标签名
+        ui->tabWidget->setTabText(shellPool.size()-1,newCon->getuUserName());
+
+
+        //连接发送命令信号和接收
+        connect(tabPagePool.at(shellPool.size()-1)->textEdit,SIGNAL(arguementDone(QString)),
+                shellPool.at(shellPool.size()-1)->ptr,SLOT(showInfoFromRemote(QString)));
+
     }
 //    QSsh::SshConnectionParameters *sshPara;
 //    sshPara=new QSsh::SshConnectionParameters();
@@ -150,6 +159,7 @@ void MainWindow::on_closeCurrentTabAction_triggered()
 
 void MainWindow::outToShell(int winNo, QString arguement)
 {
+    qDebug() << "Info from remote:" << arguement;
     tabPagePool.at(winNo)->textEdit->append(arguement);
     /*
     TabPage *tabPage = reinterpret_cast<TabPage*>(ui->tabWidget->widget(winNo));   //TODO
@@ -160,8 +170,12 @@ void MainWindow::outToShell(int winNo, QString arguement)
 void MainWindow::on_actionTest_triggered()
 {
     QString i="help\n";
-    shellPool.at(shellPool.size()-1)->handleIn(i);
+    shellPool.at(ui->tabWidget->currentIndex())->handleIn(i);
     //测试用函数
+    QString l="cd test\n";
+    shellPool.at(ui->tabWidget->currentIndex())->handleIn(l);
+    QString l1="ls\n";
+    shellPool.at(ui->tabWidget->currentIndex())->handleIn(l1);
 }
 
 void MainWindow::on_action_6_triggered()//断开连接
@@ -177,4 +191,12 @@ void MainWindow::on_action_4_triggered()
    if(winNo>shellPool.size()-1 && winNo>tabPagePool.size()-1)
        return ;
    shellPool.at(winNo)->reconnect();
+}
+
+void MainWindow::showInfoFromRemote(QString arguement)
+{
+    qDebug() << "testSlot arguement:" << arguement;
+    arguement += "\n";
+    shellPool.at(ui->tabWidget->currentIndex())->handleIn(arguement);
+  //  tabPagePool.at(ui->tabWidget->currentIndex())->textEdit->append(arguement);
 }

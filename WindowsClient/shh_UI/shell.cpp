@@ -78,7 +78,7 @@ void Shell::handleConnected()
 
 void Shell::shellOut()
 {
-    ptr->outToShell(this->getNo(),m_shell->readAll()+"\n");
+    ptr->outToShell(this->getNo(),m_shell->readAll());
 }
 void Shell::handleChannelClosed(int exitStatus)
 {
