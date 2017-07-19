@@ -71,7 +71,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>60</x>
@@ -104,7 +104,11 @@
        </spacer>
       </item>
       <item>
-       <widget class="QLineEdit" name="hostNumLineEdit"/>
+       <widget class="QLineEdit" name="hostNumLineEdit">
+        <property name="text">
+         <string>192.168.0.1</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
@@ -205,12 +209,7 @@
   <zorder>buttonBox</zorder>
   <zorder>statusTextEdit</zorder>
   <zorder>layoutWidget</zorder>
-  <zorder>layoutWidget_2</zorder>
-  <zorder>layoutWidget_3</zorder>
-  <zorder>layoutWidget_4</zorder>
   <zorder>layoutWidget_5</zorder>
-  <zorder>nameLabel</zorder>
-  <zorder>horizontalSpacer_6</zorder>
  </widget>
  <resources/>
  <connections>

@@ -6,7 +6,7 @@ ShellTextEdit::ShellTextEdit(QWidget *parent) :
     initSytle();
     arguement = "";
     i=0;
-    setReadOnly(true);
+//    setReadOnly(true);
 }
 
 ShellTextEdit::~ShellTextEdit()
@@ -44,7 +44,56 @@ void ShellTextEdit::initSytle()
  * ****************************************************************************************/
 void ShellTextEdit::keyPressEvent(QKeyEvent *e)
 {
-    moveCursor(QTextCursor::EndOfWord);
+    qDebug() << "text:" << e->text() << "ASCII :" << e->key();
+
+    //Control
+    if(e->modifiers() == Qt::ControlModifier)
+    {
+        qDebug() << "Control!!!";
+        return;
+    }
+
+    //Alt
+    if(e->modifiers() == Qt::AltModifier)
+    {
+        qDebug() << "Alt!!!";
+        return;
+    }
+
+    if(/*e->key()==Qt::Key_Enter||*/e->key()==Qt::Key_Return)
+    {
+        qDebug() << "Enter Done";
+        emit arguementDone(arguement);
+        arguement = "";
+        qDebug() << "After \\r arguement：" << arguement;
+        return;
+    }
+
+
+    if(e->key() <= 31 && e->key() >= 0)     //ASCII 控制字符暂不做命令处理
+        ;
+    if(e->key() <= 256 && e->key() >= 32)   //非控制字符
+        arguement += e->text();
+    if(e->key()==Qt::Key_Backspace/*e->text() == "\b"*/)         //退格键删除
+    {
+        //命令为空，不可删除，即为ReadOnly
+        if(arguement.size() == 0)
+        {
+           e->ignore();
+           return;
+        }
+        arguement.remove(arguement.size()-1,1);
+    }
+
+
+    if(e->key() == 16777222)
+        arguement = "\u007F";
+    if(e->key() == 16777216)
+        arguement = "\u001B";
+
+    qDebug() << "arguement" << arguement;
+    QTextEdit::keyPressEvent(e);    //TODO 极重要，将输入显示到命令行
+/*    moveCursor(QTextCursor::EndOfWord);
     if(e->modifiers()==Qt::ControlModifier&&e->key()>64&&e->key()<95)
     {
         keyReleaseEvent(e);
@@ -55,16 +104,19 @@ void ShellTextEdit::keyPressEvent(QKeyEvent *e)
     }
     else if(e->key()==Qt::Key_Enter||e->key()==Qt::Key_Return)
     {
-       emit arguementDone(arguement);
-        arguement="";
+        qDebug() << "Enter Done";
+        emit arguementDone(arguement);
+        arguement = "";
+        qDebug() << "After \\r arguement：" << arguement;
+        return;
     }
-    else if(e->key()==Qt::Key_Backspace)
+    else if(e->key()==Qt::Key_Backspace)    //退格键删除
     {
         if(i>0)
         {
             setReadOnly(false);
             this->QTextEdit::keyPressEvent(e);
-             arguement.remove(arguement.size(),1);
+             arguement.remove(arguement.size() - 1, 1);     //最后一个char位于size()-1
              qDebug()<<arguement.at(arguement.size()-1);
             i--;
             if(arguement.at(arguement.size()-1)<='\31'){
@@ -75,11 +127,11 @@ void ShellTextEdit::keyPressEvent(QKeyEvent *e)
             }
 
             setReadOnly(true);
-            //
         }
         else
             return;
     }
+    // Control
     else if(e->modifiers()!=Qt::ControlModifier)
     {
         setReadOnly(false);
@@ -88,4 +140,10 @@ void ShellTextEdit::keyPressEvent(QKeyEvent *e)
         i++;
         setReadOnly(true);
     }
+    // Alt
+    else if(e->modifiers() == Qt::AltModifier)
+    {
+        qDebug() << "Alt!!!";
+        return;
+    }*/
 }
