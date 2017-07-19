@@ -5,6 +5,7 @@ ShellTextEdit::ShellTextEdit(QWidget *parent) :
 {
     initSytle();
     arguement = "";
+    i=0;
 }
 
 ShellTextEdit::~ShellTextEdit()
@@ -41,39 +42,41 @@ void ShellTextEdit::initSytle()
  * ****************************************************************************************/
 void ShellTextEdit::keyPressEvent(QKeyEvent *e)
 {
-    qDebug() << "text:" << e->text() << "ASCII :" << e->key();
-
-    //Control
-    if(e->modifiers() == Qt::ControlModifier)
+    if(e->modifiers()==Qt::ControlModifier)
     {
-        qDebug() << "Control!!!";
-        return;
+        keyReleaseEvent(e);
+        arguement.append(QChar(e->key()-64));
+        i+=2;
     }
-
-    //Alt
-    if(e->modifiers() == Qt::AltModifier)
+    else if(e->key()==Qt::Key_Enter||e->key()==Qt::Key_Return)
     {
-        qDebug() << "Alt!!!";
-        return;
+       emit arguementDone(arguement);
     }
-
-    if(e->text() == "\r")
+    else if(e->key()==Qt::Key_Backspace)
     {
-        qDebug() << "Enter Done";
-        emit arguementDone(arguement);
-        arguement = "";
-        qDebug() << "After \\r arguement：" << arguement;
-        return;
+        if(i>0)
+        {
+            setReadOnly(false);
+            this->QTextEdit::keyPressEvent(e);
+            i--;
+            if(arguement.end()->toAscii()<=31){
+                arguement.remove(arguement.size()-1,2);
+                this->QTextEdit::keyPressEvent(e);
+                i--;
+            }
+
+            setReadOnly(true);
+            //
+        }
+        else
+            return;
     }
-
-
-    if(e->key() <= 31 && e->key() >= 0)     /*ASCII 控制字符不做命令处理*/
-        ;
-    if(e->key() <= 256 && e->key() >= 32)   /*非控制字符*/
-        arguement += e->text();
-    if(e->text() == "\b")                   /*退格键删除*/
-        arguement.remove(arguement.size()-1,1);
-
-    qDebug() << "arguement" << arguement;
-    QTextEdit::keyPressEvent(e);
+    else
+    {
+        setReadOnly(false);
+        this->QTextEdit::keyPressEvent(e);
+        arguement.append(QChar(e->key()));
+        i++;
+        setReadOnly(true);
+    }
 }

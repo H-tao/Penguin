@@ -16,9 +16,8 @@ class ShellTextEdit : public QTextEdit
 public:
     explicit ShellTextEdit(QWidget *parent);
     ~ShellTextEdit();
-
+int i;
     void initSytle();   //初始化文本框风格
-
 signals:
     void arguementDone(QString);
 

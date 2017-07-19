@@ -196,6 +196,7 @@ void MainWindow::on_action_4_triggered()
 void MainWindow::showInfoFromRemote(QString arguement)
 {
     qDebug() << "testSlot arguement:" << arguement;
+    arguement.remove('\r');
     arguement += "\n";
     shellPool.at(ui->tabWidget->currentIndex())->handleIn(arguement);
   //  tabPagePool.at(ui->tabWidget->currentIndex())->textEdit->append(arguement);

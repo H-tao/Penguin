@@ -35,7 +35,7 @@
 #include <QCoreApplication>
 #include <QFile>
 #include <QSocketNotifier>
-
+#include<QDebug>
 #include <cstdlib>
 #include <iostream>
 #include<mainwindow.h>
@@ -89,6 +89,8 @@ void Shell::handleChannelClosed(int exitStatus)
 
 void Shell::handleIn(QString &mse)
 {
+    qDebug()<<mse;
+    mse=mse.toLower();
    if(writeable)
        m_shell->write(mse.toLatin1());
 }
