@@ -6,6 +6,7 @@ ShellTextEdit::ShellTextEdit(QWidget *parent) :
     initSytle();
     arguement = "";
     i=0;
+    setReadOnly(true);
 }
 
 ShellTextEdit::~ShellTextEdit()
@@ -31,6 +32,7 @@ void ShellTextEdit::initSytle()
     //设置换行模式
      setWordWrapMode(QTextOption::NoWrap);
 //   setReadOnly(true);
+
 }
 
 /*****************************************************************************************
@@ -42,15 +44,19 @@ void ShellTextEdit::initSytle()
  * ****************************************************************************************/
 void ShellTextEdit::keyPressEvent(QKeyEvent *e)
 {
-    if(e->modifiers()==Qt::ControlModifier)
+    moveCursor(QTextCursor::EndOfWord);
+    if(e->modifiers()==Qt::ControlModifier&&e->key()>64&&e->key()<95)
     {
         keyReleaseEvent(e);
-        arguement.append(QChar(e->key()-64));
+        arguement+=(QChar(e->key()-64));
+        this->moveCursor(QTextCursor::EndOfLine);
+        insertPlainText("^"+QChar(e->key()));
         i+=2;
     }
     else if(e->key()==Qt::Key_Enter||e->key()==Qt::Key_Return)
     {
        emit arguementDone(arguement);
+        arguement="";
     }
     else if(e->key()==Qt::Key_Backspace)
     {
@@ -58,9 +64,12 @@ void ShellTextEdit::keyPressEvent(QKeyEvent *e)
         {
             setReadOnly(false);
             this->QTextEdit::keyPressEvent(e);
+             arguement.remove(arguement.size(),1);
+             qDebug()<<arguement.at(arguement.size()-1);
             i--;
-            if(arguement.end()->toAscii()<=31){
-                arguement.remove(arguement.size()-1,2);
+            if(arguement.at(arguement.size()-1)<='\31'){
+                qDebug()<<"2222222";
+                arguement.remove(arguement.size(),1);
                 this->QTextEdit::keyPressEvent(e);
                 i--;
             }
@@ -71,7 +80,7 @@ void ShellTextEdit::keyPressEvent(QKeyEvent *e)
         else
             return;
     }
-    else
+    else if(e->modifiers()!=Qt::ControlModifier)
     {
         setReadOnly(false);
         this->QTextEdit::keyPressEvent(e);

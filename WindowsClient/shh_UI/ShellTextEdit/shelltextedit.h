@@ -8,6 +8,7 @@
 #include <QDebug>
 #include <QObject>
 #include <QCoreApplication>
+#include <QEvent>
 
 class ShellTextEdit : public QTextEdit
 {
@@ -23,7 +24,6 @@ signals:
 
 protected:
     void keyPressEvent(QKeyEvent *e);
-
 private:
     QString arguement;
 };
