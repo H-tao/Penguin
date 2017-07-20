@@ -44,21 +44,13 @@ void ShellTextEdit::initSytle()
  * ****************************************************************************************/
 void ShellTextEdit::keyPressEvent(QKeyEvent *e)
 {
-    qDebug() << "text:" << e->text() << "ASCII :" << e->key();
+    //输入命令时设置光标位置为文本末尾
+    QTextCursor textCursor = this->textCursor();
+    textCursor.movePosition(QTextCursor::End);
+    this->setTextCursor(textCursor);
+//    moveCursor(QTextCursor::EndOfWord);
+//    qDebug() << "text:" << e->text() << "ASCII :" << e->key();
 
-    //Control
-    if(e->modifiers() == Qt::ControlModifier)
-    {
-        qDebug() << "Control!!!";
-        return;
-    }
-
-    //Alt
-    if(e->modifiers() == Qt::AltModifier)
-    {
-        qDebug() << "Alt!!!";
-        return;
-    }
 
     if(/*e->key()==Qt::Key_Enter||*/e->key()==Qt::Key_Return)
     {
@@ -68,7 +60,21 @@ void ShellTextEdit::keyPressEvent(QKeyEvent *e)
         qDebug() << "After \\r arguement：" << arguement;
         return;
     }
-
+    //Control
+    else if(e->modifiers() == Qt::ControlModifier)
+    {
+        return;
+    }
+    //Alt
+    else if(e->modifiers() == Qt::AltModifier)
+    {
+        return;
+    }
+    //方向键
+    else if(e->key() == Qt::Key_Left || e->key() == Qt::Key_Right || e->key() == Qt::Key_Up || e->key() == Qt::Key_Down)
+    {
+        return;
+    }
 
     if(e->key() <= 31 && e->key() >= 0)     //ASCII 控制字符暂不做命令处理
         ;
@@ -85,16 +91,17 @@ void ShellTextEdit::keyPressEvent(QKeyEvent *e)
         arguement.remove(arguement.size()-1,1);
     }
 
-
+    /***** Esc ******/
+/*
     if(e->key() == 16777222)
         arguement = "\u007F";
     if(e->key() == 16777216)
         arguement = "\u001B";
-
+    */
     qDebug() << "arguement" << arguement;
     QTextEdit::keyPressEvent(e);    //TODO 极重要，将输入显示到命令行
-/*    moveCursor(QTextCursor::EndOfWord);
-    if(e->modifiers()==Qt::ControlModifier&&e->key()>64&&e->key()<95)
+
+ /*   if(e->modifiers()==Qt::ControlModifier&&e->key()>64&&e->key()<95)
     {
         keyReleaseEvent(e);
         arguement+=(QChar(e->key()-64));
@@ -147,3 +154,13 @@ void ShellTextEdit::keyPressEvent(QKeyEvent *e)
         return;
     }*/
 }
+/*
+void ShellTextEdit::mousePressEvent(QMouseEvent *e)
+{
+
+}*/
+/*
+void ShellTextEdit::mouseReleaseEvent(QMouseEvent *e)
+{
+
+}*/

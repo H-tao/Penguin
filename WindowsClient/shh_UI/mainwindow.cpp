@@ -29,6 +29,7 @@ void MainWindow::initStyle()
     TabPage *tabPage = new TabPage;
     tabPagePool.append(tabPage);
     ui->firstTabLayout->addWidget(tabPage);
+    statusBar()->showMessage(tr("ready"));
 
     //由于QTabWidget默认有两个Tab，所以需移除tabWidget的第二个Tab
     ui->tabWidget->removeTab(1);

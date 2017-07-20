@@ -24,6 +24,9 @@ signals:
 
 protected:
     void keyPressEvent(QKeyEvent *e);
+ //   void mousePressEvent(QMouseEvent *e);
+ //   void mouseReleaseEvent(QMouseEvent *e);
+
 private:
     QString arguement;
 };
