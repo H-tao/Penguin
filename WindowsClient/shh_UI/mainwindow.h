@@ -14,6 +14,7 @@
 #include <shell.h>
 #include <QThread>
 #include <QActionGroup>
+#include <sftpserver.h>
 
 class ShellTextEdit;
 class FileWidget;

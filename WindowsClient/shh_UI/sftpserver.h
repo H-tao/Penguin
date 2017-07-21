@@ -4,7 +4,8 @@
 #include <QWidget>
 #include <ssh/sshconnection.h>
 #include <ssh/sftpchannel.h>
-#include <QObject>
+#include <filetreeview.h>
+#include "function.h"
 
 namespace Ui {
 class SftpServer;
@@ -15,8 +16,8 @@ class SftpServer : public QWidget
     Q_OBJECT
 
 public:
-    explicit SftpServer(QWidget *parent = 0);
-    SftpServer(const QSsh::SshConnectionParameters &parameters, int serverNumber = 0, QWidget *parent = 0);
+    SftpServer(QWidget *parent = 0);
+    explicit SftpServer(const QSsh::SshConnectionParameters &parameters, int serverNumber = 0, QWidget *parent = 0);
     ~SftpServer();
 
 public slots:
@@ -24,9 +25,9 @@ public slots:
     void handleError();
     void handleDisconnected();
     void handleChannelInitialized();
-    void handleChannelInitializedFailed();
-    void handleJobFinished();
-    void handleFileInfo();
+    void handleChannelInitializationFailed(const QString &renson);
+    void handleJobFinished(QSsh::SftpJobId id, const QString &error);
+    void handleFileInfo(QSsh::SftpJobId id, const QList<QSsh::SftpFileInfo> &fileInfoList);
     void handleChannelClosed();
 
 private:
@@ -46,6 +47,8 @@ private:
     QSsh::SftpJobId m_jobListDirId;
     QSsh::SftpJobId m_jobUploadId;
     
+    FileTreeView *fileTree;
+
 };
 
 #endif // SFTPSERVER_H

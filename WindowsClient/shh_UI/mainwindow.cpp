@@ -214,4 +214,7 @@ void MainWindow::showInfoFromRemote(QString arguement)
 void MainWindow::openSftpServer()
 {
     qDebug() << "openSftpServer clieked";
+    SftpServer *sftpServer = new SftpServer((*paraPool.at(ui->tabWidget->currentIndex())),
+                                            ui->tabWidget->currentIndex(),0);
+    sftpServer->show();
 }

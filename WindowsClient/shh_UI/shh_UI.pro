@@ -5,6 +5,8 @@
 #-------------------------------------------------
 
 QT       += core gui network
+QT       += winextras
+
 SUBDIRS = \
     src
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -21,7 +23,9 @@ SOURCES += main.cpp\
     shell.cpp \
     newconnection.cpp\
     tabpage.cpp \
-    sftpserver.cpp
+    sftpserver.cpp \
+    filetreeview.cpp \
+    function.cpp
 
 HEADERS  += mainwindow.h \
     FileSystemWidget/filewidget.h \
@@ -29,7 +33,9 @@ HEADERS  += mainwindow.h \
     shell.h \
     newconnection.h \
     tabpage.h \
-    sftpserver.h
+    sftpserver.h \
+    filetreeview.h \
+    function.h
 
 
 FORMS    += mainwindow.ui \
