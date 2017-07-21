@@ -207,7 +207,7 @@
     <addaction name="action_X"/>
     <addaction name="actionTest"/>
    </widget>
-   <widget class="QMenu" name="menu_W">
+   <widget class="QMenu" name="windowMenu">
     <property name="title">
      <string>窗口(&amp;W)</string>
     </property>
@@ -241,7 +241,7 @@
    <addaction name="menu_V"/>
    <addaction name="menu_T"/>
    <addaction name="menu_B"/>
-   <addaction name="menu_W"/>
+   <addaction name="windowMenu"/>
    <addaction name="menu_H"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>

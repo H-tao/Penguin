@@ -20,14 +20,16 @@ SOURCES += main.cpp\
     ShellTextEdit/shelltextedit.cpp \
     shell.cpp \
     newconnection.cpp\
-    tabpage.cpp
+    tabpage.cpp \
+    sftpserver.cpp
 
 HEADERS  += mainwindow.h \
     FileSystemWidget/filewidget.h \
     ShellTextEdit/shelltextedit.h \
     shell.h \
     newconnection.h \
-    tabpage.h
+    tabpage.h \
+    sftpserver.h
 
 
 FORMS    += mainwindow.ui \
@@ -36,7 +38,8 @@ FORMS    += mainwindow.ui \
     filetransfer.ui \
     useloginauthentication.ui \
     newconnection.ui \
-    tabpage.ui
+    tabpage.ui \
+    sftpserver.ui
 
 RESOURCES += \
     filetype.qrc

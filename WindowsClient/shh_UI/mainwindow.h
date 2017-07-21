@@ -11,8 +11,10 @@
 #include <newconnection.h>
 #include <tabpage.h>
 #include <QVector>
-#include<shell.h>
-#include<QThread>
+#include <shell.h>
+#include <QThread>
+#include <QActionGroup>
+
 class ShellTextEdit;
 class FileWidget;
 class Shell;
@@ -29,6 +31,7 @@ public:
     ~MainWindow();
 
     void initStyle();
+    void initWindowMenu();
     void setUiDesignerStyle();
     void connectAction();
 
@@ -49,12 +52,20 @@ private slots:
     void on_action_4_triggered();
 
 public slots:
-    /********** SSH部分 *********/
+    /********** SSH *********/
     void outToShell(int winNo, QString arguement); //输出到
     void showInfoFromRemote(QString arguement);
 
+    /********** Sftp *********/
+    void openSftpServer();
+
+
 private:
+
+    QAction *pOpenSftpAct;
+
     Ui::MainWindow *ui;
+    QVector<QSsh::SshConnectionParameters *> paraPool;
     QVector<Shell*> shellPool;
     QVector<TabPage*> tabPagePool;      //TabPage池
     ShellTextEdit *textEdit;

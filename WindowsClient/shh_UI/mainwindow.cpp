@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     initStyle();
+    initWindowMenu();
 }
 
 MainWindow::~MainWindow()
@@ -33,6 +34,13 @@ void MainWindow::initStyle()
 
     //由于QTabWidget默认有两个Tab，所以需移除tabWidget的第二个Tab
     ui->tabWidget->removeTab(1);
+}
+
+void MainWindow::initWindowMenu()
+{
+    pOpenSftpAct = new QAction(tr("Open Sftp Server"),this);
+    ui->windowMenu->addAction(pOpenSftpAct);
+    connect(pOpenSftpAct, SIGNAL(triggered(bool)), this, SLOT(openSftpServer()));
 }
 
 //UI界面风格
@@ -96,23 +104,23 @@ void MainWindow::on_newConnectionAction_triggered()
         sshPara->password=newCon->getPassword();
         sshPara->authenticationType=QSsh::SshConnectionParameters::AuthenticationByPassword;
         sshPara->timeout=500;
+        paraPool.append(sshPara);
         if(shellPool.size()<=ui->tabWidget->currentIndex())
         {
-                shellPool.append(new Shell(*sshPara,ui->tabWidget->currentIndex(),this));
-                qDebug()<<"55566";
             //当前的页面无连接
+            shellPool.append(new Shell(*sshPara,ui->tabWidget->currentIndex(),this));
+            qDebug()<<"55566";
+
         }
         else
         {
             shellPool.replace(ui->tabWidget->currentIndex(),new Shell(*sshPara,ui->tabWidget->currentIndex(),this));
             qDebug()<<"6666";
         }
-            shellPool.at(ui->tabWidget->currentIndex())->run();
         //获得数据
-
+        shellPool.at(ui->tabWidget->currentIndex())->run();
         //改变标签名
         ui->tabWidget->setTabText(shellPool.size()-1,newCon->getuUserName());
-
 
         //连接发送命令信号和接收
         connect(tabPagePool.at(shellPool.size()-1)->textEdit,SIGNAL(arguementDone(QString)),
@@ -201,4 +209,9 @@ void MainWindow::showInfoFromRemote(QString arguement)
     arguement += "\n";
     shellPool.at(ui->tabWidget->currentIndex())->handleIn(arguement);
   //  tabPagePool.at(ui->tabWidget->currentIndex())->textEdit->append(arguement);
+}
+
+void MainWindow::openSftpServer()
+{
+    qDebug() << "openSftpServer clieked";
 }
