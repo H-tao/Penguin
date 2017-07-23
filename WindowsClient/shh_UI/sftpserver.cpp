@@ -11,7 +11,7 @@ SftpServer::SftpServer(QWidget *parent) :
 SftpServer::SftpServer(const QSsh::SshConnectionParameters &parameters, int serverNumber, QWidget *parent)
     : QWidget(parent), ui(new Ui::SftpServer),
       m_connection(new QSsh::SshConnection(parameters)), serverNum(serverNumber),
-      m_currentPath("/root/"), m_jobType(JobUnknow)
+      m_currentPath("/"), m_jobType(JobUnknow)
 {
     ui->setupUi(this);
 
@@ -80,6 +80,17 @@ void SftpServer::handleJobFinished(QSsh::SftpJobId id, const QString &error)
 {
     qDebug() << "handleJobFinished" << "error" << error;
     qDebug() << "finish : " << m_currentPath;
+    if(!items.isEmpty())
+    {
+        QueueItem *i = items.front();
+        m_currentItem = items.front()->it;
+        m_currentPath = items.front()->strPath;
+        items.pop_front();
+        delete i;
+        m_jobType = JobListDir;
+        qDebug() << "currentItem : " << m_currentItem->text() << "currentPath : " << m_currentPath;
+        m_jobListDirId = m_channel->listDirectory(m_currentPath);
+    }
 }
 
 void SftpServer::handleFileInfo(QSsh::SftpJobId id, const QList<QSsh::SftpFileInfo> &fileInfoList)
@@ -87,38 +98,16 @@ void SftpServer::handleFileInfo(QSsh::SftpJobId id, const QList<QSsh::SftpFileIn
     qDebug() << "handleFileInfo";
 
 
-//    if(id != m_jobListDirId)
-//    {
-//        qDebug() << id;
-//        qDebug() << "id != m_jobListDirId";
-//        return;
-//    }
+    if(id != m_jobListDirId)
+    {
+        qDebug() << id;
+        qDebug() << "id != m_jobListDirId";
+        return;
+    }
 
 //    fileTree = new FileTreeView(this);
     if(fileInfoList.isEmpty())
     {
-        QString strPath = m_currentPath;
-
-        // chop the end
-        strPath.chop(1);
-
-        // if root, return
-        if(strPath.isEmpty())
-        {
-            return;
-        }
-
-        // choose up dir
-        int iLastPos = strPath.lastIndexOf("/");
-        QString strParentPath = strPath.left(iLastPos+1);
-        QString strName = strPath.right(strPath.length()-iLastPos-1);
-
-        // update current path
-        m_currentPath = strParentPath;
-        qDebug() << "Current Item" << item->text();
-        item = item->parent();
-        qDebug() << "Item's parent" << item->text();
-
         return;
     }
 
@@ -132,7 +121,7 @@ void SftpServer::handleFileInfo(QSsh::SftpJobId id, const QList<QSsh::SftpFileIn
             continue;
         }
 
-        if(m_treeItemModel->rowCount() == 0)
+        if(m_currentPath == "/")
         {
             if(fi.type == QSsh::FileTypeRegular)
             {
@@ -142,11 +131,14 @@ void SftpServer::handleFileInfo(QSsh::SftpJobId id, const QList<QSsh::SftpFileIn
             else if(fi.type == QSsh::FileTypeDirectory)
             {
                 item = new QStandardItem(getFolderIcon(), fi.name);
-                m_currentItem = item;
                 m_treeItemModel->appendRow(item);
-                getNextLevelList(m_currentPath + fi.name + "/");
+//                getNextLevelList(m_currentPath + fi.name + "/");
+                path = m_currentPath + fi.name + "/";
+                QueueItem *tempQI = new QueueItem;
+                tempQI->it = item;
+                tempQI->strPath = path;
+                items.append(tempQI);
             }
-//            m_currentPath = path;
         }
         else
         {
@@ -158,67 +150,20 @@ void SftpServer::handleFileInfo(QSsh::SftpJobId id, const QList<QSsh::SftpFileIn
             else if(fi.type == QSsh::FileTypeDirectory)
             {
                 item = new QStandardItem(getFolderIcon(), fi.name);
-                m_currentItem = item;
                 m_currentItem->appendRow(item);
-                getNextLevelList(m_currentPath + fi.name + "/");
+//                getNextLevelList(m_currentPath + fi.name + "/");
+                path = m_currentPath + fi.name + "/";
+                QueueItem *tempQI = new QueueItem;
+                tempQI->it = item;
+                tempQI->strPath = path;
+                items.append(tempQI);
             }
-//            m_currentPath = path;
         }
 
-
-//        if(m_currentPath == "/")
-//        {
-//            if(fi.type == QSsh::FileTypeRegular)
-//                fileTree->addTreeRoot(fi.name, getFileIcon(fi.name));
-//            if(fi.type == QSsh::FileTypeDirectory)
-//                fileTree->addTreeRoot(fi.name, getFolderIcon());
-//        }
-//        else
-//        {
-//            if(fi.type == QSsh::FileTypeRegular)
-//                fileTree->addTreeRoot(fi.name, getFileIcon(fi.name));
-//            if(fi.type == QSsh::FileTypeDirectory)
-//                fileTree->addTreeRoot(fi.name, getFolderIcon());
-//        }
-
-//        int iRow = m_treeItemModel->rowCount();
-//        m_treeItemModel->insertRow(iRow);
-//        m_treeItemModel->setData(m_treeItemModel->index(iRow, 0), fi.name, Qt::DisplayRole);
-
-//        if(fi.type == QSsh::FileTypeRegular)
-//            m_treeItemModel->setData(m_treeItemModel->index(iRow,0),
-//                                     getFileIcon(fi.name), Qt::DecorationRole);
-//        if(fi.type == QSsh::FileTypeDirectory)
-//            m_treeItemModel->setData(m_treeItemModel->index(iRow,0),
-//                                     getFolderIcon(), Qt::DecorationRole);
     } // end foreash
 
-    m_currentPath = path;
-
-    qDebug() << "Current Item" << item->text();
-    if((item = item->parent()) != NULL)
-        qDebug() << "Item's parent" << item->text();
-//    ui->layout->addWidget(fileTree);
-//    fileTree->sortByColumn(fileTree->header()->sortIndicatorSection(),
-//                           fileTree->header()->sortIndicatorOrder());
-
-//    int iSelectRow=0;
-//    if(m_treeItemModel->rowCount()>0)
-//    {
-//        m_treeView->sortByColumn(m_treeView->header()->sortIndicatorSection(),
-//                                  m_treeView->header()->sortIndicatorOrder());
-//        for(int i=0; i<m_treeItemModel->rowCount(); i++)
-//        {
-//            if(m_treeItemModel->data(m_treeItemModel->index(i,0)).toString() == ""/*m_strSelectName*/)
-//            {
-//                iSelectRow = i;
-//                break;
-//            }
-//        }
-////        m_strSelectName.clear();
-//        m_treeView->setCurrentIndex(m_treeItemModel->index(iSelectRow,0));
-//        }
-
+//    m_currentItem = item;
+//    m_currentPath = path;
 }
 
 void SftpServer::handleChannelClosed()

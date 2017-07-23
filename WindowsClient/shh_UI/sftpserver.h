@@ -7,10 +7,17 @@
 #include "filetreeview.h"
 #include "function.h"
 #include "qfiletreeview.h"
+#include <QQueue>
 
 namespace Ui {
 class SftpServer;
 }
+
+typedef struct
+{
+    QStandardItem *it;
+    QString strPath;
+}QueueItem;
 
 class SftpServer : public QWidget
 {
@@ -57,6 +64,7 @@ private:
     QStandardItem *m_currentItem;
 
     QStandardItem *item;
+    QQueue<QueueItem *> items;
 };
 
 #endif // SFTPSERVER_H
