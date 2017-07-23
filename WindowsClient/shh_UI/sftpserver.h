@@ -24,6 +24,8 @@ class SftpServer : public QWidget
     Q_OBJECT
 
 public:
+    int serverNum;
+
     SftpServer(QWidget *parent = 0);
     explicit SftpServer(const QSsh::SshConnectionParameters &parameters, int serverNumber = 0, QWidget *parent = 0);
     ~SftpServer();
@@ -42,7 +44,6 @@ public slots:
     void getNextLevelList(QString path);
 
 private:
-    int serverNum;
     Ui::SftpServer *ui;
     
     QSsh::SshConnection *m_connection;
@@ -58,7 +59,7 @@ private:
     QSsh::SftpJobId m_jobListDirId;
     QSsh::SftpJobId m_jobUploadId;
     
-    FileTreeView *fileTree;
+//    FileTreeView *fileTree;
     QFileTreeView *m_treeView;
     QStandardItemModel *m_treeItemModel;
     QStandardItem *m_currentItem;

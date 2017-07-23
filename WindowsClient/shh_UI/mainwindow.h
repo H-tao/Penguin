@@ -59,16 +59,19 @@ public slots:
 
     /********** Sftp *********/
     void openSftpServer();
+    void newSftpServer();
 
 
 private:
 
     QAction *pOpenSftpAct;
+    QAction *pNewSftpAct;
 
     Ui::MainWindow *ui;
     QVector<QSsh::SshConnectionParameters *> paraPool;
     QVector<Shell*> shellPool;
     QVector<TabPage*> tabPagePool;      //TabPage池
+    QVector<SftpServer *> sftpPool;
     ShellTextEdit *textEdit;
 };
 

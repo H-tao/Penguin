@@ -39,8 +39,11 @@ void MainWindow::initStyle()
 void MainWindow::initWindowMenu()
 {
     pOpenSftpAct = new QAction(tr("Open Sftp Server"),this);
+    pNewSftpAct = new QAction(tr("new Sftp Server"),this);
     ui->windowMenu->addAction(pOpenSftpAct);
+    ui->windowMenu->addAction(pNewSftpAct);
     connect(pOpenSftpAct, SIGNAL(triggered(bool)), this, SLOT(openSftpServer()));
+    connect(pNewSftpAct, SIGNAL(triggered(bool)), this, SLOT(newSftpServer()));
 }
 
 //UI界面风格
@@ -213,8 +216,18 @@ void MainWindow::showInfoFromRemote(QString arguement)
 
 void MainWindow::openSftpServer()
 {
-    qDebug() << "openSftpServer clieked";
+    if(sftpPool.isEmpty())
+        return;
+
+    sftpPool.at(ui->tabWidget->currentIndex())->show();
+}
+
+void MainWindow::newSftpServer()
+{
+    if(paraPool.isEmpty())
+        return;
+
     SftpServer *sftpServer = new SftpServer((*paraPool.at(ui->tabWidget->currentIndex())),
                                             ui->tabWidget->currentIndex(),0);
-    sftpServer->show();
+    sftpPool.append(sftpServer);
 }

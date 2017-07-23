@@ -11,7 +11,7 @@ SftpServer::SftpServer(QWidget *parent) :
 SftpServer::SftpServer(const QSsh::SshConnectionParameters &parameters, int serverNumber, QWidget *parent)
     : QWidget(parent), ui(new Ui::SftpServer),
       m_connection(new QSsh::SshConnection(parameters)), serverNum(serverNumber),
-      m_currentPath("/"), m_jobType(JobUnknow)
+      m_currentPath("/root/"), m_jobType(JobUnknow)
 {
     ui->setupUi(this);
 
@@ -121,7 +121,7 @@ void SftpServer::handleFileInfo(QSsh::SftpJobId id, const QList<QSsh::SftpFileIn
             continue;
         }
 
-        if(m_currentPath == "/")
+        if(m_currentPath == "/root/")
         {
             if(fi.type == QSsh::FileTypeRegular)
             {
