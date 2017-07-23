@@ -4,7 +4,10 @@ FileTreeView::FileTreeView(QWidget *parent) :
     QTreeWidget(parent)
 {
     this->setColumnCount(1);
-    this->setHeaderHidden(true);
+ //   this->setHeaderHidden(true);
+    this->setHeaderLabel("File Name");
+    this->setAlternatingRowColors(true);
+    this->setSortingEnabled(true);
 }
 
 FileTreeView::~FileTreeView()

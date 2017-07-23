@@ -25,7 +25,8 @@ SOURCES += main.cpp\
     tabpage.cpp \
     sftpserver.cpp \
     filetreeview.cpp \
-    function.cpp
+    function.cpp \
+    qfiletreeview.cpp
 
 HEADERS  += mainwindow.h \
     FileSystemWidget/filewidget.h \
@@ -35,7 +36,8 @@ HEADERS  += mainwindow.h \
     tabpage.h \
     sftpserver.h \
     filetreeview.h \
-    function.h
+    function.h \
+    qfiletreeview.h
 
 
 FORMS    += mainwindow.ui \
