@@ -8,12 +8,54 @@ FileWidget::FileWidget(QWidget *parent) :
     setViewMode(QListView::IconMode);   // 设置显示模式
     setMovement(QListView::Static);     // 设置单元项不可被拖动
     setSpacing(10);                     // 设置单元项间距
+
+
+    initOperaMenu();
 }
 
 FileWidget::~FileWidget()
 {
 //    delete this;
 //    this = nullptr;
+}
+
+void FileWidget::initOperaMenu()//右键菜单设置
+{
+    m_pOperaMenu = new QMenu();
+
+    m_pActOpen = new QAction(tr("open"),this);
+    m_pActUpload = new QAction(tr("upload"),this);
+    m_pActDownload = new QAction(tr("download"),this);
+    m_pActHome = new QAction(tr("home"),this);
+    m_pActNew = new QAction(tr("new"),this);
+    m_pActUp = new QAction(tr("up"),this);
+    m_pActRename = new QAction(tr("rename"),this);
+    m_pActRefresh = new QAction(tr("refresh"),this);
+    m_pActDelete = new QAction(tr("delete"),this);
+
+    m_pOperaMenu->addAction(m_pActOpen);
+    m_pOperaMenu->addAction(m_pActUp);
+    m_pOperaMenu->addAction(m_pActHome);
+    m_pOperaMenu->addAction(m_pActRefresh);
+    m_pOperaMenu->addSeparator();
+    m_pOperaMenu->addAction(m_pActNew);
+    m_pOperaMenu->addAction(m_pActDelete);
+    m_pOperaMenu->addAction(m_pActRename);
+    m_pOperaMenu->addSeparator();
+    m_pOperaMenu->addAction(m_pActUpload);
+    m_pOperaMenu->addAction(m_pActDownload);
+
+    connect(m_pActOpen, SIGNAL(triggered()), this, SLOT(clickedOpen()));
+    connect(m_pActUpload, SIGNAL(triggered()), this, SLOT(clickedUpload()));
+    connect(m_pActDownload, SIGNAL(triggered()), this, SLOT(clickedDownload()));
+    connect(m_pActUp, SIGNAL(triggered()), this, SLOT(clickedUp()));
+    connect(m_pActHome, SIGNAL(triggered()), this, SLOT(clickedHome()));
+    connect(m_pActRefresh, SIGNAL(triggered()), this, SLOT(clickedRefresh()));
+    connect(m_pActNew, SIGNAL(triggered()), this, SLOT(clickedNewFolder()));
+    connect(m_pActDelete, SIGNAL(triggered()), this, SLOT(clickedDelete()));
+    connect(m_pActRename, SIGNAL(triggered()), this, SLOT(clickedRename()));
+    connect(this,SIGNAL(customContextMenuRequested(QPoint)),this, SLOT(customMenuView(QPoint)));
+
 }
 
 //打开文件系统
@@ -53,6 +95,62 @@ void FileWidget::refreshDirectory(const QList<QSsh::SftpFileInfo> &fiList)
         item->setText(fi.name);
         this->addItem(item);
     }
+}
+
+
+void FileWidget::customMenuView(QPoint pt)
+{
+    qDebug() << "customMenuView";
+    QListWidgetItem* cur=this->itemAt(pt);
+    if(cur==NULL) return;
+
+    m_pOperaMenu->exec(QCursor::pos());
+    qDebug() << "exec";
+}
+
+void FileWidget::clickedOpen()
+{
+    qDebug()<<"open";
+}
+
+void FileWidget::clickedUp()
+{
+    qDebug()<<"break";
+}
+
+void FileWidget::clickedHome()
+{
+    qDebug()<<"break home";
+}
+
+void FileWidget::clickedRefresh()
+{
+    qDebug()<<"refresh";
+}
+
+void FileWidget::clickedNewFolder()
+{
+    qDebug()<<"new";
+}
+
+void FileWidget::clickedDelete()
+{
+    qDebug()<<"delete";
+}
+
+void FileWidget::clickedRename()
+{
+    qDebug()<<"rename";
+}
+
+void FileWidget::clickedDownload()
+{
+    qDebug()<<"download";
+}
+
+void FileWidget::clickedUpload()
+{
+    qDebug()<<"upload";
 }
 
 //获取文件图标
