@@ -171,6 +171,9 @@ void SftpServer::handleFileInfo(QSsh::SftpJobId id, const QList<QSsh::SftpFileIn
                 }
             }// end else
         } // end foreash
+
+        m_treeView->sortByColumn(m_treeView->header()->sortIndicatorSection(),
+                                  m_treeView->header()->sortIndicatorOrder());
     }// end WorkFileTreeView
 
     /************* FileWidget ******************/

@@ -8,7 +8,7 @@ FileWidget::FileWidget(QWidget *parent) :
     setViewMode(QListView::IconMode);   // 设置显示模式
     setMovement(QListView::Static);     // 设置单元项不可被拖动
     setSpacing(10);                     // 设置单元项间距
-
+    this->setContextMenuPolicy(Qt::CustomContextMenu);
 
     initOperaMenu();
 }

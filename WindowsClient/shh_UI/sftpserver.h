@@ -26,6 +26,7 @@ class SftpServer : public QWidget
 
 public:
     int serverNum;
+    QString m_shellPath;
 
     SftpServer(QWidget *parent = 0);
     explicit SftpServer(const QSsh::SshConnectionParameters &parameters, int serverNumber = 0, QWidget *parent = 0, TabPage *p = 0);
@@ -55,7 +56,6 @@ private:
     QSsh::SftpChannel::Ptr m_channel;
     
     QString m_currentPath;
-    QString m_shellPath;
 
     enum JobType{
         JobUnknow, JobStatFile, JobListDir, JobCreateDir, JobRemoveDir, JobRemoveFile, JobRename,

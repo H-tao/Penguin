@@ -39,11 +39,11 @@ void MainWindow::initStyle()
 void MainWindow::initWindowMenu()
 {
     pOpenSftpAct = new QAction(tr("Open Sftp Server"),this);
-    pNewSftpAct = new QAction(tr("new Sftp Server"),this);
+    pCloseSftpAct = new QAction(tr("close Sftp Server"),this);
     ui->windowMenu->addAction(pOpenSftpAct);
-    ui->windowMenu->addAction(pNewSftpAct);
+    ui->windowMenu->addAction(pCloseSftpAct);
     connect(pOpenSftpAct, SIGNAL(triggered(bool)), this, SLOT(openSftpServer()));
-    connect(pNewSftpAct, SIGNAL(triggered(bool)), this, SLOT(newSftpServer()));
+    connect(pCloseSftpAct, SIGNAL(triggered(bool)), this, SLOT(closeSftpServer()));
 }
 
 //UI界面风格
@@ -63,6 +63,9 @@ void MainWindow::connectAction()
 //打开文件管理系统Action
 void MainWindow::on_openFileSystemAction_triggered()
 {
+    if(sftpPool.size() < (getCurrentIndex() + 1))
+        newSftpServer();
+
     if(tabPagePool.at(ui->tabWidget->currentIndex()) == NULL)
     {
         //提示对话框
@@ -81,6 +84,9 @@ void MainWindow::on_closeFileSystemAction_triggered()
 //显示文件管理系统Action
 void MainWindow::on_showFileSystemAction_triggered()
 {
+    if(sftpPool.size() < getCurrentIndex())
+        newSftpServer();
+
     tabPagePool.at(ui->tabWidget->currentIndex())->showFileSystem();
 }
 
@@ -163,7 +169,12 @@ void MainWindow::on_addTabAction_triggered()
 void MainWindow::on_closeCurrentTabAction_triggered()
 {
     if(ui->tabWidget->count() >= 1)
+    {
         ui->tabWidget->removeTab(getCurrentIndex());
+        tabPagePool.removeAt(getCurrentIndex());
+        sftpPool.removeAt(getCurrentIndex());
+        shellPool.removeAt(getCurrentIndex());
+    }
     //选项卡全部关闭则关闭小企鹅
     if(ui->tabWidget->count() == 0)
         close();
@@ -217,8 +228,8 @@ void MainWindow::showInfoFromRemote(QString arguement)
 
 void MainWindow::openSftpServer()
 {
-    if(sftpPool.isEmpty())
-        return;
+    if(sftpPool.size() < (getCurrentIndex() + 1))
+        newSftpServer();
 
     sftpPool.at(getCurrentIndex())->show();
 }
@@ -226,7 +237,10 @@ void MainWindow::openSftpServer()
 void MainWindow::newSftpServer()
 {
     if(paraPool.isEmpty())
+    {
+        qDebug() << "未建立连接，请先新建连接";
         return;
+    }
 
     if(tabPagePool.isEmpty())
         return;
@@ -234,6 +248,14 @@ void MainWindow::newSftpServer()
     SftpServer *sftpServer = new SftpServer((*paraPool.at(getCurrentIndex())),
                                             getCurrentIndex(),0,tabPagePool.at(getCurrentIndex()));
     sftpPool.append(sftpServer);
+}
+
+void MainWindow::closeSftpServer()
+{
+    if(sftpPool.size() < getCurrentIndex())
+        return;
+
+    sftpPool.at(getCurrentIndex())->close();
 }
 
 int MainWindow::getCurrentIndex()

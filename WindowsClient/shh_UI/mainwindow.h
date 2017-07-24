@@ -36,6 +36,7 @@ public:
     void setUiDesignerStyle();
     void connectAction();
     int getCurrentIndex();
+    void newSftpServer();
 
 private slots:
 
@@ -60,13 +61,13 @@ public slots:
 
     /********** Sftp *********/
     void openSftpServer();
-    void newSftpServer();
+    void closeSftpServer();
 
 
 private:
 
     QAction *pOpenSftpAct;
-    QAction *pNewSftpAct;
+    QAction *pCloseSftpAct;
 
     Ui::MainWindow *ui;
     QVector<QSsh::SshConnectionParameters *> paraPool;
