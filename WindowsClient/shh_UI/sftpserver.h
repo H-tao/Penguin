@@ -31,6 +31,7 @@ public:
     explicit SftpServer(const QSsh::SshConnectionParameters &parameters, int serverNumber = 0, QWidget *parent = 0, TabPage *p = 0);
     ~SftpServer();
 
+    void initPage();
     void initTreeView();
 
 public slots:
@@ -44,6 +45,9 @@ public slots:
     void handleChannelClosed();
     void getNextLevelList(QString path);
 
+    void handleOpenFileWidgetClicked();
+
+
 private:
     Ui::SftpServer *ui;
     
@@ -51,7 +55,8 @@ private:
     QSsh::SftpChannel::Ptr m_channel;
     
     QString m_currentPath;
-    
+    QString m_shellPath;
+
     enum JobType{
         JobUnknow, JobStatFile, JobListDir, JobCreateDir, JobRemoveDir, JobRemoveFile, JobRename,
         JobCreateFile, JobCreateLink, JobUploadFile, JobDownloadFile, JobUploadDir, JobDownloadDir
@@ -63,6 +68,11 @@ private:
 //    FileTreeView *fileTree;
     QFileTreeView *m_treeView;
     TabPage *page;
+
+    enum WorkWidget{
+        WorkFileWidget, WorkFileTreeView
+    };
+    WorkWidget m_workWidget;
 
     QStandardItemModel *m_treeItemModel;
     QStandardItem *m_currentItem;

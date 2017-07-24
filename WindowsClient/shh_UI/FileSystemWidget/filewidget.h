@@ -11,21 +11,29 @@
 #include <QTemporaryFile>
 #include <QString>
 #include <QDebug>
+#include <QList>
+#include <ssh/sftpchannel.h>
+#include <ssh/sshconnection.h>
+#include "function.h"
 
 class FileWidget : public QListWidget
 {
+    Q_OBJECT
 public:
-    FileWidget(QWidget *parent);
+    FileWidget(QWidget *parent = 0);
     ~FileWidget();
 
     void openFileSystem();      //打开文件资源系统
-    void setFileInfoList(QFileInfoList infoList);   //设置文件信息列表
-    QIcon getFileIcon(const QString &suffix) const; //获取平台图标
-    void Working();
+    void setFileInfoList(const QList<QSsh::SftpFileInfo> &fiList);   //设置文件信息列表
+    void refreshDirectory(const QList<QSsh::SftpFileInfo> &fiList);
+
+signals:
+    void openClicked();
+
+public slots:
 
 private:
-    QFileInfoList fileInfoList;
-
+    QList<QSsh::SftpFileInfo> fileInfoList;
 };
 
 #endif // FILEWIDGET_H

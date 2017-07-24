@@ -22,6 +22,8 @@ void TabPage::initStyle()
     textEdit = new ShellTextEdit(ui->textWidget);   //新增TextEdit
     ui->textWidgetLayout->addWidget(textEdit);
     filePathLineEdit = ui->filePathLineText;
+    fileWidget = new FileWidget(ui->fileSystemWidget);  //新增FileWidget
+    ui->fileSystemWidgetLayout->addWidget(fileWidget);
 }
 
 //打开文件管理系统
@@ -40,9 +42,7 @@ void TabPage::openFileSystem()
     ui->filePathLineText->setFocusPolicy(Qt::NoFocus);
     ui->filePathLineText->setVisible(true);
 
-    fileWidget = new FileWidget(ui->fileSystemWidget);
-    ui->fileSystemWidgetLayout->addWidget(fileWidget);
-    fileWidget->Working();                                              //TODO 用于测试是否能显示图标
+    fileWidget->openFileSystem();                                              //TODO 用于测试是否能显示图标
     ui->fileSystemWidget->setFrameShape(QFrame::NoFrame);
     showFileSystem();
     isOpenFileSystem = true;

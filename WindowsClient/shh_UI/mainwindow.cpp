@@ -181,13 +181,14 @@ void MainWindow::outToShell(int winNo, QString arguement)
 
 void MainWindow::on_actionTest_triggered()
 {
-    QString i="help\n";
-    shellPool.at(getCurrentIndex())->handleIn(i);
-    //测试用函数
-    QString l="cd test\n";
-    shellPool.at(getCurrentIndex())->handleIn(l);
-    QString l1="ls\n";
-    shellPool.at(getCurrentIndex())->handleIn(l1);
+//    QString i="help\n";
+//    shellPool.at(getCurrentIndex())->handleIn(i);
+//    //测试用函数
+//    QString l="cd test\n";
+//    shellPool.at(getCurrentIndex())->handleIn(l);
+//    QString l1="ls\n";
+//    shellPool.at(getCurrentIndex())->handleIn(l1);
+    qDebug() << tabPagePool.size();
 }
 
 void MainWindow::on_action_6_triggered()//断开连接
@@ -225,6 +226,9 @@ void MainWindow::openSftpServer()
 void MainWindow::newSftpServer()
 {
     if(paraPool.isEmpty())
+        return;
+
+    if(tabPagePool.isEmpty())
         return;
 
     SftpServer *sftpServer = new SftpServer((*paraPool.at(getCurrentIndex())),

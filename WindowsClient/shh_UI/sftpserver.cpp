@@ -14,13 +14,16 @@ SftpServer::SftpServer(const QSsh::SshConnectionParameters &parameters, int serv
       m_currentPath("/root/"), m_jobType(JobUnknow)
 {
     ui->setupUi(this);
+    page = p;
+    qDebug() << page;
+    m_shellPath = "/root/";
 
     initTreeView();
+    initPage();
 
     connect(m_connection, SIGNAL(connected()), this, SLOT(handleConnected()));
     connect(m_connection, SIGNAL(error(QSsh::SshError)), this, SLOT(handleError()));
     connect(m_connection, SIGNAL(disconnected()), this, SLOT(handleDisconnected()));
-
 
     m_connection->connectToHost();
 }
@@ -68,6 +71,7 @@ void SftpServer::handleChannelInitialized()
     
     // list dir
     m_jobType = JobListDir;
+    m_workWidget = WorkFileTreeView;
     m_jobListDirId = m_channel->listDirectory(m_currentPath);
 }
 
@@ -80,16 +84,23 @@ void SftpServer::handleJobFinished(QSsh::SftpJobId id, const QString &error)
 {
     qDebug() << "handleJobFinished" << "error" << error;
     qDebug() << "finish : " << m_currentPath;
-    if(!items.isEmpty())
+    if(m_workWidget == WorkFileTreeView)
     {
-        QueueItem *i = items.front();
-        m_currentItem = items.front()->it;
-        m_currentPath = items.front()->strPath;
-        items.pop_front();
-        delete i;
-        m_jobType = JobListDir;
-        qDebug() << "currentItem : " << m_currentItem->text() << "currentPath : " << m_currentPath;
-        m_jobListDirId = m_channel->listDirectory(m_currentPath);
+        if(!items.isEmpty())
+        {
+            QueueItem *i = items.front();
+            m_currentItem = items.front()->it;
+            m_currentPath = items.front()->strPath;
+            items.pop_front();
+            delete i;
+            m_jobType = JobListDir;
+            qDebug() << "currentItem : " << m_currentItem->text() << "currentPath : " << m_currentPath;
+            m_jobListDirId = m_channel->listDirectory(m_currentPath);
+        }
+    }
+    if(m_workWidget == WorkFileWidget)
+    {
+        return;
     }
 }
 
@@ -105,65 +116,70 @@ void SftpServer::handleFileInfo(QSsh::SftpJobId id, const QList<QSsh::SftpFileIn
         return;
     }
 
-//    fileTree = new FileTreeView(this);
     if(fileInfoList.isEmpty())
     {
         return;
     }
 
-    QString path = m_currentPath;
-    foreach (const QSsh::SftpFileInfo &fi, fileInfoList)
+    /************* FileTreeView ******************/
+    if(m_workWidget == WorkFileTreeView)
     {
-        qDebug()<<fi.name<<" "<<fi.size<<" "<<fi.type<<" "<<fi.permissions;
-
-        if(fi.name == ".." || fi.name == ".")
+        QString path = m_currentPath;
+        foreach (const QSsh::SftpFileInfo &fi, fileInfoList)
         {
-            continue;
-        }
+            qDebug()<<fi.name<<" "<<fi.size<<" "<<fi.type<<" "<<fi.permissions;
 
-        if(m_currentPath == "/root/")
-        {
-            if(fi.type == QSsh::FileTypeRegular)
+            if(fi.name == ".." || fi.name == ".")
             {
-                item = new QStandardItem(getFileIcon(fi.name), fi.name);
-                m_treeItemModel->appendRow(item);
+                continue;
             }
-            else if(fi.type == QSsh::FileTypeDirectory)
-            {
-                item = new QStandardItem(getFolderIcon(), fi.name);
-                m_treeItemModel->appendRow(item);
-//                getNextLevelList(m_currentPath + fi.name + "/");
-                path = m_currentPath + fi.name + "/";
-                QueueItem *tempQI = new QueueItem;
-                tempQI->it = item;
-                tempQI->strPath = path;
-                items.append(tempQI);
-            }
-        }
-        else
-        {
-            if(fi.type == QSsh::FileTypeRegular)
-            {
-                item = new QStandardItem(getFileIcon(fi.name), fi.name);
-                m_currentItem->appendRow(item);
-            }
-            else if(fi.type == QSsh::FileTypeDirectory)
-            {
-                item = new QStandardItem(getFolderIcon(), fi.name);
-                m_currentItem->appendRow(item);
-//                getNextLevelList(m_currentPath + fi.name + "/");
-                path = m_currentPath + fi.name + "/";
-                QueueItem *tempQI = new QueueItem;
-                tempQI->it = item;
-                tempQI->strPath = path;
-                items.append(tempQI);
-            }
-        }
 
-    } // end foreash
+            if(m_currentPath == "/root/")
+            {
+                if(fi.type == QSsh::FileTypeRegular)
+                {
+                    item = new QStandardItem(getFileIcon(fi.name), fi.name);
+                    m_treeItemModel->appendRow(item);
+                }
+                else if(fi.type == QSsh::FileTypeDirectory)
+                {
+                    item = new QStandardItem(getFolderIcon(), fi.name);
+                    m_treeItemModel->appendRow(item);
+                    path = m_currentPath + fi.name + "/";
+                    QueueItem *tempQI = new QueueItem;
+                    tempQI->it = item;
+                    tempQI->strPath = path;
+                    items.append(tempQI);
+                }
+            }// end if
+            else
+            {
+                if(fi.type == QSsh::FileTypeRegular)
+                {
+                    item = new QStandardItem(getFileIcon(fi.name), fi.name);
+                    m_currentItem->appendRow(item);
+                }
+                else if(fi.type == QSsh::FileTypeDirectory)
+                {
+                    item = new QStandardItem(getFolderIcon(), fi.name);
+                    m_currentItem->appendRow(item);
+                    path = m_currentPath + fi.name + "/";
+                    QueueItem *tempQI = new QueueItem;
+                    tempQI->it = item;
+                    tempQI->strPath = path;
+                    items.append(tempQI);
+                }
+            }// end else
+        } // end foreash
+    }// end WorkFileTreeView
 
-//    m_currentItem = item;
-//    m_currentPath = path;
+    /************* FileWidget ******************/
+    if(m_workWidget == WorkFileWidget)
+    {
+        qDebug() << "refreshDirectory(fileInfoList)";
+        page->fileWidget->refreshDirectory(fileInfoList);
+    }
+
 }
 
 void SftpServer::handleChannelClosed()
@@ -195,4 +211,20 @@ void SftpServer::initTreeView()
 
     m_treeView->setModel(m_treeItemModel);
     m_treeView->header()->setSortIndicator(0, Qt::AscendingOrder);
+}
+
+void SftpServer::initPage()
+{
+    connect(page->fileWidget, SIGNAL(openClicked()), this, SLOT(handleOpenFileWidgetClicked()));
+    qDebug() << page->fileWidget;
+}
+
+void SftpServer::handleOpenFileWidgetClicked()
+{
+    qDebug() << "handleOpenFileWidgetClicked()";
+
+    //list
+    m_jobType = JobListDir;
+    m_workWidget = WorkFileWidget;
+    m_jobListDirId = m_channel->listDirectory(m_shellPath);
 }
