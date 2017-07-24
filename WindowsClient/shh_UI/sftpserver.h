@@ -8,6 +8,7 @@
 #include "function.h"
 #include "qfiletreeview.h"
 #include <QQueue>
+#include <tabpage.h>
 
 namespace Ui {
 class SftpServer;
@@ -27,7 +28,7 @@ public:
     int serverNum;
 
     SftpServer(QWidget *parent = 0);
-    explicit SftpServer(const QSsh::SshConnectionParameters &parameters, int serverNumber = 0, QWidget *parent = 0);
+    explicit SftpServer(const QSsh::SshConnectionParameters &parameters, int serverNumber = 0, QWidget *parent = 0, TabPage *p = 0);
     ~SftpServer();
 
     void initTreeView();
@@ -61,9 +62,10 @@ private:
     
 //    FileTreeView *fileTree;
     QFileTreeView *m_treeView;
+    TabPage *page;
+
     QStandardItemModel *m_treeItemModel;
     QStandardItem *m_currentItem;
-
     QStandardItem *item;
     QQueue<QueueItem *> items;
 };

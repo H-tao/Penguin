@@ -163,7 +163,7 @@ void MainWindow::on_addTabAction_triggered()
 void MainWindow::on_closeCurrentTabAction_triggered()
 {
     if(ui->tabWidget->count() >= 1)
-        ui->tabWidget->removeTab(ui->tabWidget->currentIndex());
+        ui->tabWidget->removeTab(getCurrentIndex());
     //选项卡全部关闭则关闭小企鹅
     if(ui->tabWidget->count() == 0)
         close();
@@ -182,12 +182,12 @@ void MainWindow::outToShell(int winNo, QString arguement)
 void MainWindow::on_actionTest_triggered()
 {
     QString i="help\n";
-    shellPool.at(ui->tabWidget->currentIndex())->handleIn(i);
+    shellPool.at(getCurrentIndex())->handleIn(i);
     //测试用函数
     QString l="cd test\n";
-    shellPool.at(ui->tabWidget->currentIndex())->handleIn(l);
+    shellPool.at(getCurrentIndex())->handleIn(l);
     QString l1="ls\n";
-    shellPool.at(ui->tabWidget->currentIndex())->handleIn(l1);
+    shellPool.at(getCurrentIndex())->handleIn(l1);
 }
 
 void MainWindow::on_action_6_triggered()//断开连接
@@ -210,7 +210,7 @@ void MainWindow::showInfoFromRemote(QString arguement)
     qDebug() << "testSlot arguement:" << arguement;
     arguement.remove('\r');
     arguement += "\n";
-    shellPool.at(ui->tabWidget->currentIndex())->handleIn(arguement);
+    shellPool.at(getCurrentIndex())->handleIn(arguement);
   //  tabPagePool.at(ui->tabWidget->currentIndex())->textEdit->append(arguement);
 }
 
@@ -219,7 +219,7 @@ void MainWindow::openSftpServer()
     if(sftpPool.isEmpty())
         return;
 
-    sftpPool.at(ui->tabWidget->currentIndex())->show();
+    sftpPool.at(getCurrentIndex())->show();
 }
 
 void MainWindow::newSftpServer()
@@ -227,7 +227,12 @@ void MainWindow::newSftpServer()
     if(paraPool.isEmpty())
         return;
 
-    SftpServer *sftpServer = new SftpServer((*paraPool.at(ui->tabWidget->currentIndex())),
-                                            ui->tabWidget->currentIndex(),0);
+    SftpServer *sftpServer = new SftpServer((*paraPool.at(getCurrentIndex())),
+                                            getCurrentIndex(),0,tabPagePool.at(getCurrentIndex()));
     sftpPool.append(sftpServer);
+}
+
+int MainWindow::getCurrentIndex()
+{
+    return ui->tabWidget->currentIndex();
 }

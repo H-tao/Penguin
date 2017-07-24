@@ -35,6 +35,7 @@ public:
     void initWindowMenu();
     void setUiDesignerStyle();
     void connectAction();
+    int getCurrentIndex();
 
 private slots:
 

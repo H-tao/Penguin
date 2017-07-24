@@ -13,6 +13,7 @@ public:
 protected:
     virtual void mouseDoubleClickEvent(QMouseEvent *event);
 
+    void mousePressEvent(QMouseEvent *event);
 };
 
 #endif // QFILETREEVIEW_H

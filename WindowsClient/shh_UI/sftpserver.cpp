@@ -8,9 +8,9 @@ SftpServer::SftpServer(QWidget *parent) :
     ui->setupUi(this);
 }
 
-SftpServer::SftpServer(const QSsh::SshConnectionParameters &parameters, int serverNumber, QWidget *parent)
+SftpServer::SftpServer(const QSsh::SshConnectionParameters &parameters, int serverNumber, QWidget *parent, TabPage *p)
     : QWidget(parent), ui(new Ui::SftpServer),
-      m_connection(new QSsh::SshConnection(parameters)), serverNum(serverNumber),
+      m_connection(new QSsh::SshConnection(parameters)), serverNum(serverNumber), page(p),
       m_currentPath("/root/"), m_jobType(JobUnknow)
 {
     ui->setupUi(this);
