@@ -11,6 +11,8 @@ FileWidget::FileWidget(QWidget *parent) :
     this->setContextMenuPolicy(Qt::CustomContextMenu);
 
     initOperaMenu();
+
+    connect(this, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(handleItemDoubleClicked(QListWidgetItem*)));
 }
 
 FileWidget::~FileWidget()
@@ -61,7 +63,7 @@ void FileWidget::initOperaMenu()//右键菜单设置
 //打开文件系统
 void FileWidget::openFileSystem()
 {
-    emit openClicked();
+    emit openFileSystemClicked();
 }
 
 //传入文件信息列表
@@ -85,14 +87,25 @@ void FileWidget::refreshDirectory(const QList<QSsh::SftpFileInfo> &fiList)
         {
             continue;
         }
-        if(fi.type == QSsh::FileTypeRegular)
-            icon = getFileIcon(fi.name);
-        if(fi.type == QSsh::FileTypeDirectory)
-            icon = getFolderIcon();
 
         QListWidgetItem *item = new QListWidgetItem(this);
-        item->setIcon(icon);
-        item->setText(fi.name);
+        item->setData(Qt::DisplayRole, fi.name);
+
+        if(fi.type == QSsh::FileTypeRegular)
+        {
+            item->setData(Qt::DecorationRole, getFileIcon(fi.name));
+            item->setData(Qt::ToolTipRole, getSizeFromByte(fi.size));
+            item->setData(Qt::WhatsThisRole, getFileType(fi.name));
+            item->setData(Qt::StatusTipRole, getPermissions(fi.permissions));
+        }
+        if(fi.type == QSsh::FileTypeDirectory)
+        {
+            item->setData(Qt::DecorationRole, getFolderIcon());
+            item->setData(Qt::ToolTipRole, "Unknown");
+            item->setData(Qt::WhatsThisRole, getFolderType());
+            item->setData(Qt::StatusTipRole, getPermissions(fi.permissions));
+        }
+
         this->addItem(item);
     }
 }
@@ -111,16 +124,22 @@ void FileWidget::customMenuView(QPoint pt)
 void FileWidget::clickedOpen()
 {
     qDebug()<<"open";
+    if(this->currentItem()->text() == "")
+        return;
+    // text() == fileName
+    emit openClicked(this->currentItem()->text(), this->currentItem()->whatsThis());
 }
 
 void FileWidget::clickedUp()
 {
     qDebug()<<"break";
+    emit upClicked();
 }
 
 void FileWidget::clickedHome()
 {
     qDebug()<<"break home";
+    emit homeClicked();
 }
 
 void FileWidget::clickedRefresh()
@@ -176,3 +195,16 @@ QIcon FileWidget::getFileIcon(const QString &suffix) const
 
     return icon;
 }*/
+
+void FileWidget::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key() == Qt::Key_Backspace)
+        emit upClicked();
+    QListWidget::keyPressEvent(event);
+}
+
+void FileWidget::handleItemDoubleClicked(QListWidgetItem *item)
+{
+    qDebug() << "handleItemDoubleClicked";
+    emit openClicked(item->text(), item->whatsThis());
+}

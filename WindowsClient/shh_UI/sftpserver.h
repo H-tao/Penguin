@@ -2,13 +2,14 @@
 #define SFTPSERVER_H
 
 #include <QWidget>
-#include <ssh/sshconnection.h>
-#include <ssh/sftpchannel.h>
+#include <QQueue>
+#include <tabpage.h>
+#include <QMessageBox>
+#include "ssh/sshconnection.h"
+#include "ssh/sftpchannel.h"
 #include "filetreeview.h"
 #include "function.h"
 #include "qfiletreeview.h"
-#include <QQueue>
-#include <tabpage.h>
 
 namespace Ui {
 class SftpServer;
@@ -47,6 +48,12 @@ public slots:
     void getNextLevelList(QString path);
 
     void handleOpenFileWidgetClicked();
+    void handleOpenClicked(const QString &fileName, const QString &fileType);
+    void handleUpClicked();
+    void handleHomeClicked();
+
+
+    void handleDownloadClicked(const QString &fileName, const QString &fileType);
 
 
 private:

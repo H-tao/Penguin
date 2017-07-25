@@ -1,6 +1,8 @@
 #include "sftpserver.h"
 #include "ui_sftpserver.h"
 
+QString homePath = "/root/";
+
 SftpServer::SftpServer(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SftpServer)
@@ -11,12 +13,11 @@ SftpServer::SftpServer(QWidget *parent) :
 SftpServer::SftpServer(const QSsh::SshConnectionParameters &parameters, int serverNumber, QWidget *parent, TabPage *p)
     : QWidget(parent), ui(new Ui::SftpServer),
       m_connection(new QSsh::SshConnection(parameters)), serverNum(serverNumber), page(p),
-      m_currentPath("/root/"), m_jobType(JobUnknow)
+      m_currentPath(homePath), m_shellPath(homePath), m_jobType(JobUnknow)
 {
     ui->setupUi(this);
     page = p;
     qDebug() << page;
-    m_shellPath = "/root/";
 
     initTreeView();
     initPage();
@@ -134,7 +135,7 @@ void SftpServer::handleFileInfo(QSsh::SftpJobId id, const QList<QSsh::SftpFileIn
                 continue;
             }
 
-            if(m_currentPath == "/root/")
+            if(m_currentPath == homePath)
             {
                 if(fi.type == QSsh::FileTypeRegular)
                 {
@@ -218,7 +219,10 @@ void SftpServer::initTreeView()
 
 void SftpServer::initPage()
 {
-    connect(page->fileWidget, SIGNAL(openClicked()), this, SLOT(handleOpenFileWidgetClicked()));
+    connect(page->fileWidget, SIGNAL(openFileSystemClicked()), this, SLOT(handleOpenFileWidgetClicked()));
+    connect(page->fileWidget, SIGNAL(openClicked(QString,QString)), this, SLOT(handleOpenClicked(QString,QString)));
+    connect(page->fileWidget, SIGNAL(upClicked()), this, SLOT(handleUpClicked()));
+    connect(page->fileWidget, SIGNAL(homeClicked()), this, SLOT(handleHomeClicked()));
     qDebug() << page->fileWidget;
 }
 
@@ -231,3 +235,83 @@ void SftpServer::handleOpenFileWidgetClicked()
     m_workWidget = WorkFileWidget;
     m_jobListDirId = m_channel->listDirectory(m_shellPath);
 }
+
+void SftpServer::handleOpenClicked(const QString &fileName,const QString &fileType)
+{
+    qDebug() << "handleOpenClicked";
+
+    if(fileType == getFolderType())
+    {
+        m_shellPath = m_shellPath + fileName + "/";
+        qDebug() << "Current Shell Path : " << m_shellPath;
+
+        // list directory
+        m_jobType == JobListDir;
+        m_workWidget = WorkFileWidget;
+        m_jobListDirId = m_channel->listDirectory(m_shellPath);
+    }
+    else
+    {
+        qDebug() << "Not a file, can't open, choose to download!";
+        if(QMessageBox::Yes ==
+                QMessageBox::question(this, tr("open"),
+                                      tr("This file is not a folder, do you want to download?"),
+                                      QMessageBox::Yes | QMessageBox::No, QMessageBox::No))
+        {
+            handleDownloadClicked(fileName, fileType);
+        }
+        return;
+    }
+}
+
+void SftpServer::handleUpClicked()
+{
+    qDebug() << "handleUpClicked";
+
+    if(m_shellPath == homePath)
+    {
+        qDebug() << "m_shellPath == homePath, is home , can't Up!";
+        return;
+    }
+
+    QString path = m_shellPath;
+
+    // chop the end
+    path.chop(1);
+
+    // if the root is "/", after chop the end, the path will be empty
+    if(path.isEmpty())
+    {
+        return;
+    }
+
+    QString parentPath = path.left(path.lastIndexOf("/") + 1);
+
+    // update the shellPath
+    m_shellPath = parentPath;
+    qDebug() << "m_shellPath : " << m_shellPath;
+
+    // list up direcotry
+    m_jobType = JobListDir;
+    m_workWidget = WorkFileWidget;
+    m_jobListDirId = m_channel->listDirectory(m_shellPath);
+}
+
+void SftpServer::handleHomeClicked()
+{
+    qDebug() << "handleHomeClicked";
+
+    // update shellPath to homePath
+    m_shellPath = homePath;
+
+    // list up direcotry
+    m_jobType = JobListDir;
+    m_workWidget = WorkFileWidget;
+    m_jobListDirId = m_channel->listDirectory(m_shellPath);
+}
+
+void SftpServer::handleDownloadClicked(const QString &fileName,const QString &fileType)
+{
+    qDebug() << "handleDownloadClicked";
+}
+
