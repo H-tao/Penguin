@@ -254,7 +254,7 @@ void SftpServer::handleOpenClicked(const QString &fileName,const QString &fileTy
     {
         qDebug() << "Not a file, can't open, choose to download!";
         if(QMessageBox::Yes ==
-                QMessageBox::question(this, tr("open"),
+                QMessageBox::question(page->fileWidget, tr("open"),
                                       tr("This file is not a folder, do you want to download?"),
                                       QMessageBox::Yes | QMessageBox::No, QMessageBox::No))
         {
