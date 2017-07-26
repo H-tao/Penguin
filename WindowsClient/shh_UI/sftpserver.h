@@ -56,9 +56,9 @@ public slots:
     void handleOpenClicked(const QString &fileName, const QString &fileType, const QString &fileSize);
     void handleUpClicked();
     void handleHomeClicked();
-
-
     void handleDownloadClicked(const QString &fileName, const QString &fileType, const QString &fileSize);
+    void handleRefreshClicked();
+    void handleDeleteClicked(const QString &fileName, const QString &fileType);
 
 
 private:

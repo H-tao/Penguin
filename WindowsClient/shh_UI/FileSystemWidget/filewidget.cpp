@@ -153,6 +153,7 @@ void FileWidget::clickedHome()
 void FileWidget::clickedRefresh()
 {
     qDebug()<<"refresh";
+    emit refreshClicked();
 }
 
 void FileWidget::clickedNewFolder()
@@ -163,11 +164,13 @@ void FileWidget::clickedNewFolder()
 void FileWidget::clickedDelete()
 {
     qDebug()<<"delete";
+    emit deleteClicked(this->currentItem()->text(), this->currentItem()->whatsThis());
 }
 
 void FileWidget::clickedRename()
 {
     qDebug()<<"rename";
+    this->currentItem()->setSelected(true);
 }
 
 void FileWidget::clickedDownload()

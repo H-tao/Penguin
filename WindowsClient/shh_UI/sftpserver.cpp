@@ -260,7 +260,23 @@ void SftpServer::initPage()
     connect(page->fileWidget, SIGNAL(homeClicked()), this, SLOT(handleHomeClicked()));
     connect(page->fileWidget, SIGNAL(downloadClicked(QString,QString,QString)),
             this, SLOT(handleDownloadClicked(QString,QString,QString)));
+    connect(page->fileWidget, SIGNAL(refreshClicked()), this, SLOT(handleRefreshClicked()));
+    connect(page->fileWidget, SIGNAL(deleteClicked(QString,QString)), this, SLOT(handleDeleteClicked(QString,QString)));
     qDebug() << page->fileWidget;
+}
+
+void SftpServer::initProgressDialog()
+{
+    qDebug() << "initProgressDialog";
+    m_progress = new QProgressDialog(page->fileWidget, Qt::Dialog | Qt::CustomizeWindowHint);
+    m_progress->setWindowModality(Qt::WindowModal);
+    m_progress->setMaximumWidth(800);
+    m_progress->setCancelButton(0);
+    m_progress->setAutoClose(true);
+    m_progress->setAutoReset(false);
+
+    m_progress->setRange(0, 100);
+    m_progress->cancel();
 }
 
 void SftpServer::handleOpenFileWidgetClicked()
@@ -296,6 +312,10 @@ void SftpServer::handleOpenClicked(const QString &fileName,const QString &fileTy
                                       QMessageBox::Yes | QMessageBox::No, QMessageBox::No))
         {
             handleDownloadClicked(fileName, fileType, fileSize);
+        }
+        else
+        {
+            page->fileWidget->currentItem()->setSelected(true);
         }
         return;
     }
@@ -380,15 +400,32 @@ void SftpServer::handleDownloadClicked(const QString &fileName, const QString &f
     m_timer = startTimer(500);
 }
 
-void SftpServer::initProgressDialog()
+void SftpServer::handleRefreshClicked()
 {
-    qDebug() << "initProgressDialog";
-    m_progress = new QProgressDialog(page->fileWidget, Qt::Dialog | Qt::CustomizeWindowHint);
-    m_progress->setWindowModality(Qt::WindowModal);
-    m_progress->setMaximumWidth(800);
-    m_progress->setCancelButton(0);
-    m_progress->setAutoClose(true);
-    m_progress->setAutoReset(false);
+    qDebug() << "handleRefreshClicked";
 
-    m_progress->setRange(0, 100);
+    m_jobType = JobListDir;
+    m_workWidget = WorkFileWidget;
+    m_jobListDirId = m_channel->listDirectory(m_shellPath);
+}
+
+void SftpServer::handleDeleteClicked(const QString &fileName, const QString &fileType)
+{
+    qDebug() << "handleDeleteClicked";
+
+    QString filePath = m_shellPath + fileName;
+    if(fileType == getFolderType())
+    {
+        qDebug() << "Delete Dir: " << (filePath + "/");
+        qDebug() << "内有文件删除不了，暂未处理（可通过shell处理）";
+        m_channel->removeDirectory(filePath + "/");
+
+    }
+    else
+    {
+        m_channel->removeFile(filePath);
+    }
+
+    // refresh direcotry
+    handleRefreshClicked();
 }

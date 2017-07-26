@@ -43,7 +43,7 @@ signals:
     void upClicked();
     void homeClicked();
     void newFolderClicked();
-    void deleteClicked();
+    void deleteClicked(QString fileName, QString fileType);
     void renameClicked();
     void refreshClicked();
 
