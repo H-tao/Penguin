@@ -17,6 +17,8 @@
 #include <QEvent>
 #include <QKeyEvent>
 #include <QMouseEvent>
+#include <QDropEvent>
+#include <QDrag>
 #include "ssh/sftpchannel.h"
 #include "ssh/sshconnection.h"
 #include "function.h"
@@ -35,9 +37,9 @@ public:
 
 signals:
     void openFileSystemClicked();
-    void openClicked(QString fileName, QString fileType);
+    void openClicked(QString fileName, QString fileType, QString fileSize);
     void uploadClicked();
-    void downloadClicked();
+    void downloadClicked(QString fileName, QString fileType, QString fileSize);
     void upClicked();
     void homeClicked();
     void newFolderClicked();
@@ -61,6 +63,8 @@ public slots:
 
 protected:
     void keyPressEvent(QKeyEvent *event);
+//    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
 
 private:
     QList<QSsh::SftpFileInfo> fileInfoList;

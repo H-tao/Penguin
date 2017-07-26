@@ -21,6 +21,7 @@ SftpServer::SftpServer(const QSsh::SshConnectionParameters &parameters, int serv
 
     initTreeView();
     initPage();
+    initProgressDialog();
 
     connect(m_connection, SIGNAL(connected()), this, SLOT(handleConnected()));
     connect(m_connection, SIGNAL(error(QSsh::SshError)), this, SLOT(handleError()));
@@ -84,7 +85,17 @@ void SftpServer::handleChannelInitializationFailed(const QString &renson)
 void SftpServer::handleJobFinished(QSsh::SftpJobId id, const QString &error)
 {
     qDebug() << "handleJobFinished" << "error" << error;
-    qDebug() << "finish : " << m_currentPath;
+    qDebug() << "finished currentPath: " << m_currentPath;
+    qDebug() << "finished shellPath: " << m_shellPath;
+
+    if(!error.isEmpty())
+    {
+        m_jobType = JobUnknow;
+        killTimer(m_timer);
+        m_progress->cancel();
+    }
+
+
     if(m_workWidget == WorkFileTreeView)
     {
         if(!items.isEmpty())
@@ -101,6 +112,29 @@ void SftpServer::handleJobFinished(QSsh::SftpJobId id, const QString &error)
     }
     if(m_workWidget == WorkFileWidget)
     {
+        switch(m_jobType)
+        {
+        case JobCreateDir:  break;
+        case JobRemoveDir:  break;
+        case JobRemoveFile: break;
+        case JobRename:
+            //refresh directory
+            m_jobType = JobListDir;
+            m_workWidget = WorkFileWidget;
+            m_jobListDirId = m_channel->listDirectory(m_shellPath);
+            break;
+        case JobDownloadFile:
+            killTimer(m_timer);
+            m_progress->setValue(100);
+            QTest::qSleep(1000);
+            m_progress->cancel();
+            break;
+        case JobUploadFile:
+            break;
+        default:
+            m_jobType = JobUnknow;
+            break;
+        }
         return;
     }
 }
@@ -220,9 +254,12 @@ void SftpServer::initTreeView()
 void SftpServer::initPage()
 {
     connect(page->fileWidget, SIGNAL(openFileSystemClicked()), this, SLOT(handleOpenFileWidgetClicked()));
-    connect(page->fileWidget, SIGNAL(openClicked(QString,QString)), this, SLOT(handleOpenClicked(QString,QString)));
+    connect(page->fileWidget, SIGNAL(openClicked(QString,QString,QString)),
+            this, SLOT(handleOpenClicked(QString,QString,QString)));
     connect(page->fileWidget, SIGNAL(upClicked()), this, SLOT(handleUpClicked()));
     connect(page->fileWidget, SIGNAL(homeClicked()), this, SLOT(handleHomeClicked()));
+    connect(page->fileWidget, SIGNAL(downloadClicked(QString,QString,QString)),
+            this, SLOT(handleDownloadClicked(QString,QString,QString)));
     qDebug() << page->fileWidget;
 }
 
@@ -236,7 +273,7 @@ void SftpServer::handleOpenFileWidgetClicked()
     m_jobListDirId = m_channel->listDirectory(m_shellPath);
 }
 
-void SftpServer::handleOpenClicked(const QString &fileName,const QString &fileType)
+void SftpServer::handleOpenClicked(const QString &fileName,const QString &fileType, const QString &fileSize)
 {
     qDebug() << "handleOpenClicked";
 
@@ -258,7 +295,7 @@ void SftpServer::handleOpenClicked(const QString &fileName,const QString &fileTy
                                       tr("This file is not a folder, do you want to download?"),
                                       QMessageBox::Yes | QMessageBox::No, QMessageBox::No))
         {
-            handleDownloadClicked(fileName, fileType);
+            handleDownloadClicked(fileName, fileType, fileSize);
         }
         return;
     }
@@ -310,8 +347,48 @@ void SftpServer::handleHomeClicked()
     m_jobListDirId = m_channel->listDirectory(m_shellPath);
 }
 
-void SftpServer::handleDownloadClicked(const QString &fileName,const QString &fileType)
+void SftpServer::handleDownloadClicked(const QString &fileName, const QString &fileType,const QString &fileSize)
 {
     qDebug() << "handleDownloadClicked";
+    m_currentSize = getSizeToByte(fileSize);
+
+    if(fileType == getFolderType())
+    {
+        QMessageBox::warning(this, tr("Download"), tr("Can not download folder!"),
+                             QMessageBox::Ok);
+        return;
+    }
+
+    m_currentLocalFilePath = QFileDialog::getSaveFileName(page->fileWidget, tr("Download File"),
+                                                      QDir::currentPath() + "/" + fileName, tr("All Files (*.*"));
+
+    if(m_currentLocalFilePath.isEmpty())
+        return;
+    qDebug() << "Local File : " << m_currentLocalFilePath;
+
+    // download file
+    m_jobType = JobDownloadFile;
+    m_workWidget = WorkFileWidget;
+    m_channel->downloadFile(m_shellPath + fileName, m_currentLocalFilePath, QSsh::SftpOverwriteExisting);
+
+    m_progress->setLabelText(tr("Download... ") + fileName +
+                             tr(" to ") + QFileInfo(m_currentLocalFilePath).absolutePath());
+
+    m_progress->reset();
+    m_progress->show();
+    m_progress->setValue(0);
+    m_timer = startTimer(500);
 }
 
+void SftpServer::initProgressDialog()
+{
+    qDebug() << "initProgressDialog";
+    m_progress = new QProgressDialog(page->fileWidget, Qt::Dialog | Qt::CustomizeWindowHint);
+    m_progress->setWindowModality(Qt::WindowModal);
+    m_progress->setMaximumWidth(800);
+    m_progress->setCancelButton(0);
+    m_progress->setAutoClose(true);
+    m_progress->setAutoReset(false);
+
+    m_progress->setRange(0, 100);
+}

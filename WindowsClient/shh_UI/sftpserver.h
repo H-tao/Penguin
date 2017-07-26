@@ -3,8 +3,12 @@
 
 #include <QWidget>
 #include <QQueue>
-#include <tabpage.h>
+#include "tabpage.h"
 #include <QMessageBox>
+#include <QProgressDialog>
+#include <QFileDialog>
+#include <QtTest/QTest>
+#include <QFileInfo>
 #include "ssh/sshconnection.h"
 #include "ssh/sftpchannel.h"
 #include "filetreeview.h"
@@ -35,6 +39,7 @@ public:
 
     void initPage();
     void initTreeView();
+    void initProgressDialog();
 
 public slots:
     void handleConnected();
@@ -48,12 +53,12 @@ public slots:
     void getNextLevelList(QString path);
 
     void handleOpenFileWidgetClicked();
-    void handleOpenClicked(const QString &fileName, const QString &fileType);
+    void handleOpenClicked(const QString &fileName, const QString &fileType, const QString &fileSize);
     void handleUpClicked();
     void handleHomeClicked();
 
 
-    void handleDownloadClicked(const QString &fileName, const QString &fileType);
+    void handleDownloadClicked(const QString &fileName, const QString &fileType, const QString &fileSize);
 
 
 private:
@@ -63,6 +68,8 @@ private:
     QSsh::SftpChannel::Ptr m_channel;
     
     QString m_currentPath;
+    quint64 m_currentSize;
+    QString m_currentLocalFilePath;
 
     enum JobType{
         JobUnknow, JobStatFile, JobListDir, JobCreateDir, JobRemoveDir, JobRemoveFile, JobRename,
@@ -75,6 +82,8 @@ private:
 //    FileTreeView *fileTree;
     QFileTreeView *m_treeView;
     TabPage *page;
+    QProgressDialog *m_progress;
+    int m_timer;
 
     enum WorkWidget{
         WorkFileWidget, WorkFileTreeView

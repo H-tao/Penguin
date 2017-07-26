@@ -1,4 +1,5 @@
 #include "filewidget.h"
+QSize itemSize(50,60);
 
 FileWidget::FileWidget(QWidget *parent) :
     QListWidget(parent)
@@ -7,7 +8,10 @@ FileWidget::FileWidget(QWidget *parent) :
     setResizeMode(QListView::Adjust);   // 设置大小模式-可调节
     setViewMode(QListView::IconMode);   // 设置显示模式
     setMovement(QListView::Static);     // 设置单元项不可被拖动
-    setSpacing(10);                     // 设置单元项间距
+    setSpacing(2);                     // 设置单元项间距
+//    setTextElideMode(Qt::ElideRight);   // 设置文本
+    setFlow(QListView::LeftToRight);
+    this->setSortingEnabled(true);
     this->setContextMenuPolicy(Qt::CustomContextMenu);
 
     initOperaMenu();
@@ -106,6 +110,10 @@ void FileWidget::refreshDirectory(const QList<QSsh::SftpFileInfo> &fiList)
             item->setData(Qt::StatusTipRole, getPermissions(fi.permissions));
         }
 
+        item->setSizeHint(itemSize);
+
+        item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable | Qt::ItemIsDragEnabled);
+
         this->addItem(item);
     }
 }
@@ -127,7 +135,7 @@ void FileWidget::clickedOpen()
     if(this->currentItem()->text() == "")
         return;
     // text() == fileName
-    emit openClicked(this->currentItem()->text(), this->currentItem()->whatsThis());
+    emit openClicked(this->currentItem()->text(), this->currentItem()->whatsThis(), this->currentItem()->toolTip());
 }
 
 void FileWidget::clickedUp()
@@ -165,6 +173,7 @@ void FileWidget::clickedRename()
 void FileWidget::clickedDownload()
 {
     qDebug()<<"download";
+    emit downloadClicked(this->currentItem()->text(), this->currentItem()->whatsThis(), this->currentItem()->toolTip());
 }
 
 void FileWidget::clickedUpload()
@@ -203,8 +212,18 @@ void FileWidget::keyPressEvent(QKeyEvent *event)
     QListWidget::keyPressEvent(event);
 }
 
+//void FileWidget::mousePressEvent(QMouseEvent *event)
+//{
+//    QListWidget::mousePressEvent(event);
+//}
+
+void FileWidget::mouseMoveEvent(QMouseEvent *event)
+{
+    QListWidget::mouseMoveEvent(event);
+}
+
 void FileWidget::handleItemDoubleClicked(QListWidgetItem *item)
 {
     qDebug() << "handleItemDoubleClicked";
-    emit openClicked(item->text(), item->whatsThis());
+    emit openClicked(item->text(), item->whatsThis(), item->toolTip());
 }
