@@ -9,7 +9,7 @@
 #include <QObject>
 #include <QCoreApplication>
 #include <QEvent>
-
+#include<QTextCursor>
 class ShellTextEdit : public QTextEdit
 {
     Q_OBJECT
@@ -17,7 +17,6 @@ class ShellTextEdit : public QTextEdit
 public:
     explicit ShellTextEdit(QWidget *parent = 0);
     ~ShellTextEdit();
-int i;
     void initSytle();   //初始化文本框风格
 signals:
     void arguementDone(QString);
@@ -29,6 +28,9 @@ protected:
 
 private:
     QString arguement;
+    QString console;
+    QVector<QString> history;
+    QVector<QString>::Iterator ptr;
 };
 
 #endif // SHELLTEXTEDIT_H

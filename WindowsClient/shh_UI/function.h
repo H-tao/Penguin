@@ -8,7 +8,7 @@
 #include <QTemporaryFile>
 #include <QDir>
 #include <QCoreApplication>
-
+#include<shellapi.h>
 
 QIcon getFileIcon(const QString name);
 QIcon getFolderIcon();
