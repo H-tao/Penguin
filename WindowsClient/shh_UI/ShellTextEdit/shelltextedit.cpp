@@ -50,6 +50,9 @@ void ShellTextEdit::keyPressEvent(QKeyEvent *e)
     this->setTextCursor(textCursor);
     if(/*e->key()==Qt::Key_Enter||*/e->key()==Qt::Key_Return)
     {
+        if(arguement.isEmpty()) //命令为空，返回
+            return;
+
         qDebug() << "Enter Done";
         history.append(arguement);
         enterHistory=true;

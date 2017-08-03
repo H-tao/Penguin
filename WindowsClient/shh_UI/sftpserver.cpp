@@ -10,14 +10,13 @@ SftpServer::SftpServer(QWidget *parent) :
     ui->setupUi(this);
 }
 
-SftpServer::SftpServer(const QSsh::SshConnectionParameters &parameters, int serverNumber, QWidget *parent, TabPage *p)
+SftpServer::SftpServer(const QSsh::SshConnectionParameters &parameters, int serverNumber, QWidget *parent, TabPage *p, MainWindow *mainWindow)
     : QWidget(parent), ui(new Ui::SftpServer),
       m_connection(new QSsh::SshConnection(parameters)), serverNum(serverNumber), page(p),
       m_currentPath(homePath), m_shellPath(homePath), m_jobType(JobUnknow)
 {
     ui->setupUi(this);
-    page = p;
-    qDebug() << page;
+    m_mainWindow = reinterpret_cast<MainWindow*>(mainWindow);
 
     initTreeView();
     initPage();
@@ -27,6 +26,12 @@ SftpServer::SftpServer(const QSsh::SshConnectionParameters &parameters, int serv
     connect(m_connection, SIGNAL(error(QSsh::SshError)), this, SLOT(handleError()));
     connect(m_connection, SIGNAL(disconnected()), this, SLOT(handleDisconnected()));
 
+    // 设置Geometry
+//    this->setGeometry(m_mainWindow->x()-this->width(), m_mainWindow->y(), this->width(), m_mainWindow->height());
+    this->resize(this->width(), m_mainWindow->height());
+    this->move(m_mainWindow->x()-this->width(), m_mainWindow->y());
+    qDebug() << m_mainWindow->geometry();
+    qDebug() << this->geometry();
     m_connection->connectToHost();
 }
 
@@ -70,7 +75,7 @@ void SftpServer::handleDisconnected()
 void SftpServer::handleChannelInitialized()
 {
     qDebug() << "Initialize channel success!";
-    
+
     // list dir
     m_jobType = JobListDir;
     m_workWidget = WorkFileTreeView;

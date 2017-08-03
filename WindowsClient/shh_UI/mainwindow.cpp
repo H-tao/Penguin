@@ -113,27 +113,39 @@ void MainWindow::on_newConnectionAction_triggered()
         sshPara->password=newCon->getPassword();
         sshPara->authenticationType=QSsh::SshConnectionParameters::AuthenticationByPassword;
         sshPara->timeout=500;
-        paraPool.append(sshPara);
         if(shellPool.size()<=ui->tabWidget->currentIndex())
         {
             //当前的页面无连接
             shellPool.append(new Shell(*sshPara,ui->tabWidget->currentIndex(),this));
             qDebug()<<"55566";
+            paraPool.append(sshPara);
 
+            //获得数据
+            shellPool.at(ui->tabWidget->currentIndex())->run();
+            //改变标签名
+            ui->tabWidget->setTabText(getCurrentIndex(),newCon->getuUserName());
+            //连接发送命令信号和接收
+            connect(tabPagePool.at(getCurrentIndex())->textEdit,SIGNAL(arguementDone(QString)),
+                    shellPool.at(getCurrentIndex())->ptr,SLOT(showInfoFromRemote(QString)));
         }
         else
         {
+            on_addTabAction_triggered();/*
             shellPool.replace(ui->tabWidget->currentIndex(),new Shell(*sshPara,ui->tabWidget->currentIndex(),this));
+            paraPool.replace(getCurrentIndex(),sshPara);
+            */
+            shellPool.append(new Shell(*sshPara,shellPool.size(),this));
+            paraPool.append(sshPara);
             qDebug()<<"6666";
-        }
-        //获得数据
-        shellPool.at(ui->tabWidget->currentIndex())->run();
-        //改变标签名
-        ui->tabWidget->setTabText(shellPool.size()-1,newCon->getuUserName());
 
-        //连接发送命令信号和接收
-        connect(tabPagePool.at(shellPool.size()-1)->textEdit,SIGNAL(arguementDone(QString)),
-                shellPool.at(shellPool.size()-1)->ptr,SLOT(showInfoFromRemote(QString)));
+            //获得数据
+            shellPool.at(shellPool.size()-1)->run();
+            //改变标签名
+            ui->tabWidget->setTabText(shellPool.size()-1,newCon->getuUserName());
+            //连接发送命令信号和接收
+            connect(tabPagePool.at(shellPool.size()-1)->textEdit,SIGNAL(arguementDone(QString)),
+                    shellPool.at(shellPool.size()-1)->ptr,SLOT(showInfoFromRemote(QString)));
+        }
 
     }
 //    QSsh::SshConnectionParameters *sshPara;
@@ -182,6 +194,8 @@ void MainWindow::on_closeCurrentTabAction_triggered()
 
 void MainWindow::outToShell(int winNo, QString arguement)
 {
+    if(arguement.isEmpty())
+        return;
     qDebug() << "Info from remote:" << arguement;
     tabPagePool.at(winNo)->textEdit->append(arguement);
     /*
@@ -199,7 +213,7 @@ void MainWindow::on_actionTest_triggered()
 //    shellPool.at(getCurrentIndex())->handleIn(l);
 //    QString l1="ls\n";
 //    shellPool.at(getCurrentIndex())->handleIn(l1);
-   this->tabPagePool.at(0)->textEdit->clearTheKeyin();
+    this->tabPagePool.at(0)->textEdit->clearTheKeyin();
 }
 
 void MainWindow::on_action_6_triggered()//断开连接
@@ -246,7 +260,7 @@ void MainWindow::newSftpServer()
         return;
 
     SftpServer *sftpServer = new SftpServer((*paraPool.at(getCurrentIndex())),
-                                            getCurrentIndex(),0,tabPagePool.at(getCurrentIndex()));
+                                            getCurrentIndex(),0 ,tabPagePool.at(getCurrentIndex()), this);
     sftpPool.append(sftpServer);
 }
 

@@ -19,6 +19,8 @@
 class ShellTextEdit;
 class FileWidget;
 class Shell;
+class SftpServer;
+
 namespace Ui {
 class MainWindow;
 }

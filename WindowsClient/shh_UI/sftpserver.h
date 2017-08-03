@@ -14,6 +14,9 @@
 #include "filetreeview.h"
 #include "function.h"
 #include "qfiletreeview.h"
+#include "mainwindow.h"
+
+class MainWindow;
 
 namespace Ui {
 class SftpServer;
@@ -32,9 +35,11 @@ class SftpServer : public QWidget
 public:
     int serverNum;
     QString m_shellPath;
+    MainWindow *m_mainWindow;
 
     SftpServer(QWidget *parent = 0);
-    explicit SftpServer(const QSsh::SshConnectionParameters &parameters, int serverNumber = 0, QWidget *parent = 0, TabPage *p = 0);
+    explicit SftpServer(const QSsh::SshConnectionParameters &parameters, int serverNumber = 0,
+                        QWidget *parent = 0, TabPage *p = 0, MainWindow *mainWindow = 0);
     ~SftpServer();
 
     void initPage();
@@ -63,10 +68,10 @@ public slots:
 
 private:
     Ui::SftpServer *ui;
-    
+
     QSsh::SshConnection *m_connection;
     QSsh::SftpChannel::Ptr m_channel;
-    
+
     QString m_currentPath;
     quint64 m_currentSize;
     QString m_currentLocalFilePath;
@@ -78,7 +83,7 @@ private:
     JobType m_jobType;
     QSsh::SftpJobId m_jobListDirId;
     QSsh::SftpJobId m_jobUploadId;
-    
+
 //    FileTreeView *fileTree;
     QFileTreeView *m_treeView;
     TabPage *page;
