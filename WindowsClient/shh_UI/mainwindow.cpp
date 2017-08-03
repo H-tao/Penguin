@@ -199,7 +199,7 @@ void MainWindow::on_actionTest_triggered()
 //    shellPool.at(getCurrentIndex())->handleIn(l);
 //    QString l1="ls\n";
 //    shellPool.at(getCurrentIndex())->handleIn(l1);
-    qDebug() << tabPagePool.size();
+   this->tabPagePool.at(0)->textEdit->clearTheKeyin();
 }
 
 void MainWindow::on_action_6_triggered()//断开连接

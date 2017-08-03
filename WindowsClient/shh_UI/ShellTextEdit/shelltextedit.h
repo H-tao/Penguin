@@ -18,6 +18,7 @@ public:
     explicit ShellTextEdit(QWidget *parent = 0);
     ~ShellTextEdit();
     void initSytle();   //初始化文本框风格
+    void clearTheKeyin();
 signals:
     void arguementDone(QString);
 
@@ -30,7 +31,8 @@ private:
     QString arguement;
     QString console;
     QVector<QString> history;
-    QVector<QString>::Iterator ptr;
+    int hisNum;
+    bool enterHistory;
 };
 
 #endif // SHELLTEXTEDIT_H
