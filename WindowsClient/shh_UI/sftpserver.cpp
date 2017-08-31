@@ -1,5 +1,6 @@
 #include "sftpserver.h"
 #include "ui_sftpserver.h"
+#include <QFileDialog>
 
 QString homePath = "/root/";
 
@@ -89,7 +90,9 @@ void SftpServer::handleChannelInitializationFailed(const QString &renson)
 
 void SftpServer::handleJobFinished(QSsh::SftpJobId id, const QString &error)
 {
-    qDebug() << "handleJobFinished" << "error" << error;
+    qDebug() << "handleJobFinished";
+    if(!error.isEmpty())
+        qDebug() << "error" << error;
     qDebug() << "finished currentPath: " << m_currentPath;
     qDebug() << "finished shellPath: " << m_shellPath;
 
@@ -119,14 +122,25 @@ void SftpServer::handleJobFinished(QSsh::SftpJobId id, const QString &error)
     {
         switch(m_jobType)
         {
-        case JobCreateDir:  break;
-        case JobRemoveDir:  break;
-        case JobRemoveFile: break;
+        case JobCreateDir:
+            // refresh directory
+            handleRefreshClicked();
+            break;
+        case JobCreateFile:
+            // refresh directory
+            handleRefreshClicked();
+            break;
+        case JobRemoveDir:
+            // refresh directory
+            handleRefreshClicked();
+            break;
+        case JobRemoveFile:
+            // refresh directory
+            handleRefreshClicked();
+            break;
         case JobRename:
-            //refresh directory
-            m_jobType = JobListDir;
-            m_workWidget = WorkFileWidget;
-            m_jobListDirId = m_channel->listDirectory(m_shellPath);
+            // refresh directory
+            handleRefreshClicked();
             break;
         case JobDownloadFile:
             killTimer(m_timer);
@@ -135,6 +149,12 @@ void SftpServer::handleJobFinished(QSsh::SftpJobId id, const QString &error)
             m_progress->cancel();
             break;
         case JobUploadFile:
+            killTimer(m_timer);
+            m_progress->setValue(100);
+            QTest::qSleep(1000);
+            m_progress->cancel();
+            // refresh directory
+            handleRefreshClicked();
             break;
         default:
             m_jobType = JobUnknow;
@@ -267,12 +287,16 @@ void SftpServer::initPage()
             this, SLOT(handleDownloadClicked(QString,QString,QString)));
     connect(page->fileWidget, SIGNAL(refreshClicked()), this, SLOT(handleRefreshClicked()));
     connect(page->fileWidget, SIGNAL(deleteClicked(QString,QString)), this, SLOT(handleDeleteClicked(QString,QString)));
-    qDebug() << page->fileWidget;
+    connect(page->fileWidget, SIGNAL(uploadClicked()), this, SLOT(handleUploadClicked()));
+    connect(page->fileWidget, SIGNAL(renameClicked(QString)), this, SLOT(handleRenameClicked(QString)));
+    connect(page->fileWidget, SIGNAL(newFolderClicked()), this, SLOT(handleNewFolderClicked()));
+    connect(page->fileWidget, SIGNAL(newFileClicked()), this, SLOT(handleNewFileClicked()));
 }
 
 void SftpServer::initProgressDialog()
 {
     qDebug() << "initProgressDialog";
+
     m_progress = new QProgressDialog(page->fileWidget, Qt::Dialog | Qt::CustomizeWindowHint);
     m_progress->setWindowModality(Qt::WindowModal);
     m_progress->setMaximumWidth(800);
@@ -433,4 +457,143 @@ void SftpServer::handleDeleteClicked(const QString &fileName, const QString &fil
 
     // refresh direcotry
     handleRefreshClicked();
+}
+
+void SftpServer::handleUploadClicked()
+{
+    qDebug() << "handleUploadClicked";
+
+    QString localPath = QFileDialog::getOpenFileName(page->fileWidget, tr("Upload File"),
+                                                     QDir::currentPath(), tr("All File (*.*)"));
+
+    qDebug() << "Upload local file : " << localPath;
+    upload(localPath);
+}
+
+void SftpServer::upload(QString localPath)
+{
+    if(QFileInfo(localPath).isSymLink())
+    {
+        localPath = QFileInfo(localPath).symLinkTarget();
+    }
+
+    m_currentLocalFilePath = localPath;
+    QString fileName = QFileInfo(localPath).fileName();
+    m_currentSize = QFileInfo(localPath).size();
+
+    if(m_currentLocalFilePath.isEmpty())
+    {
+        return;
+    }
+
+    // Jude if the same name have existed
+    if(page->fileWidget->isFileExisted(m_currentLocalFilePath))
+    {
+        if(QMessageBox::No == QMessageBox::warning(page->fileWidget, tr("Upload"),
+                                                   tr("This file has existed, are you sure to replace it?"),
+                                                   QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes
+                                                   ))
+        {
+            return;
+        }
+    }
+
+    // start upload
+    m_currentRemoteFilePath = m_shellPath + fileName;
+    m_workWidget = WorkFileWidget;
+    m_jobType = JobUploadFile;
+    m_channel->uploadFile(m_currentLocalFilePath, m_currentRemoteFilePath, QSsh::SftpOverwriteExisting);
+
+    // show progress
+    m_progress->setLabelText(tr("Upload... ") + m_currentLocalFilePath +
+                             tr(" to ") + m_currentRemoteFilePath);
+    m_progress->reset();
+    m_progress->show();
+    m_progress->setValue(0);
+
+    m_timer = startTimer(500);
+}
+
+void SftpServer::handleRenameClicked(const QString &fileName)
+{
+    qDebug() << "handleRenameClicked";
+
+    FileNameDialog dialog(page->fileWidget);
+    dialog.setWindowTitle("Rename");
+    dialog.setText(fileName);
+
+    if(QDialog::Rejected == dialog.exec())
+    {
+        return;
+    }
+
+    // Jude if the same name have existed
+    if(page->fileWidget->isFileExisted(dialog.getText()))
+    {
+        QMessageBox::critical(page->fileWidget, tr("error"),
+                              tr("This name has existed in current path"),
+                              QMessageBox::Ok, QMessageBox::Ok);
+        return;
+    }
+
+    m_selectName = dialog.getText();
+    m_workWidget = WorkFileWidget;
+    m_jobType = JobRename;
+    m_channel->renameFileOrDirectory(m_shellPath + fileName, m_shellPath + m_selectName);
+}
+
+void SftpServer::handleNewFolderClicked()
+{
+    qDebug() << "handleNewFolderClicked";
+
+    FileNameDialog dialog(page->fileWidget);
+    dialog.setWindowTitle("New Folder");
+    dialog.setText("new folder");
+
+    if(QDialog::Rejected == dialog.exec())
+    {
+        return;
+    }
+
+    // Jude if the same name have existed
+    if(page->fileWidget->isFileExisted(dialog.getText()))
+    {
+        QMessageBox::critical(page->fileWidget, tr("error"),
+                              tr("This name has existed in current path"),
+                              QMessageBox::Ok, QMessageBox::Ok);
+        return;
+    }
+
+    m_selectName = dialog.getText();
+    m_workWidget = WorkFileWidget;
+    m_jobType = JobCreateDir;
+    m_channel->createDirectory(m_shellPath + m_selectName);
+}
+
+void SftpServer::handleNewFileClicked()
+{
+    qDebug() << "handleNewFileClicked";
+
+    FileNameDialog dialog(page->fileWidget);
+    dialog.setWindowTitle("New File");
+    dialog.setText("new file");
+
+    if(QDialog::Rejected == dialog.exec())
+    {
+        return;
+    }
+
+    // Jude if the same name have existed
+    if(page->fileWidget->isFileExisted(dialog.getText()))
+    {
+        QMessageBox::critical(page->fileWidget, tr("error"),
+                              tr("This name has existed in current path"),
+                              QMessageBox::Ok, QMessageBox::Ok);
+        return;
+    }
+
+    m_selectName = dialog.getText();
+    m_workWidget = WorkFileWidget;
+    m_jobType = JobCreateFile;
+    m_channel->createFile(m_shellPath + m_selectName, QSsh::SftpOverwriteExisting);
 }

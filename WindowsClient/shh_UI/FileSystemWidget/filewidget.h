@@ -34,6 +34,7 @@ public:
     void openFileSystem();      //打开文件资源系统
     void setFileInfoList(const QList<QSsh::SftpFileInfo> &fiList);   //设置文件信息列表
     void refreshDirectory(const QList<QSsh::SftpFileInfo> &fiList);
+    bool isFileExisted(QString fileName);
 
 signals:
     void openFileSystemClicked();
@@ -43,8 +44,9 @@ signals:
     void upClicked();
     void homeClicked();
     void newFolderClicked();
+    void newFileClicked();
     void deleteClicked(QString fileName, QString fileType);
-    void renameClicked();
+    void renameClicked(QString fileName);
     void refreshClicked();
 
 public slots:
@@ -54,6 +56,7 @@ public slots:
     void clickedUp();//返回上一级
     void clickedHome();//返回主菜单
     void clickedNewFolder();//创建新文件夹
+    void clickedNewFile();
     void clickedDelete();//删除
     void clickedRename();//重命名
     void clickedRefresh();//刷新页面
@@ -70,13 +73,15 @@ private:
     QList<QSsh::SftpFileInfo> fileInfoList;
 
     QMenu    *m_pOperaMenu;
+    QMenu    *m_pNewMenu;
     QAction  *m_pActOpen;
     QAction  *m_pActUpload;
     QAction  *m_pActDownload;
     QAction  *m_pActUp;
     QAction  *m_pActHome;
     QAction  *m_pActRefresh;
-    QAction  *m_pActNew;
+    QAction  *m_pActNewFile;
+    QAction  *m_pActNewFolder;
     QAction  *m_pActDelete;
     QAction  *m_pActRename;
 };

@@ -15,6 +15,7 @@
 #include "function.h"
 #include "qfiletreeview.h"
 #include "mainwindow.h"
+#include "filenamedialog.h"
 
 class MainWindow;
 
@@ -45,6 +46,7 @@ public:
     void initPage();
     void initTreeView();
     void initProgressDialog();
+    void upload(QString localPath);
 
 public slots:
     void handleConnected();
@@ -64,7 +66,10 @@ public slots:
     void handleDownloadClicked(const QString &fileName, const QString &fileType, const QString &fileSize);
     void handleRefreshClicked();
     void handleDeleteClicked(const QString &fileName, const QString &fileType);
-
+    void handleUploadClicked();
+    void handleRenameClicked(const QString &fileName);
+    void handleNewFolderClicked();
+    void handleNewFileClicked();
 
 private:
     Ui::SftpServer *ui;
@@ -75,6 +80,8 @@ private:
     QString m_currentPath;
     quint64 m_currentSize;
     QString m_currentLocalFilePath;
+    QString m_currentRemoteFilePath;
+    QString m_selectName;
 
     enum JobType{
         JobUnknow, JobStatFile, JobListDir, JobCreateDir, JobRemoveDir, JobRemoveFile, JobRename,

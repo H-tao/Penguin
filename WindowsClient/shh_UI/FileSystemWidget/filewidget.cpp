@@ -27,24 +27,29 @@ FileWidget::~FileWidget()
 
 void FileWidget::initOperaMenu()//右键菜单设置
 {
-    m_pOperaMenu = new QMenu();
+    m_pOperaMenu = new QMenu(this);
+    m_pNewMenu = new QMenu(tr("new"),this);
 
     m_pActOpen = new QAction(tr("open"),this);
     m_pActUpload = new QAction(tr("upload"),this);
     m_pActDownload = new QAction(tr("download"),this);
     m_pActHome = new QAction(tr("home"),this);
-    m_pActNew = new QAction(tr("new"),this);
+    m_pActNewFolder = new QAction(tr("new folder"),this);
+    m_pActNewFile = new QAction(tr("new file"),this);
     m_pActUp = new QAction(tr("up"),this);
     m_pActRename = new QAction(tr("rename"),this);
     m_pActRefresh = new QAction(tr("refresh"),this);
     m_pActDelete = new QAction(tr("delete"),this);
+
+    m_pNewMenu->addAction(m_pActNewFolder);
+    m_pNewMenu->addAction(m_pActNewFile);
 
     m_pOperaMenu->addAction(m_pActOpen);
     m_pOperaMenu->addAction(m_pActUp);
     m_pOperaMenu->addAction(m_pActHome);
     m_pOperaMenu->addAction(m_pActRefresh);
     m_pOperaMenu->addSeparator();
-    m_pOperaMenu->addAction(m_pActNew);
+    m_pOperaMenu->addMenu(m_pNewMenu);
     m_pOperaMenu->addAction(m_pActDelete);
     m_pOperaMenu->addAction(m_pActRename);
     m_pOperaMenu->addSeparator();
@@ -57,7 +62,8 @@ void FileWidget::initOperaMenu()//右键菜单设置
     connect(m_pActUp, SIGNAL(triggered()), this, SLOT(clickedUp()));
     connect(m_pActHome, SIGNAL(triggered()), this, SLOT(clickedHome()));
     connect(m_pActRefresh, SIGNAL(triggered()), this, SLOT(clickedRefresh()));
-    connect(m_pActNew, SIGNAL(triggered()), this, SLOT(clickedNewFolder()));
+    connect(m_pActNewFolder, SIGNAL(triggered()), this, SLOT(clickedNewFolder()));
+    connect(m_pActNewFile, SIGNAL(triggered()), this, SLOT(clickedNewFile()));
     connect(m_pActDelete, SIGNAL(triggered()), this, SLOT(clickedDelete()));
     connect(m_pActRename, SIGNAL(triggered()), this, SLOT(clickedRename()));
     connect(this,SIGNAL(customContextMenuRequested(QPoint)),this, SLOT(customMenuView(QPoint)));
@@ -158,7 +164,15 @@ void FileWidget::clickedRefresh()
 
 void FileWidget::clickedNewFolder()
 {
-    qDebug()<<"new";
+    qDebug()<<"new folder";
+    emit newFolderClicked();
+}
+
+void FileWidget::clickedNewFile()
+
+{
+    qDebug() << "new file";
+    emit newFileClicked();
 }
 
 void FileWidget::clickedDelete()
@@ -170,6 +184,7 @@ void FileWidget::clickedDelete()
 void FileWidget::clickedRename()
 {
     qDebug()<<"rename";
+    emit renameClicked(this->currentItem()->text());
     this->currentItem()->setSelected(true);
 }
 
@@ -182,6 +197,16 @@ void FileWidget::clickedDownload()
 void FileWidget::clickedUpload()
 {
     qDebug()<<"upload";
+    emit uploadClicked();
+}
+
+bool FileWidget::isFileExisted(QString fileName)
+{
+    QList<QListWidgetItem *> list = this->findItems(fileName, Qt::MatchExactly);
+    if(list.isEmpty())
+        return false;
+    else
+        return true;
 }
 
 //获取文件图标
