@@ -241,6 +241,7 @@ void SftpServer::handleFileInfo(QSsh::SftpJobId id, const QList<QSsh::SftpFileIn
     {
         qDebug() << "refreshDirectory(fileInfoList)";
         page->fileWidget->refreshDirectory(fileInfoList);
+        page->filePathLineEdit->setCurrentText(m_shellPath);
     }
 
 
@@ -293,9 +294,10 @@ void SftpServer::initPage()
     connect(page->fileWidget, SIGNAL(newFolderClicked()), this, SLOT(handleNewFolderClicked()));
     connect(page->fileWidget, SIGNAL(newFileClicked()), this, SLOT(handleNewFileClicked()));
 
-    connect(page->filePathLineEdit, SIGNAL(activated(QString)), this, SLOT(lineEditChanged(QString)));
     connect(page->maxiBtn, SIGNAL(clicked(bool)), page, SLOT(openFileSystem()));
     connect(page->miniBtn, SIGNAL(clicked(bool)), page, SLOT(concealFileSystem()));
+    connect(page->filePathLineEdit, SIGNAL(activated(QString)), this, SLOT(lineEditChanged(QString)));
+    page->filePathLineEdit->setCurrentText(m_shellPath);
 }
 
 void SftpServer::initProgressDialog()
@@ -639,4 +641,7 @@ void SftpServer::lineEditChanged(QString pathChanged)
 
     qDebug() << "Path Changed : " << pathChanged;
 
+    m_shellPath = pathChanged;
+
+    handleRefreshClicked();
 }

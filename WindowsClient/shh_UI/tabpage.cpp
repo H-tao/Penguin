@@ -30,7 +30,7 @@ void TabPage::initStyle()
 
     // 初始化ComboBox
     filePathLineEdit->setEditable(true);
-    filePathLineEdit->setEditText("d:\\");
+    filePathLineEdit->setEditText("");
     filePathLineEdit->setEnabled(true);
 //    filePathLineEdit->setFocusPolicy(Qt::NoFocus);
 
