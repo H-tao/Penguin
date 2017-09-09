@@ -17,13 +17,30 @@ TabPage::~TabPage()
 void TabPage::initStyle()
 {
     /****** 用public指针指向私有成员，外部访问可通使用指针 *******/
-    ui->fileSystemWidget->setVisible(false);    //设置初始用于显示文件资源管理系统的窗口为不可见
-    ui->filePathLineText->setVisible(false);
     textEdit = new ShellTextEdit(ui->textWidget);   //新增TextEdit
     ui->textWidgetLayout->addWidget(textEdit);
-    filePathLineEdit = ui->filePathLineText;
+
+    filePathLineEdit = ui->comboBox;    //新增LineEdit
+
     fileWidget = new FileWidget(ui->fileSystemWidget);  //新增FileWidget
     ui->fileSystemWidgetLayout->addWidget(fileWidget);
+
+    maxiBtn = ui->maximizeBtn;
+    miniBtn = ui->minimizeBtn;
+
+    // 初始化ComboBox
+    filePathLineEdit->setEditable(true);
+    filePathLineEdit->setEditText("d:\\");
+    filePathLineEdit->setEnabled(true);
+//    filePathLineEdit->setFocusPolicy(Qt::NoFocus);
+
+
+    //设置初始用于显示文件资源管理系统的窗口为不可见
+    ui->fileSystemWidget->setVisible(false);
+//    filePathLineEdit->setVisible(false);
+//    maxiBtn->setVisible(false);
+//    miniBtn->setVisible(false);
+
 }
 
 //打开文件管理系统
@@ -35,12 +52,6 @@ void TabPage::openFileSystem()
         showFileSystem();
         return;
     }
-
-    ui->filePathLineText->setText("d:\\");
-    ui->filePathLineText->setAlignment(Qt::AlignLeft);
-    ui->filePathLineText->setEnabled(false);
-    ui->filePathLineText->setFocusPolicy(Qt::NoFocus);
-    ui->filePathLineText->setVisible(true);
 
     fileWidget->openFileSystem();                                              //TODO 用于测试是否能显示图标
     ui->fileSystemWidget->setFrameShape(QFrame::NoFrame);
@@ -84,3 +95,4 @@ void TabPage::concealFileSystem()
         return;
     }
 }
+

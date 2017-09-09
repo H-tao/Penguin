@@ -43,6 +43,7 @@ public:
                         QWidget *parent = 0, TabPage *p = 0, MainWindow *mainWindow = 0);
     ~SftpServer();
 
+    void openTreeView();
     void initPage();
     void initTreeView();
     void initProgressDialog();
@@ -70,6 +71,8 @@ public slots:
     void handleRenameClicked(const QString &fileName);
     void handleNewFolderClicked();
     void handleNewFileClicked();
+
+    void lineEditChanged(QString pathChanged);
 
 private:
     Ui::SftpServer *ui;

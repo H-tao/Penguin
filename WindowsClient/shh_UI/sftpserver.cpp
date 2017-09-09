@@ -243,6 +243,7 @@ void SftpServer::handleFileInfo(QSsh::SftpJobId id, const QList<QSsh::SftpFileIn
         page->fileWidget->refreshDirectory(fileInfoList);
     }
 
+
 }
 
 void SftpServer::handleChannelClosed()
@@ -291,6 +292,10 @@ void SftpServer::initPage()
     connect(page->fileWidget, SIGNAL(renameClicked(QString)), this, SLOT(handleRenameClicked(QString)));
     connect(page->fileWidget, SIGNAL(newFolderClicked()), this, SLOT(handleNewFolderClicked()));
     connect(page->fileWidget, SIGNAL(newFileClicked()), this, SLOT(handleNewFileClicked()));
+
+    connect(page->filePathLineEdit, SIGNAL(activated(QString)), this, SLOT(lineEditChanged(QString)));
+    connect(page->maxiBtn, SIGNAL(clicked(bool)), page, SLOT(openFileSystem()));
+    connect(page->miniBtn, SIGNAL(clicked(bool)), page, SLOT(concealFileSystem()));
 }
 
 void SftpServer::initProgressDialog()
@@ -596,4 +601,42 @@ void SftpServer::handleNewFileClicked()
     m_workWidget = WorkFileWidget;
     m_jobType = JobCreateFile;
     m_channel->createFile(m_shellPath + m_selectName, QSsh::SftpOverwriteExisting);
+}
+
+void SftpServer::openTreeView()
+{
+    this->show();
+}
+
+void SftpServer::lineEditChanged(QString pathChanged)
+{
+    qDebug() << "lineEditChanged";
+
+    int i = 0;
+    int j = -1;
+    while(i < pathChanged.length())
+    {
+        if(pathChanged.at(i) == '/')
+        {
+            if(j + 1 == i)
+            {
+                pathChanged.remove(i,1);
+                continue;
+            }
+            j = i;
+        }
+        ++i;
+    }
+
+    // add '/' at the front
+    pathChanged.push_front('/');
+
+    // add '/' at the back
+    if(pathChanged.right(1) != "/")
+    {
+        pathChanged.push_back('/');
+    }
+
+    qDebug() << "Path Changed : " << pathChanged;
+
 }

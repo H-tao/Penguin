@@ -23,10 +23,6 @@ MainWindow::~MainWindow()
 void MainWindow::initStyle()
 {
     setUiDesignerStyle();   //设置UI界面风格
-    /*
-    textEdit = new ShellTextEdit(ui->tab_1);
-    ui->firstTabLayout->addWidget(textEdit);
-    */
     TabPage *tabPage = new TabPage;
     tabPagePool.append(tabPage);
     ui->firstTabLayout->addWidget(tabPage);
@@ -40,10 +36,15 @@ void MainWindow::initWindowMenu()
 {
     pOpenSftpAct = new QAction(tr("Open Sftp Server"),this);
     pCloseSftpAct = new QAction(tr("close Sftp Server"),this);
+    pOpenTreeView = new QAction(tr("Open TreeView"),this);
+
     ui->windowMenu->addAction(pOpenSftpAct);
     ui->windowMenu->addAction(pCloseSftpAct);
+    ui->windowMenu->addAction(pOpenTreeView);
+
     connect(pOpenSftpAct, SIGNAL(triggered(bool)), this, SLOT(openSftpServer()));
     connect(pCloseSftpAct, SIGNAL(triggered(bool)), this, SLOT(closeSftpServer()));
+    connect(pOpenTreeView, SIGNAL(triggered(bool)), this, SLOT(openTreeView()));
 }
 
 //UI界面风格
@@ -242,14 +243,18 @@ void MainWindow::showInfoFromRemote(QString arguement)
 
 void MainWindow::openSftpServer()
 {
+    qDebug() << "openSftpServer clicked";
+
     if(sftpPool.size() < (getCurrentIndex() + 1))
         newSftpServer();
 
-    sftpPool.at(getCurrentIndex())->show();
+//    sftpPool.at(getCurrentIndex())->show();
 }
 
 void MainWindow::newSftpServer()
 {
+    qDebug() << "newSftpServer clicked";
+
     if(paraPool.isEmpty())
     {
         qDebug() << "未建立连接，请先新建连接";
@@ -266,10 +271,17 @@ void MainWindow::newSftpServer()
 
 void MainWindow::closeSftpServer()
 {
+    qDebug() << "closeSftpServer clicked";
     if(sftpPool.size() < getCurrentIndex())
         return;
 
     sftpPool.at(getCurrentIndex())->close();
+}
+
+void MainWindow::openTreeView()
+{
+    qDebug() << "MainWindow::openTreeView clicked";
+    sftpPool.at(getCurrentIndex())->openTreeView();
 }
 
 int MainWindow::getCurrentIndex()

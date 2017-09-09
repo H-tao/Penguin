@@ -65,11 +65,15 @@ public slots:
     void openSftpServer();
     void closeSftpServer();
 
+    /********* TreeView *****/
+    void openTreeView();
+
 
 private:
 
     QAction *pOpenSftpAct;
     QAction *pCloseSftpAct;
+    QAction *pOpenTreeView;
 
     Ui::MainWindow *ui;
     QVector<QSsh::SshConnectionParameters *> paraPool;

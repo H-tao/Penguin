@@ -10,6 +10,8 @@
 #include <QWidget>
 #include <FileSystemWidget/filewidget.h>
 #include <ShellTextEdit/shelltextedit.h>
+#include <QComboBox>
+#include <QPushButton>
 
 namespace Ui {
 class TabPage;
@@ -24,19 +26,23 @@ public:
     ~TabPage();
 
     void initStyle();   //初始化标签页风格
-    void openFileSystem();   //打开文件系统
-    void closeFileSystem();  //关闭文件系统
-    void showFileSystem();   //显示文件系统
-    void concealFileSystem();    //隐藏文件系统
 
     /**** textEdit、textLine、fileWidget 设置为Public，外部可以访问****/
     FileWidget *fileWidget;
     ShellTextEdit *textEdit;
-    QLineEdit *filePathLineEdit;
+    QComboBox *filePathLineEdit;
+    QPushButton *maxiBtn;
+    QPushButton *miniBtn;
 
     //文件资源管理系统部分变量
     bool isOpenFileSystem = false;
     bool isShowFileSystem = false;
+
+public slots:
+    void openFileSystem();   //打开文件系统
+    void closeFileSystem();  //关闭文件系统
+    void showFileSystem();   //显示文件系统
+    void concealFileSystem();    //隐藏文件系统
 
 private:
     Ui::TabPage *ui;
