@@ -73,6 +73,7 @@ private:
     QList<QSsh::SftpFileInfo> fileInfoList;
 
     QMenu    *m_pOperaMenu;
+    QMenu *m_pMarginMenu;
     QMenu    *m_pNewMenu;
     QAction  *m_pActOpen;
     QAction  *m_pActUpload;
@@ -84,6 +85,7 @@ private:
     QAction  *m_pActNewFolder;
     QAction  *m_pActDelete;
     QAction  *m_pActRename;
+
 };
 
 #endif // FILEWIDGET_H

@@ -9,6 +9,7 @@
 #include <QFileDialog>
 #include <QtTest/QTest>
 #include <QFileInfo>
+#include <QList>
 #include "ssh/sshconnection.h"
 #include "ssh/sftpchannel.h"
 #include "filetreeview.h"
@@ -18,6 +19,8 @@
 #include "filenamedialog.h"
 
 class MainWindow;
+
+using Channel_Type = typename QSsh::SftpChannel::Ptr;
 
 namespace Ui {
 class SftpServer;
@@ -54,7 +57,7 @@ public slots:
     void handleError();
     void handleDisconnected();
     void handleChannelInitialized();
-    void handleChannelInitializationFailed(const QString &renson);
+    void  handleChannelInitializationFailed(const QString &reason);
     void handleJobFinished(QSsh::SftpJobId id, const QString &error);
     void handleFileInfo(QSsh::SftpJobId id, const QList<QSsh::SftpFileInfo> &fileInfoList);
     void handleChannelClosed();
@@ -73,6 +76,8 @@ public slots:
     void handleNewFileClicked();
 
     void lineEditChanged(QString pathChanged);
+
+    Channel_Type *createNewChannel(Channel_Type *channel);
 
 private:
     Ui::SftpServer *ui;
@@ -109,6 +114,8 @@ private:
     QStandardItem *m_currentItem;
     QStandardItem *item;
     QQueue<QueueItem *> items;
+    QList<QSsh::SftpChannel::Ptr> channels;
+    QSsh::SftpChannel::Ptr channel_2;
 };
 
 #endif // SFTPSERVER_H

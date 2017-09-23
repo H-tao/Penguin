@@ -1,8 +1,11 @@
 #include "sftpserver.h"
 #include "ui_sftpserver.h"
 #include <QFileDialog>
+#include <QTimer>
+#include <QThread>
 
 QString homePath = "/root/";
+bool isFirstLink = true;
 
 SftpServer::SftpServer(QWidget *parent) :
     QWidget(parent),
@@ -41,6 +44,26 @@ SftpServer::~SftpServer()
     delete ui;
 }
 
+Channel_Type* SftpServer::createNewChannel(Channel_Type * channel)
+{
+    qDebug() << "createNewChannel";
+//    Channel_Type* channel = new Channel_Type;
+//    channel = m_connection->createSftpChannel();
+//    channels.append(channel);
+
+//    connect(channel->data(), SIGNAL(initialized()),
+//            this, SLOT(handleChannelInitialized()));
+    connect(channel->data(), SIGNAL(initializationFailed(QString)),
+            this, SLOT(handleChannelInitializationFailed(QString)));
+    connect(channel->data(), SIGNAL(finished(QSsh::SftpJobId, QString)),
+            this, SLOT(handleJobFinished(QSsh::SftpJobId, QString)), Qt::DirectConnection);
+    connect(channel->data(), SIGNAL(fileInfoAvailable(QSsh::SftpJobId,QList<QSsh::SftpFileInfo>)),
+            this, SLOT(handleFileInfo(QSsh::SftpJobId, QList<QSsh::SftpFileInfo>)));
+    connect(channel->data(), SIGNAL(closed()), this, SLOT(handleChannelClosed()));
+
+    return channel;
+}
+
 void SftpServer::handleConnected()
 {
     qDebug() << "Create Channel";
@@ -61,6 +84,20 @@ void SftpServer::handleConnected()
     connect(m_channel.data(), SIGNAL(closed()), this, SLOT(handleChannelClosed()));
 
     m_channel->initialize();
+
+    channel_2 = m_connection->createSftpChannel();
+
+    connect(channel_2.data(), SIGNAL(initialized()),
+            this, SLOT(handleChannelInitialized()));
+    connect(channel_2.data(), SIGNAL(initializationFailed(QString)),
+            this, SLOT(handleChannelInitializationFailed(QString)));
+    connect(channel_2.data(), SIGNAL(finished(QSsh::SftpJobId, QString)),
+           this, SLOT(handleJobFinished(QSsh::SftpJobId, QString)), Qt::DirectConnection);
+    connect(channel_2.data(), SIGNAL(fileInfoAvailable(QSsh::SftpJobId,QList<QSsh::SftpFileInfo>)),
+           this, SLOT(handleFileInfo(QSsh::SftpJobId, QList<QSsh::SftpFileInfo>)));
+    connect(channel_2.data(), SIGNAL(closed()), this, SLOT(handleChannelClosed()));
+
+    channel_2->initialize();
 }
 
 void SftpServer::handleError()
@@ -77,15 +114,20 @@ void SftpServer::handleChannelInitialized()
 {
     qDebug() << "Initialize channel success!";
 
-    // list dir
-    m_jobType = JobListDir;
-    m_workWidget = WorkFileTreeView;
-    m_jobListDirId = m_channel->listDirectory(m_currentPath);
+    if(isFirstLink)
+    {
+        isFirstLink = false;
+        // list dir
+        m_jobType = JobListDir;
+        m_workWidget = WorkFileTreeView;
+        m_jobListDirId = m_channel->listDirectory(m_currentPath);
+    }
 }
 
-void SftpServer::handleChannelInitializationFailed(const QString &renson)
+void SftpServer::handleChannelInitializationFailed(const QString &reason)
 {
-
+    qDebug() << "handleChannelInitializationFailed";
+    QMessageBox::warning(page->fileWidget, tr("CreateNewChannelFailed"), tr("reason") + reason, QMessageBox::Ok);
 }
 
 void SftpServer::handleJobFinished(QSsh::SftpJobId id, const QString &error)
@@ -94,6 +136,8 @@ void SftpServer::handleJobFinished(QSsh::SftpJobId id, const QString &error)
     if(!error.isEmpty())
         qDebug() << "error" << error;
     qDebug() << "finished currentPath: " << m_currentPath;
+    m_currentPath = m_shellPath;
+    qDebug() << "currentPaht = shellPath" << m_currentPath;
     qDebug() << "finished shellPath: " << m_shellPath;
 
     if(!error.isEmpty())
@@ -509,7 +553,9 @@ void SftpServer::upload(QString localPath)
     m_currentRemoteFilePath = m_shellPath + fileName;
     m_workWidget = WorkFileWidget;
     m_jobType = JobUploadFile;
-    m_channel->uploadFile(m_currentLocalFilePath, m_currentRemoteFilePath, QSsh::SftpOverwriteExisting);
+//    QThread::msleep(2000);
+ //   m_channel->uploadFile(m_currentLocalFilePath, m_currentRemoteFilePath, QSsh::SftpOverwriteExisting);
+    channel_2->uploadFile(m_currentLocalFilePath, m_currentRemoteFilePath, QSsh::SftpOverwriteExisting);
 
     // show progress
     m_progress->setLabelText(tr("Upload... ") + m_currentLocalFilePath +
@@ -547,6 +593,7 @@ void SftpServer::handleRenameClicked(const QString &fileName)
     m_workWidget = WorkFileWidget;
     m_jobType = JobRename;
     m_channel->renameFileOrDirectory(m_shellPath + fileName, m_shellPath + m_selectName);
+    qDebug() << "m_channel " << m_channel;
 }
 
 void SftpServer::handleNewFolderClicked()

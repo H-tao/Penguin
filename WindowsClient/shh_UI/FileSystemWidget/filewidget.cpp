@@ -56,6 +56,14 @@ void FileWidget::initOperaMenu()//右键菜单设置
     m_pOperaMenu->addAction(m_pActUpload);
     m_pOperaMenu->addAction(m_pActDownload);
 
+    m_pMarginMenu = new QMenu(this);
+    m_pMarginMenu->addAction(m_pActUp);
+    m_pMarginMenu->addAction(m_pActHome);
+    m_pMarginMenu->addAction(m_pActRefresh);
+    m_pMarginMenu->addMenu(m_pNewMenu);
+    m_pMarginMenu->addAction(m_pActUpload);
+    m_pMarginMenu->addAction(m_pActDownload);
+
     connect(m_pActOpen, SIGNAL(triggered()), this, SLOT(clickedOpen()));
     connect(m_pActUpload, SIGNAL(triggered()), this, SLOT(clickedUpload()));
     connect(m_pActDownload, SIGNAL(triggered()), this, SLOT(clickedDownload()));
@@ -129,10 +137,12 @@ void FileWidget::customMenuView(QPoint pt)
 {
     qDebug() << "customMenuView";
     QListWidgetItem* cur=this->itemAt(pt);
-    if(cur==NULL) return;
+    if(cur != NULL)
+        m_pOperaMenu->exec(QCursor::pos());
+    else
+        m_pMarginMenu->exec(QCursor::pos());
 
-    m_pOperaMenu->exec(QCursor::pos());
-    qDebug() << "exec";
+    qDebug() << "customMenuView";
 }
 
 void FileWidget::clickedOpen()
