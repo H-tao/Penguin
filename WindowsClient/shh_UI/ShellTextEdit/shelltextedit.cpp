@@ -168,8 +168,10 @@ void ShellTextEdit::keyPressEvent(QKeyEvent *e)
            e->ignore();
            return;
         }
-        if(arguement.at(arguement.size()-1)<='\0X1F')
-            QTextEdit::keyPressEvent(e);
+        if(arguement.at(arguement.size()-1).toAscii()<=28)
+           { QTextEdit::keyPressEvent(e);
+            qDebug()<<arguement.at(arguement.size()-1).toAscii();
+        }
         QTextEdit::keyPressEvent(e);
         arguement.remove(arguement.size()-1,1);
     }
