@@ -373,7 +373,7 @@ void SshDecryptionFacility::decrypt(QByteArray &data, quint32 offset,
     const char * const start = data.constData() + offset;
     const char * const end = start + dataSize;
     for (const char *c = start; c < end; ++c)
-        qDebug() << "'" << *c << "' (0x" << (static_cast<int>(*c) & 0xff) << ")";
+        //qDebug() << "'" << *c << "' (0x" << (static_cast<int>(*c) & 0xff) << ")";
 #endif
 }
 

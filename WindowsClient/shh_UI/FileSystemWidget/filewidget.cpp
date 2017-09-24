@@ -99,7 +99,7 @@ void FileWidget::refreshDirectory(const QList<QSsh::SftpFileInfo> &fiList)
     foreach (const QSsh::SftpFileInfo &fi, fiList)
     {
 
-        qDebug()<<fi.name<<" "<<fi.size<<" "<<fi.type<<" "<<fi.permissions;
+        //qDebug()<<fi.name<<" "<<fi.size<<" "<<fi.type<<" "<<fi.permissions;
 
         if(fi.name == ".." || fi.name == ".")
         {
@@ -135,19 +135,19 @@ void FileWidget::refreshDirectory(const QList<QSsh::SftpFileInfo> &fiList)
 
 void FileWidget::customMenuView(QPoint pt)
 {
-    qDebug() << "customMenuView";
+    //qDebug() << "customMenuView";
     QListWidgetItem* cur=this->itemAt(pt);
     if(cur != NULL)
         m_pOperaMenu->exec(QCursor::pos());
     else
         m_pMarginMenu->exec(QCursor::pos());
 
-    qDebug() << "customMenuView";
+    //qDebug() << "customMenuView";
 }
 
 void FileWidget::clickedOpen()
 {
-    qDebug()<<"open";
+    //qDebug()<<"open";
     if(this->currentItem()->text() == "")
         return;
     // text() == fileName
@@ -156,57 +156,57 @@ void FileWidget::clickedOpen()
 
 void FileWidget::clickedUp()
 {
-    qDebug()<<"break";
+    //qDebug()<<"break";
     emit upClicked();
 }
 
 void FileWidget::clickedHome()
 {
-    qDebug()<<"break home";
+    //qDebug()<<"break home";
     emit homeClicked();
 }
 
 void FileWidget::clickedRefresh()
 {
-    qDebug()<<"refresh";
+    //qDebug()<<"refresh";
     emit refreshClicked();
 }
 
 void FileWidget::clickedNewFolder()
 {
-    qDebug()<<"new folder";
+    //qDebug()<<"new folder";
     emit newFolderClicked();
 }
 
 void FileWidget::clickedNewFile()
 
 {
-    qDebug() << "new file";
+    //qDebug() << "new file";
     emit newFileClicked();
 }
 
 void FileWidget::clickedDelete()
 {
-    qDebug()<<"delete";
+    //qDebug()<<"delete";
     emit deleteClicked(this->currentItem()->text(), this->currentItem()->whatsThis());
 }
 
 void FileWidget::clickedRename()
 {
-    qDebug()<<"rename";
+    //qDebug()<<"rename";
     emit renameClicked(this->currentItem()->text());
     this->currentItem()->setSelected(true);
 }
 
 void FileWidget::clickedDownload()
 {
-    qDebug()<<"download";
+    //qDebug()<<"download";
     emit downloadClicked(this->currentItem()->text(), this->currentItem()->whatsThis(), this->currentItem()->toolTip());
 }
 
 void FileWidget::clickedUpload()
 {
-    qDebug()<<"upload";
+    //qDebug()<<"upload";
     emit uploadClicked();
 }
 
@@ -262,6 +262,6 @@ void FileWidget::mouseMoveEvent(QMouseEvent *event)
 
 void FileWidget::handleItemDoubleClicked(QListWidgetItem *item)
 {
-    qDebug() << "handleItemDoubleClicked";
+    //qDebug() << "handleItemDoubleClicked";
     emit openClicked(item->text(), item->whatsThis(), item->toolTip());
 }

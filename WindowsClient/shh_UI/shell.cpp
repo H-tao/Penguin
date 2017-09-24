@@ -44,6 +44,7 @@ Shell::Shell(const QSsh::SshConnectionParameters &parameters,int winNo, QObject 
     : QObject(parent),
       m_connection(new SshConnection(parameters)),no(winNo)
 {
+    returnArgs=false;
     ptr=(MainWindow*)parent;
     writeable=false;
 
@@ -78,7 +79,15 @@ void Shell::handleConnected()
 
 void Shell::shellOut()
 {
+    if(returnArgs)
+    {
+        returnArgs=false;
+        m_shell->readLine();
+        ptr->outToShell(this->getNo(),m_shell->readAll());
+        return;
+    }
     ptr->outToShell(this->getNo(),m_shell->readAll());
+    qDebug()<<"asdasd";
 }
 void Shell::handleChannelClosed(int exitStatus)
 {
@@ -89,10 +98,13 @@ void Shell::handleChannelClosed(int exitStatus)
 
 void Shell::handleIn(QString &mse)
 {
-    qDebug()<<mse;
-    mse=mse.toLower();
+    //qDebug()<<mse;
+   // mse=mse.toLower();
    if(writeable)
-       m_shell->write(mse.toLatin1());
+   {
+    m_shell->write(mse.toLatin1());
+    returnArgs=true;
+   }
 }
 void Shell::shellData(QString mse)
 {

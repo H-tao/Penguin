@@ -53,7 +53,7 @@ namespace {
     {
 #ifdef CREATOR_SSH_DEBUG
         for (int i = 0; i < data.count(); ++i)
-            qDebug() << std::hex << (static_cast<unsigned int>(data[i]) & 0xff) << " ";
+            //qDebug() << std::hex << (static_cast<unsigned int>(data[i]) & 0xff) << " ";
 #else
         Q_UNUSED(data);
 #endif

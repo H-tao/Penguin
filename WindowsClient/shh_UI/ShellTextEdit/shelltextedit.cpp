@@ -53,7 +53,7 @@ void ShellTextEdit::keyPressEvent(QKeyEvent *e)
         if(arguement.isEmpty()) //命令为空，返回
             return;
 
-        qDebug() << "Enter Done";
+        //qDebug() << "Enter Done";
         history.append(arguement);
         enterHistory=true;
         hisNum=history.size();
@@ -93,7 +93,7 @@ void ShellTextEdit::keyPressEvent(QKeyEvent *e)
 //             txtcur.movePosition(QTextCursor::EndOfWord,QTextCursor::KeepAnchor);
 //             txtcur.movePosition(QTextCursor::EndOfWord,QTextCursor::KeepAnchor,-1*arguement.size());
 //             txtcur.removeSelectedText();
-//             qDebug()<<txtcur.selectedText();
+//             //qDebug()<<txtcur.selectedText();
 //             insertPlainText(*ptr);
 //             arguement=*ptr;
 //             return;
@@ -161,7 +161,7 @@ void ShellTextEdit::keyPressEvent(QKeyEvent *e)
     }
     if(e->key()==Qt::Key_Backspace/*e->text() == "\b"*/)         //退格键删除
     {
-        qDebug()<<e->type()<<"  "<<e->key()<<"  "<<e->modifiers();
+        //qDebug()<<e->type()<<"  "<<e->key()<<"  "<<e->modifiers();
         //命令为空，不可删除，即为ReadOnly
         if(arguement.size() == 0)
         {
@@ -170,7 +170,7 @@ void ShellTextEdit::keyPressEvent(QKeyEvent *e)
         }
         if(arguement.at(arguement.size()-1).toAscii()<=28)
            { QTextEdit::keyPressEvent(e);
-            qDebug()<<arguement.at(arguement.size()-1).toAscii();
+            //qDebug()<<arguement.at(arguement.size()-1).toAscii();
         }
         QTextEdit::keyPressEvent(e);
         arguement.remove(arguement.size()-1,1);
@@ -201,10 +201,10 @@ void ShellTextEdit::keyPressEvent(QKeyEvent *e)
     }
     else if(e->key()==Qt::Key_Enter||e->key()==Qt::Key_Return)
     {
-        qDebug() << "Enter Done";
+        //qDebug() << "Enter Done";
         emit arguementDone(arguement);
         arguement = "";
-        qDebug() << "After \\r arguement：" << arguement;
+        //qDebug() << "After \\r arguement：" << arguement;
         return;
     }
     else if(e->key()==Qt::Key_Backspace)    //退格键删除
@@ -214,10 +214,10 @@ void ShellTextEdit::keyPressEvent(QKeyEvent *e)
             setReadOnly(false);
             this->QTextEdit::keyPressEvent(e);
              arguement.remove(arguement.size() - 1, 1);     //最后一个char位于size()-1
-             qDebug()<<arguement.at(arguement.size()-1);
+             //qDebug()<<arguement.at(arguement.size()-1);
             i--;
             if(arguement.at(arguement.size()-1)<='\31'){
-                qDebug()<<"2222222";
+                //qDebug()<<"2222222";
                 arguement.remove(arguement.size(),1);
                 this->QTextEdit::keyPressEvent(e);
                 i--;
@@ -240,7 +240,7 @@ void ShellTextEdit::keyPressEvent(QKeyEvent *e)
     // Alt
     else if(e->modifiers() == Qt::AltModifier)
     {
-        qDebug() << "Alt!!!";
+        //qDebug() << "Alt!!!";
         return;
     }*/
 }

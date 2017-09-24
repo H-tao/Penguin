@@ -118,7 +118,7 @@ void MainWindow::on_newConnectionAction_triggered()
         {
             //当前的页面无连接
             shellPool.append(new Shell(*sshPara,ui->tabWidget->currentIndex(),this));
-            qDebug()<<"55566";
+            //qDebug()<<"55566";
             paraPool.append(sshPara);
 
             //获得数据
@@ -137,7 +137,7 @@ void MainWindow::on_newConnectionAction_triggered()
             */
             shellPool.append(new Shell(*sshPara,shellPool.size(),this));
             paraPool.append(sshPara);
-            qDebug()<<"6666";
+            //qDebug()<<"6666";
 
             //获得数据
             shellPool.at(shellPool.size()-1)->run();
@@ -175,7 +175,7 @@ void MainWindow::on_addTabAction_triggered()
     TabPage *tabPage = new TabPage(ui->tabWidget);
     ui->tabWidget->addTab(tabPage,"本地Shell");
     tabPagePool.append(tabPage);                        //加入TabPage池
-    qDebug() << ui->tabWidget->count();
+    //qDebug() << ui->tabWidget->count();
 }
 
 //关闭当前选项卡Action
@@ -197,12 +197,13 @@ void MainWindow::outToShell(int winNo, QString arguement)
 {
     if(arguement.isEmpty())
         return;
-    qDebug() << "Info from remote:" << arguement;
+    //qDebug() << "Info from remote:" << arguement;
     tabPagePool.at(winNo)->textEdit->append(arguement);
     /*
     TabPage *tabPage = reinterpret_cast<TabPage*>(ui->tabWidget->widget(winNo));   //TODO
     tabPage->textEdit->append(arguement);    //将远端命令输出显示
 */
+    qDebug()<<arguement;
 }
 
 void MainWindow::on_actionTest_triggered()
@@ -234,7 +235,7 @@ void MainWindow::on_action_4_triggered()
 
 void MainWindow::showInfoFromRemote(QString arguement)
 {
-    qDebug() << "testSlot arguement:" << arguement;
+    //qDebug() << "testSlot arguement:" << arguement;
     arguement.remove('\r');
     arguement += "\n";
     shellPool.at(getCurrentIndex())->handleIn(arguement);
@@ -243,7 +244,7 @@ void MainWindow::showInfoFromRemote(QString arguement)
 
 void MainWindow::openSftpServer()
 {
-    qDebug() << "openSftpServer clicked";
+    //qDebug() << "openSftpServer clicked";
 
     if(sftpPool.size() < (getCurrentIndex() + 1))
         newSftpServer();
@@ -253,11 +254,11 @@ void MainWindow::openSftpServer()
 
 void MainWindow::newSftpServer()
 {
-    qDebug() << "newSftpServer clicked";
+    //qDebug() << "newSftpServer clicked";
 
     if(paraPool.isEmpty())
     {
-        qDebug() << "未建立连接，请先新建连接";
+        //qDebug() << "未建立连接，请先新建连接";
         return;
     }
 
@@ -271,7 +272,7 @@ void MainWindow::newSftpServer()
 
 void MainWindow::closeSftpServer()
 {
-    qDebug() << "closeSftpServer clicked";
+    //qDebug() << "closeSftpServer clicked";
     if(sftpPool.size() < getCurrentIndex())
         return;
 
@@ -280,7 +281,7 @@ void MainWindow::closeSftpServer()
 
 void MainWindow::openTreeView()
 {
-    qDebug() << "MainWindow::openTreeView clicked";
+    //qDebug() << "MainWindow::openTreeView clicked";
     sftpPool.at(getCurrentIndex())->openTreeView();
 }
 

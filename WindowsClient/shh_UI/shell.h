@@ -72,6 +72,7 @@ private:
     QSharedPointer<QSsh::SshRemoteProcess > m_shell;
     int no;
     bool writeable;
+    bool returnArgs;
 signals:
     void connection(int,QString);
     void dataReady(int,QString);
