@@ -5,6 +5,7 @@
 #include <QGridLayout>
 #include <QScrollArea>
 #include<QDebug>
+#include<QMessageBox>
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -288,4 +289,11 @@ void MainWindow::openTreeView()
 int MainWindow::getCurrentIndex()
 {
     return ui->tabWidget->currentIndex();
+}
+
+void MainWindow::errorHandle(int winNo, QString error)
+{
+    paraPool.remove(winNo);
+    shellPool.remove(winNo);
+    QMessageBox::warning(this,"连接出错",error,QMessageBox::Ok);
 }

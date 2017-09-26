@@ -67,6 +67,7 @@ private slots:
     void shellData(QString);
     void shellError();
      void recon();
+
 private:
     QSsh::SshConnection *m_connection;
     QSharedPointer<QSsh::SshRemoteProcess > m_shell;

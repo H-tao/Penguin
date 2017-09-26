@@ -31,7 +31,7 @@
 
 #include <ssh/sshconnection.h>
 #include <ssh/sshremoteprocess.h>
-
+#include<QMessageBox>
 #include <QCoreApplication>
 #include <QFile>
 #include <QSocketNotifier>
@@ -52,7 +52,8 @@ Shell::Shell(const QSsh::SshConnectionParameters &parameters,int winNo, QObject 
     connect(m_connection,SIGNAL(dataAvailable(QString)),this,SLOT(shellData(QString)));
     connect(this,SIGNAL(dataReady(int,QString)),ptr,SLOT(outToShell(int,QString)));
     connect(m_connection, SIGNAL(error(QSsh::SshError)),this,SLOT(shellError()));
-    connect(this,SIGNAL(error(int,QString)),ptr,SLOT(outToShell(int,QString)));
+    //connect(this,SIGNAL(error(int,QString)),ptr,SLOT(outToShell(int,QString)));
+    connect(this,SIGNAL(error(int,QString)),ptr,SLOT(errorHandle(int,QString)));
 }
 
 Shell::~Shell()

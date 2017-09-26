@@ -67,6 +67,8 @@ public slots:
 
     /********* TreeView *****/
     void openTreeView();
+private slots:
+    void errorHandle(int,QString);
 
 
 private:
