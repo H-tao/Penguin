@@ -39,6 +39,7 @@ public:
     void connectAction();
     int getCurrentIndex();
     void newSftpServer();
+    void openStyleSheet();
 
 private slots:
 

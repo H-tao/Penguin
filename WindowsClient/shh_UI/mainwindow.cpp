@@ -31,6 +31,9 @@ void MainWindow::initStyle()
 
     //由于QTabWidget默认有两个Tab，所以需移除tabWidget的第二个Tab
     ui->tabWidget->removeTab(1);
+    ui->tabWidget->setTabsClosable(true);
+    qApp->setPalette(QPalette(QColor("#444444")));
+    openStyleSheet();
 }
 
 void MainWindow::initWindowMenu()
@@ -296,4 +299,15 @@ void MainWindow::errorHandle(int winNo, QString error)
     paraPool.remove(winNo);
     shellPool.remove(winNo);
     QMessageBox::warning(this,"连接出错",error,QMessageBox::Ok);
+}
+
+void MainWindow::openStyleSheet()
+{
+    QFile file(":/src/style.css");
+    if(file.open(QFile::ReadOnly))
+    {
+        QString styleSheet = tr(file.readAll());
+        qApp->setStyleSheet(styleSheet);
+        file.close();
+    }
 }

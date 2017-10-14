@@ -53,7 +53,8 @@ FORMS    += mainwindow.ui \
     filenamedialog.ui
 
 RESOURCES += \
-    filetype.qrc
+    filetype.qrc \
+    style.qrc
 
 include(../qssh.pri) ## Required for IDE_LIBRARY_PATH and qtLibraryName
 LIBS += -L$$IDE_LIBRARY_PATH -l$$qtLibraryName(Botan) -l$$qtLibraryName(QSsh)

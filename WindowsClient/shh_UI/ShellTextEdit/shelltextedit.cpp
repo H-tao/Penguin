@@ -17,7 +17,7 @@ ShellTextEdit::~ShellTextEdit()
 void ShellTextEdit::initSytle()
 {
     //设置文本标签背景
-    setStyleSheet("background-color:#242424");
+    setStyleSheet("background-color:#484848");
     //设置字体颜色
     QPalette pal = palette();
     //pal.setColor(QPalette::Background, QColor(0,0,0));

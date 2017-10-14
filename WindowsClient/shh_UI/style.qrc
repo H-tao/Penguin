@@ -1,0 +1,26 @@
+<RCC>
+    <qresource prefix="/">
+        <file>src/style.css</file>
+        <file>src/style/add_bottom.png</file>
+        <file>src/style/add_left.png</file>
+        <file>src/style/add_right.png</file>
+        <file>src/style/add_top.png</file>
+        <file>src/style/branch_close.png</file>
+        <file>src/style/branch_open.png</file>
+        <file>src/style/calendar_nextmonth.png</file>
+        <file>src/style/calendar_prevmonth.png</file>
+        <file>src/style/checkbox_checked.png</file>
+        <file>src/style/checkbox_checked_disable.png</file>
+        <file>src/style/checkbox_parcial.png</file>
+        <file>src/style/checkbox_parcial_disable.png</file>
+        <file>src/style/checkbox_unchecked.png</file>
+        <file>src/style/checkbox_unchecked_disable.png</file>
+        <file>src/style/radiobutton_checked.png</file>
+        <file>src/style/radiobutton_checked_disable.png</file>
+        <file>src/style/radiobutton_unchecked.png</file>
+        <file>src/style/radiobutton_unchecked_disable.png</file>
+        <file>src/style/tabbar_close_disable.png</file>
+        <file>src/style/tabbar_close_on.png</file>
+        <file>src/style/close2.png</file>
+    </qresource>
+</RCC>
