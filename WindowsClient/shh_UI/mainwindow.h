@@ -70,7 +70,7 @@ public slots:
     void openTreeView();
 private slots:
     void errorHandle(int,QString);
-
+    void closeTab(int index);
 
 private:
 

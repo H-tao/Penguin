@@ -577,9 +577,6 @@
    <property name="text">
     <string>打开</string>
    </property>
-   <property name="shortcut">
-    <string>Ctrl+Alt+1</string>
-   </property>
   </action>
   <action name="closeFileSystemAction">
    <property name="checkable">
@@ -587,9 +584,6 @@
    </property>
    <property name="text">
     <string>关闭</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Alt+2</string>
    </property>
   </action>
   <action name="showFileSystemAction">

@@ -34,6 +34,8 @@ void MainWindow::initStyle()
     ui->tabWidget->setTabsClosable(true);
     qApp->setPalette(QPalette(QColor("#444444")));
     openStyleSheet();
+
+    connect(ui->tabWidget->tabBar(), SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
 }
 
 void MainWindow::initWindowMenu()
@@ -185,16 +187,7 @@ void MainWindow::on_addTabAction_triggered()
 //关闭当前选项卡Action
 void MainWindow::on_closeCurrentTabAction_triggered()
 {
-    if(ui->tabWidget->count() >= 1)
-    {
-        ui->tabWidget->removeTab(getCurrentIndex());
-        tabPagePool.removeAt(getCurrentIndex());
-        sftpPool.removeAt(getCurrentIndex());
-        shellPool.removeAt(getCurrentIndex());
-    }
-    //选项卡全部关闭则关闭小企鹅
-    if(ui->tabWidget->count() == 0)
-        close();
+    closeTab(getCurrentIndex());
 }
 
 void MainWindow::outToShell(int winNo, QString arguement)
@@ -310,4 +303,22 @@ void MainWindow::openStyleSheet()
         qApp->setStyleSheet(styleSheet);
         file.close();
     }
+}
+
+void MainWindow::closeTab(int index)
+{
+    if(ui->tabWidget->count() >= 1)
+    {
+        ui->tabWidget->removeTab(index);
+        if(index < tabPagePool.size())
+            tabPagePool.removeAt(index);
+        if(index < sftpPool.size())
+            sftpPool.removeAt(index);
+        if(index < shellPool.size())
+            shellPool.removeAt(index);
+    }
+
+    //选项卡全部关闭则关闭小企鹅
+    if(ui->tabWidget->count() == 0)
+        close();
 }
