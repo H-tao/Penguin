@@ -395,7 +395,7 @@ void SftpServer::handleOpenClicked(const QString &fileName,const QString &fileTy
         }
         else
         {
-            page->fileWidget->currentItem()->setSelected(true);
+//            page->fileWidget->currentItem()->setSelected(true);
         }
         return;
     }

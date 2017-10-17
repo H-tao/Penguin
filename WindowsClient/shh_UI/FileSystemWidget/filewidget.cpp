@@ -4,13 +4,7 @@ QSize itemSize(50,60);
 FileWidget::FileWidget(QWidget *parent) :
     QListWidget(parent)
 {
-    setIconSize(QSize(48, 48));         // 设置单元项图片大小
-    setResizeMode(QListView::Adjust);   // 设置大小模式-可调节
-    setViewMode(QListView::IconMode);   // 设置显示模式
-    setMovement(QListView::Static);     // 设置单元项不可被拖动
-    setSpacing(2);                     // 设置单元项间距
-//    setTextElideMode(Qt::ElideRight);   // 设置文本
-    setFlow(QListView::LeftToRight);
+    this->setView(ViewMode::ListMode);
     this->setSortingEnabled(true);
     this->setContextMenuPolicy(Qt::CustomContextMenu);
 
@@ -264,4 +258,24 @@ void FileWidget::handleItemDoubleClicked(QListWidgetItem *item)
 {
     //qDebug() << "handleItemDoubleClicked";
     emit openClicked(item->text(), item->whatsThis(), item->toolTip());
+}
+
+void FileWidget::setView(ViewMode mode)
+{
+    if(mode == ViewMode::IconMode)
+    {
+        setIconSize(QSize(48, 48));         // 设置单元项图片大小
+        setResizeMode(QListView::Adjust);   // 设置大小模式-可调节
+        setViewMode(QListView::IconMode);   // 设置显示模式
+        setMovement(QListView::Static);     // 设置单元项不可被拖动
+        setSpacing(2);                     // 设置单元项间距
+    //    setTextElideMode(Qt::ElideRight);   // 设置文本
+        setFlow(QListView::LeftToRight);
+    }
+    if(mode == ViewMode::ListMode)
+    {
+        setViewMode(QListView::ListMode);
+        setMovement(QListView::Static);     // 设置单元项不可被拖动
+        setFlow(QListView::TopToBottom);
+    }
 }

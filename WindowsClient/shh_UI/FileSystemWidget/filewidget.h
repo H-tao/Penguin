@@ -36,6 +36,10 @@ public:
     void refreshDirectory(const QList<QSsh::SftpFileInfo> &fiList);
     bool isFileExisted(QString fileName);
 
+    enum ViewMode{
+        ListMode, IconMode
+    };
+
 signals:
     void openFileSystemClicked();
     void openClicked(QString fileName, QString fileType, QString fileSize);
@@ -63,6 +67,7 @@ public slots:
     void customMenuView(QPoint pt);//右键菜单位置
 
     void handleItemDoubleClicked(QListWidgetItem *item);
+    void setView(ViewMode mode);
 
 protected:
     void keyPressEvent(QKeyEvent *event);

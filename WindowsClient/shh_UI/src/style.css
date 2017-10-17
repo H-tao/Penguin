@@ -210,6 +210,35 @@ alternate-background-color:#525252;
 gridline-color:#242424;
 }
 
+QTreeView::branch:closed:has-children{
+margin:4px;
+border-image:url(:/src/style/branch_open.png);
+}
+
+QTreeView::branch:open:has-children{
+margin:4px;
+border-image:url(:/src/style/branch_close.png);
+}
+
+QTreeView,QListView,QTableView,QSplitter::handle,QTreeView::branch{
+background:#444444;
+}
+
+QTableView::item:selected,QListView::item:selected,QTreeView::item:selected{
+color:#0055ff;
+background:qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:1,stop:0 #484848,stop:1 #383838);
+}
+
+QTableView::item:hover,QListView::item:hover,QTreeView::item:hover{
+color:#DCDCDC;
+background:qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:0.5,stop:0 #646464,stop:1 #525252);
+}
+
+QTableView::item,QListView::item,QTreeView::item{
+padding:1px;
+margin:0px;
+}
+
 QTabBar::tab{
 border:1px solid #242424;
 color:#DCDCDC;
@@ -354,3 +383,39 @@ background:none;
 QScrollBar::sub-line:vertical{
 background:none;
 }
+
+QHeaderView{
+    height: 10px;
+}
+
+QHeaderView::section:checked
+{
+    background-color: red;
+}
+
+QHeaderView::section {
+/*     background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                       stop:0 #616161, stop: 0.5 #505050,
+                                       stop: 0.6 #434343, stop:1 #656565);*/
+     background:#484848;
+/*     color: white;*/
+     padding-left: 4px;
+     border: 1px solid #6c6c6c;
+ }
+
+ QHeaderView::section:hover {
+     background:qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:1,stop:0 #646464,stop:1 #525252);
+ }
+
+ QHeaderView::section:pressed {
+     background:qlineargradint (spread:pad,x1:0,y1:0,x2:0,y2:1,stop:0 $484848,stop:1 $383838);
+ }
+
+ /* style the sort indicator */
+ QHeaderView::down-arrow {
+     image: url(:/src/style/add_bottom.png);
+ }
+
+ QHeaderView::up-arrow {
+     image: url(:/src/style/add_top.png);
+ }

@@ -22,7 +22,8 @@ void TabPage::initStyle()
 
     filePathLineEdit = ui->comboBox;    //新增LineEdit
 
-    fileWidget = new FileWidget(ui->fileSystemWidget);  //新增FileWidget
+//    fileWidget = new FileWidget(ui->fileSystemWidget);  //新增FileWidget
+    fileWidget = new FileTreeView(ui->fileSystemWidget);
     ui->fileSystemWidgetLayout->addWidget(fileWidget);
 
     maxiBtn = ui->maximizeBtn;

@@ -12,6 +12,7 @@
 #include <ShellTextEdit/shelltextedit.h>
 #include <QComboBox>
 #include <QPushButton>
+#include <filetreeview.h>
 
 namespace Ui {
 class TabPage;
@@ -28,7 +29,8 @@ public:
     void initStyle();   //初始化标签页风格
 
     /**** textEdit、textLine、fileWidget 设置为Public，外部可以访问****/
-    FileWidget *fileWidget;
+//    FileWidget *fileWidget;
+    FileTreeView *fileWidget;
     ShellTextEdit *textEdit;
     QComboBox *filePathLineEdit;
     QPushButton *maxiBtn;
