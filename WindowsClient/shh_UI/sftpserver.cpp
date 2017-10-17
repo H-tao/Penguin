@@ -4,7 +4,7 @@
 #include <QTimer>
 #include <QThread>
 
-QString homePath = "/root/";
+QString homePath = "/";
 bool isFirstLink = true;
 
 SftpServer::SftpServer(QWidget *parent) :

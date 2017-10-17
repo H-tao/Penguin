@@ -29,6 +29,11 @@ void FileTreeView::initialize()
     this->setColumnWidth(3, 150);
 
     this->header()->setSortIndicator(0, Qt::AscendingOrder);
+    connect(this->header(), &QHeaderView::sectionClicked,
+                [this](int column)
+    {
+        this->sortByColumn(column, this->header()->sortIndicatorOrder());
+    });
 }
 
 void FileTreeView::initOperaMenu()
@@ -80,7 +85,8 @@ void FileTreeView::initOperaMenu()
     connect(m_pActNewFile, SIGNAL(triggered()), this, SLOT(clickedNewFile()));
     connect(m_pActDelete, SIGNAL(triggered()), this, SLOT(clickedDelete()));
     connect(m_pActRename, SIGNAL(triggered()), this, SLOT(clickedRename()));
-    connect(this,SIGNAL(customContextMenuRequested(QPoint)),this, SLOT(customMenuView(QPoint)));
+//    connect(this,SIGNAL(customContextMenuRequested(QPoint)),this, SLOT(customMenuView(QPoint)));
+    connect(this,&FileTreeView::customContextMenuRequested, this, &FileTreeView::customMenuView);
 }
 
 void FileTreeView::openFileSystem()
@@ -94,8 +100,8 @@ void FileTreeView::refreshDirectory(const QList<QSsh::SftpFileInfo> &fiList)
 
     foreach(const QSsh::SftpFileInfo &fi, fiList)
     {
-        qDebug() << fi.name << " " << fi.permissions << " " << fi.type << " " << fi.size;
-        qDebug() << "Permission : "  << " " << fi.permissionsValid;
+//        qDebug() << fi.name << " " << fi.permissions << " " << fi.type << " " << fi.size;
+//        qDebug() << "Permission : "  << " " << fi.permissionsValid;
 
         if(fi.name == ".." || fi.name == ".")
         {
@@ -124,6 +130,8 @@ void FileTreeView::refreshDirectory(const QList<QSsh::SftpFileInfo> &fiList)
             m_model->setData(m_model->index(rows, 3, QModelIndex()), getFolderType(), Qt::DisplayRole);
         }
     }
+
+    this->sortByColumn(this->header()->sortIndicatorSection(), this->header()->sortIndicatorOrder());
 }
 
 void FileTreeView::customMenuView(QPoint pt)
@@ -242,4 +250,34 @@ void FileTreeView::keyPressEvent(QKeyEvent *event)
     QTreeView::keyPressEvent(event);
 }
 
+void FileTreeView::sortByColumn(int column, Qt::SortOrder order)
+{
+    QTreeView::sortByColumn(column, order);
 
+    int rows = m_model->rowCount(QModelIndex());
+    int folderCount = 0;
+
+    QString selectedName = m_model->data(m_model->index(this->currentIndex().row(), 0), Qt::DisplayRole).toString();
+
+    // sort
+    for(int i = 0; i < rows; ++i)
+    {
+        QString fileType = m_model->data(m_model->index(i, 3), Qt::DisplayRole).toString();
+        if(fileType == getFolderType())
+        {
+            m_model->insertRow(folderCount, m_model->takeRow(i));
+            ++folderCount;
+        }
+    }
+
+    // reset the seleced row
+    for(int i = 0; i < rows; ++i)
+    {
+        QString fileName = m_model->data(m_model->index(i, 0), Qt::DisplayRole).toString();
+        if(fileName == selectedName)
+        {
+            this->setCurrentIndex(m_model->index(i, 0));
+            break;
+        }
+    }
+}

@@ -13,8 +13,8 @@
 #include "ssh/sshconnection.h"
 #include "ssh/sftpchannel.h"
 #include "filetreeview.h"
-#include "function.h"
 #include "qfiletreeview.h"
+#include "function.h"
 #include "mainwindow.h"
 #include "filenamedialog.h"
 

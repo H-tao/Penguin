@@ -26,8 +26,8 @@ SOURCES += main.cpp\
     sftpserver.cpp \
     filetreeview.cpp \
     function.cpp \
-    qfiletreeview.cpp \
-    filenamedialog.cpp
+    filenamedialog.cpp \
+    qfiletreeview.cpp
 
 HEADERS  += mainwindow.h \
     FileSystemWidget/filewidget.h \
@@ -38,8 +38,8 @@ HEADERS  += mainwindow.h \
     sftpserver.h \
     filetreeview.h \
     function.h \
-    qfiletreeview.h \
-    filenamedialog.h
+    filenamedialog.h \
+    qfiletreeview.h
 
 
 FORMS    += mainwindow.ui \

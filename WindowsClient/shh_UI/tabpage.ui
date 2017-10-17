@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>450</width>
-    <height>383</height>
+    <height>391</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -104,7 +104,11 @@
         </size>
        </property>
        <property name="text">
-        <string>最小化</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="style.qrc">
+         <normaloff>:/src/style/down_arrow.png</normaloff>:/src/style/down_arrow.png</iconset>
        </property>
       </widget>
      </item>
@@ -117,7 +121,11 @@
         </size>
        </property>
        <property name="text">
-        <string>最大化</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="style.qrc">
+         <normaloff>:/src/style/up_arrow.png</normaloff>:/src/style/up_arrow.png</iconset>
        </property>
       </widget>
      </item>
@@ -134,7 +142,7 @@
      <property name="minimumSize">
       <size>
        <width>250</width>
-       <height>60</height>
+       <height>120</height>
       </size>
      </property>
      <property name="frameShape">
@@ -167,6 +175,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="style.qrc"/>
+ </resources>
  <connections/>
 </ui>

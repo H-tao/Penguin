@@ -22,6 +22,7 @@
 #include <QDrag>
 #include <QTreeView>
 #include <QHeaderView>
+#include <QModelIndex>
 #include "ssh/sftpchannel.h"
 #include "ssh/sshconnection.h"
 #include "function.h"
@@ -38,6 +39,7 @@ public:
     void refreshDirectory(const QList<QSsh::SftpFileInfo> &fiList);
     bool isFileExisted(QString fileName);
     void setThisFileInfo();
+    void sortByColumn(int column, Qt::SortOrder order);
 
     QStandardItemModel *m_model;
 
