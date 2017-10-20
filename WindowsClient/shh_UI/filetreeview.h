@@ -68,6 +68,7 @@ public slots:
     void clickedRename();//重命名
     void clickedRefresh();//刷新页面
     void customMenuView(QPoint pt);//右键菜单位置
+    void clickedSearch();
 
 //    void handleItemDoubleClicked(QStandardItem *item);
 

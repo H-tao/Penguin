@@ -96,7 +96,8 @@ void FileTreeView::openFileSystem()
 
 void FileTreeView::refreshDirectory(const QList<QSsh::SftpFileInfo> &fiList)
 {
-    m_model->removeRows(0, m_model->rowCount());
+    qDebug() << "FileTreeView::refreshDirectory";
+//    m_model->removeRows(0, m_model->rowCount());
 
     foreach(const QSsh::SftpFileInfo &fi, fiList)
     {
@@ -132,6 +133,8 @@ void FileTreeView::refreshDirectory(const QList<QSsh::SftpFileInfo> &fiList)
     }
 
     this->sortByColumn(this->header()->sortIndicatorSection(), this->header()->sortIndicatorOrder());
+
+    qDebug() << m_model->rowCount(QModelIndex());
 }
 
 void FileTreeView::customMenuView(QPoint pt)
@@ -210,6 +213,11 @@ void FileTreeView::clickedRefresh()
     emit refreshClicked();
 }
 
+void FileTreeView::clickedSearch()
+{
+    this->findChild()
+}
+
 bool FileTreeView::isFileExisted(QString fileName)
 {
     QList<QStandardItem *> list = m_model->findItems(fileName, Qt::MatchExactly);
@@ -240,13 +248,13 @@ void FileTreeView::mouseDoubleClickEvent(QMouseEvent *event)
 void FileTreeView::keyPressEvent(QKeyEvent *event)
 {
     this->setThisFileInfo();
+    qDebug() << event->key();
     if(event->key() == Qt::Key_Backspace)
         emit this->upClicked();
     if(event->key() == Qt::Key_F5)
         emit this->refreshClicked();
-    if(event->key() == Qt::EnterKeyDone)
+    if(event->key() == Qt::Key_Enter)
         emit this->openClicked(thisFileName, thisFileType, thisFileSize);
-
     QTreeView::keyPressEvent(event);
 }
 

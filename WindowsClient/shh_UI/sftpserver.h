@@ -61,7 +61,6 @@ public slots:
     void handleJobFinished(QSsh::SftpJobId id, const QString &error);
     void handleFileInfo(QSsh::SftpJobId id, const QList<QSsh::SftpFileInfo> &fileInfoList);
     void handleChannelClosed();
-    void getNextLevelList(QString path);
 
     void handleOpenFileWidgetClicked();
     void handleOpenClicked(const QString &fileName, const QString &fileType, const QString &fileSize);
@@ -116,6 +115,7 @@ private:
     QQueue<QueueItem *> items;
     QList<QSsh::SftpChannel::Ptr> channels;
     QSsh::SftpChannel::Ptr channel_2;
+    QList<QSsh::SftpFileInfo> m_fileInfoList;
 };
 
 #endif // SFTPSERVER_H

@@ -132,7 +132,7 @@ void SftpServer::handleChannelInitializationFailed(const QString &reason)
 
 void SftpServer::handleJobFinished(QSsh::SftpJobId id, const QString &error)
 {
-    //qDebug() << "handleJobFinished";
+    qDebug() << "handleJobFinished";
     if(!error.isEmpty())
         //qDebug() << "error" << error;
     //qDebug() << "finished currentPath: " << m_currentPath;
@@ -166,6 +166,9 @@ void SftpServer::handleJobFinished(QSsh::SftpJobId id, const QString &error)
     {
         switch(m_jobType)
         {
+        case JobListDir:
+//            page->fileWidget->refreshDirectory(m_fileInfoList);
+            break;
         case JobCreateDir:
             // refresh directory
             handleRefreshClicked();
@@ -283,8 +286,8 @@ void SftpServer::handleFileInfo(QSsh::SftpJobId id, const QList<QSsh::SftpFileIn
     /************* FileWidget ******************/
     if(m_workWidget == WorkFileWidget)
     {
-        //qDebug() << "refreshDirectory(fileInfoList)";
         page->fileWidget->refreshDirectory(fileInfoList);
+//        m_fileInfoList.append(fileInfoList);
         page->filePathLineEdit->setCurrentText(m_shellPath);
     }
 
@@ -294,15 +297,6 @@ void SftpServer::handleFileInfo(QSsh::SftpJobId id, const QList<QSsh::SftpFileIn
 void SftpServer::handleChannelClosed()
 {
 
-}
-
-void SftpServer::getNextLevelList(QString path)
-{
-    //qDebug() << "getNextLevelList : " << path;
-    m_jobType = JobListDir;
-    m_jobListDirId = m_channel->listDirectory(path);
-//    m_currentPath = path;
-//    //qDebug() << "m_currentPath : " << m_currentPath;
 }
 
 void SftpServer::initTreeView()
@@ -364,9 +358,7 @@ void SftpServer::handleOpenFileWidgetClicked()
     //qDebug() << "handleOpenFileWidgetClicked()";
 
     //list
-    m_jobType = JobListDir;
-    m_workWidget = WorkFileWidget;
-    m_jobListDirId = m_channel->listDirectory(m_shellPath);
+    handleRefreshClicked();
 }
 
 void SftpServer::handleOpenClicked(const QString &fileName,const QString &fileType, const QString &fileSize)
@@ -379,9 +371,7 @@ void SftpServer::handleOpenClicked(const QString &fileName,const QString &fileTy
         //qDebug() << "Current Shell Path : " << m_shellPath;
 
         // list directory
-        m_jobType == JobListDir;
-        m_workWidget = WorkFileWidget;
-        m_jobListDirId = m_channel->listDirectory(m_shellPath);
+        handleRefreshClicked();
     }
     else
     {
@@ -429,9 +419,7 @@ void SftpServer::handleUpClicked()
     //qDebug() << "m_shellPath : " << m_shellPath;
 
     // list up direcotry
-    m_jobType = JobListDir;
-    m_workWidget = WorkFileWidget;
-    m_jobListDirId = m_channel->listDirectory(m_shellPath);
+    handleRefreshClicked();
 }
 
 void SftpServer::handleHomeClicked()
@@ -442,9 +430,7 @@ void SftpServer::handleHomeClicked()
     m_shellPath = homePath;
 
     // list up direcotry
-    m_jobType = JobListDir;
-    m_workWidget = WorkFileWidget;
-    m_jobListDirId = m_channel->listDirectory(m_shellPath);
+    handleRefreshClicked();
 }
 
 void SftpServer::handleDownloadClicked(const QString &fileName, const QString &fileType,const QString &fileSize)
@@ -486,6 +472,7 @@ void SftpServer::handleRefreshClicked()
 
     m_jobType = JobListDir;
     m_workWidget = WorkFileWidget;
+    page->fileWidget->m_model->removeRows(0, page->fileWidget->m_model->rowCount(QModelIndex()));
     m_jobListDirId = m_channel->listDirectory(m_shellPath);
 }
 
