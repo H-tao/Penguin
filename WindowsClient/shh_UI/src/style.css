@@ -116,6 +116,12 @@ min-height:20px;
 min-width:10px;
 }
 
+QComboBox QAbstractItemView {
+border: 2px solid darkgray;
+selection-background-color: lightgray;
+}
+
+
 QTableView[model="true"]::item{
 padding:0px;
 margin:0px;
@@ -149,7 +155,7 @@ border-radius:3px;
 border-style:none;
 border:1px solid #242424;
 color:#DCDCDC;
-padding:5px;
+padding:1px;
 min-height:10px;
 border-radius:5px;
 background:qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:1,stop:0 #484848,stop:1 #383838);
@@ -167,6 +173,21 @@ background:qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:1,stop:0 #484848,stop:1 
 image:None;
 }
 
+QPushButton#minimizeBtn, QPushButton#maximizeBtn{
+border-style:none;
+border:1px solid #242424;
+color:#DCDCDC;
+min-height:10px;
+background:qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:1,stop:0 #484848,stop:1 #383838);
+}
+
+QPushButton#minimizeBtn:hover, QPushButton#maximizeBtn:hover{
+background:qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:1,stop:0 #646464,stop:1 #525252);
+}
+
+QPushButton#minimizeBtn:pressed, QPushButton#maximizeBtn:pressed{
+background:qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:1,stop:0 #484848,stop:1 #383838);
+}
 
 QMenuBar::item{
 color:#DCDCDC;

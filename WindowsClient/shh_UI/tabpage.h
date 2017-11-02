@@ -33,6 +33,7 @@ public:
     FileTreeView *fileWidget;
     ShellTextEdit *textEdit;
     QComboBox *filePathLineEdit;
+    QComboBox *searchEdit;
     QPushButton *maxiBtn;
     QPushButton *miniBtn;
 

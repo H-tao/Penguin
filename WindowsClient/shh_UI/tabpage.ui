@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>450</width>
-    <height>391</height>
+    <width>538</width>
+    <height>451</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -78,7 +78,7 @@
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,0,0">
+    <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,0,0,0">
      <property name="spacing">
       <number>0</number>
      </property>
@@ -86,12 +86,34 @@
       <number>2</number>
      </property>
      <item>
-      <widget class="QComboBox" name="comboBox">
+      <widget class="QComboBox" name="pathCombo">
        <property name="minimumSize">
         <size>
          <width>300</width>
          <height>0</height>
         </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="searchCombo">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>180</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="editable">
+        <bool>false</bool>
+       </property>
+       <property name="currentText">
+        <string/>
        </property>
       </widget>
      </item>

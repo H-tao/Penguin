@@ -24,5 +24,7 @@
         <file>src/style/close2.png</file>
         <file>src/style/down_arrow.png</file>
         <file>src/style/up_arrow.png</file>
+        <file>src/style/triangle_down.png</file>
+        <file>src/style/triangle_up.png</file>
     </qresource>
 </RCC>

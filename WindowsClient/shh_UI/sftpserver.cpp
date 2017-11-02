@@ -34,9 +34,9 @@ SftpServer::SftpServer(const QSsh::SshConnectionParameters &parameters, int serv
 //    this->setGeometry(m_mainWindow->x()-this->width(), m_mainWindow->y(), this->width(), m_mainWindow->height());
     this->resize(this->width(), m_mainWindow->height());
     this->move(m_mainWindow->x()-this->width(), m_mainWindow->y());
-    //qDebug() << m_mainWindow->geometry();
-    //qDebug() << this->geometry();
     m_connection->connectToHost();
+
+//    page->openFileSystem();
 }
 
 SftpServer::~SftpServer()
@@ -66,6 +66,7 @@ Channel_Type* SftpServer::createNewChannel(Channel_Type * channel)
 
 void SftpServer::handleConnected()
 {
+    qDebug() << "SftpServer::handleConnected";
     //qDebug() << "Create Channel";
     //qDebug() << "Connection opened:" << m_connection->connectionParameters().host
              //<< ":" << m_connection->connectionParameters().port;
@@ -318,6 +319,8 @@ void SftpServer::initTreeView()
 
 void SftpServer::initPage()
 {
+    // 初始化文件系统的子部件
+//    page->initStyle();
     connect(page->fileWidget, SIGNAL(openFileSystemClicked()), this, SLOT(handleOpenFileWidgetClicked()));
     connect(page->fileWidget, SIGNAL(openClicked(QString,QString,QString)),
             this, SLOT(handleOpenClicked(QString,QString,QString)));
@@ -335,7 +338,11 @@ void SftpServer::initPage()
     connect(page->maxiBtn, SIGNAL(clicked(bool)), page, SLOT(openFileSystem()));
     connect(page->miniBtn, SIGNAL(clicked(bool)), page, SLOT(concealFileSystem()));
     connect(page->filePathLineEdit, SIGNAL(activated(QString)), this, SLOT(lineEditChanged(QString)));
+    connect(page->searchEdit, SIGNAL(activated(QString)), this, SLOT(searchEditChanged(QString)));
     page->filePathLineEdit->setCurrentText(m_shellPath);
+    page->searchEdit->lineEdit()->setPlaceholderText("此目录\”搜索\"");
+
+    m_fileWidgetModel = page->fileWidget->m_model;
 }
 
 void SftpServer::initProgressDialog()
@@ -355,7 +362,7 @@ void SftpServer::initProgressDialog()
 
 void SftpServer::handleOpenFileWidgetClicked()
 {
-    //qDebug() << "handleOpenFileWidgetClicked()";
+    qDebug() << "handleOpenFileWidgetClicked()";
 
     //list
     handleRefreshClicked();
@@ -468,11 +475,11 @@ void SftpServer::handleDownloadClicked(const QString &fileName, const QString &f
 
 void SftpServer::handleRefreshClicked()
 {
-    //qDebug() << "handleRefreshClicked";
+    qDebug() << "handleRefreshClicked";
 
     m_jobType = JobListDir;
     m_workWidget = WorkFileWidget;
-    page->fileWidget->m_model->removeRows(0, page->fileWidget->m_model->rowCount(QModelIndex()));
+    m_fileWidgetModel->removeRows(0, page->fileWidget->m_model->rowCount(QModelIndex()));
     m_jobListDirId = m_channel->listDirectory(m_shellPath);
 }
 
@@ -571,7 +578,7 @@ void SftpServer::handleRenameClicked(const QString &fileName)
     if(page->fileWidget->isFileExisted(dialog.getText()))
     {
         QMessageBox::critical(page->fileWidget, tr("error"),
-                              tr("This name has existed in current path"),
+                              tr("This file has existed in current path"),
                               QMessageBox::Ok, QMessageBox::Ok);
         return;
     }
@@ -596,11 +603,12 @@ void SftpServer::handleNewFolderClicked()
         return;
     }
 
+    /************ 注意：存在同名文件或文件夹均不能创建成功 ***************/
     // Jude if the same name have existed
-    if(page->fileWidget->isFileExisted(dialog.getText()))
+    if(page->fileWidget->isFolderExisted(dialog.getText()))
     {
         QMessageBox::critical(page->fileWidget, tr("error"),
-                              tr("This name has existed in current path"),
+                              tr("This folder has existed in current path"),
                               QMessageBox::Ok, QMessageBox::Ok);
         return;
     }
@@ -610,6 +618,7 @@ void SftpServer::handleNewFolderClicked()
     m_jobType = JobCreateDir;
     m_channel->createDirectory(m_shellPath + m_selectName);
 }
+
 
 void SftpServer::handleNewFileClicked()
 {
@@ -624,6 +633,7 @@ void SftpServer::handleNewFileClicked()
         return;
     }
 
+    /************ 注意：存在同名文件或文件夹均不能创建成功 ***************/
     // Jude if the same name have existed
     if(page->fileWidget->isFileExisted(dialog.getText()))
     {
@@ -678,4 +688,20 @@ void SftpServer::lineEditChanged(QString pathChanged)
     m_shellPath = pathChanged;
 
     handleRefreshClicked();
+}
+
+void SftpServer::searchEditChanged(QString fileName)
+{
+    QList<QStandardItem*> target = m_fileWidgetModel->findItems(fileName, Qt::MatchExactly);
+    if(target.size() == 0)
+    {
+        QMessageBox::warning(page->fileWidget, tr("提示"),
+                             tr("Can't find '%1' in this directory!").arg(fileName), QMessageBox::Ok);
+        page->searchEdit->lineEdit()->selectedText();
+    }
+    if(target.size() >= 1)
+    {
+        QStandardItem *item = target.at(0);
+        page->fileWidget->setCurrentIndex(item->index());
+    }
 }

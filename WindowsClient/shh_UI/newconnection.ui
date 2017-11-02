@@ -115,7 +115,7 @@
       <item>
        <widget class="QLineEdit" name="hostNumLineEdit">
         <property name="text">
-         <string>192.168.16.242</string>
+         <string>120.77.87.195</string>
         </property>
        </widget>
       </item>
@@ -251,7 +251,7 @@
       <item>
        <widget class="QLineEdit" name="protocolLineEdit">
         <property name="text">
-         <string>123456</string>
+         <string>Aa123456</string>
         </property>
         <property name="echoMode">
          <enum>QLineEdit::Password</enum>

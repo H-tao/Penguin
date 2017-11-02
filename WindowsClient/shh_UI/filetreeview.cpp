@@ -91,6 +91,7 @@ void FileTreeView::initOperaMenu()
 
 void FileTreeView::openFileSystem()
 {
+    qDebug() << "FileTreeView::openFileSystem";
     emit openFileSystemClicked();
 }
 
@@ -215,7 +216,7 @@ void FileTreeView::clickedRefresh()
 
 void FileTreeView::clickedSearch()
 {
-    this->findChild()
+//    this->findChild()
 }
 
 bool FileTreeView::isFileExisted(QString fileName)
@@ -224,7 +225,32 @@ bool FileTreeView::isFileExisted(QString fileName)
     if(list.isEmpty())
         return false;
     else
-        return true;
+    {
+        // 获得文件类型
+        QString fileType = m_model->data(m_model->index(list.at(0)->row(), 3, QModelIndex()), Qt::DisplayRole).toString();
+        // 重名文件不为文件夹,存在重名文件
+        if(fileType != getFolderType())
+            return true;
+        else
+            return false;
+    }
+}
+
+bool FileTreeView::isFolderExisted(QString fileName)
+{
+    QList<QStandardItem *> list = m_model->findItems(fileName, Qt::MatchExactly);
+    if(list.isEmpty())
+        return false;
+    else
+    {
+        // 获得文件类型
+        QString fileType = m_model->data(m_model->index(list.at(0)->row(), 3, QModelIndex()), Qt::DisplayRole).toString();
+        // 重名文件为文件夹,存在重名文件
+        if(fileType == getFolderType())
+            return true;
+        else
+            return false;
+    }
 }
 
 void FileTreeView::mousePressEvent(QMouseEvent *event)
@@ -248,12 +274,11 @@ void FileTreeView::mouseDoubleClickEvent(QMouseEvent *event)
 void FileTreeView::keyPressEvent(QKeyEvent *event)
 {
     this->setThisFileInfo();
-    qDebug() << event->key();
     if(event->key() == Qt::Key_Backspace)
         emit this->upClicked();
     if(event->key() == Qt::Key_F5)
         emit this->refreshClicked();
-    if(event->key() == Qt::Key_Enter)
+    if(event->key() == 16777220)  // 按下回车
         emit this->openClicked(thisFileName, thisFileType, thisFileSize);
     QTreeView::keyPressEvent(event);
 }

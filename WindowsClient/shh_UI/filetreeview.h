@@ -38,6 +38,7 @@ public:
     void openFileSystem();      //打开文件资源系统
     void refreshDirectory(const QList<QSsh::SftpFileInfo> &fiList);
     bool isFileExisted(QString fileName);
+    bool isFolderExisted(QString fileName);
     void setThisFileInfo();
     void sortByColumn(int column, Qt::SortOrder order);
 

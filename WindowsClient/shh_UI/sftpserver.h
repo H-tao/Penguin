@@ -75,6 +75,7 @@ public slots:
     void handleNewFileClicked();
 
     void lineEditChanged(QString pathChanged);
+    void searchEditChanged(QString fileName);
 
     Channel_Type *createNewChannel(Channel_Type *channel);
 
@@ -110,6 +111,7 @@ private:
     WorkWidget m_workWidget;
 
     QStandardItemModel *m_treeItemModel;
+    QStandardItemModel *m_fileWidgetModel;
     QStandardItem *m_currentItem;
     QStandardItem *item;
     QQueue<QueueItem *> items;
