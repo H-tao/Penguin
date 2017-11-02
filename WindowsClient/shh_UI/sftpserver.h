@@ -5,6 +5,7 @@
 #include <QQueue>
 #include "tabpage.h"
 #include <QMessageBox>
+#include <QStatusBar>
 #include <QProgressDialog>
 #include <QFileDialog>
 #include <QtTest/QTest>
@@ -39,6 +40,7 @@ class SftpServer : public QWidget
 public:
     int serverNum;
     QString m_shellPath;
+    QString m_beforePath;
     MainWindow *m_mainWindow;
 
     SftpServer(QWidget *parent = 0);
@@ -117,7 +119,6 @@ private:
     QQueue<QueueItem *> items;
     QList<QSsh::SftpChannel::Ptr> channels;
     QSsh::SftpChannel::Ptr channel_2;
-    QList<QSsh::SftpFileInfo> m_fileInfoList;
 };
 
 #endif // SFTPSERVER_H

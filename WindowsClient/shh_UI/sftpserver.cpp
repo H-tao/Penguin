@@ -134,21 +134,23 @@ void SftpServer::handleChannelInitializationFailed(const QString &reason)
 void SftpServer::handleJobFinished(QSsh::SftpJobId id, const QString &error)
 {
     qDebug() << "handleJobFinished";
-    if(!error.isEmpty())
-        //qDebug() << "error" << error;
-    //qDebug() << "finished currentPath: " << m_currentPath;
-    m_currentPath = m_shellPath;
-    //qDebug() << "currentPaht = shellPath" << m_currentPath;
-    //qDebug() << "finished shellPath: " << m_shellPath;
+    qDebug() << "m_shellPath: " << m_shellPath;
+    qDebug() << "m_currentPath" << m_currentPath;
 
     if(!error.isEmpty())
     {
         m_jobType = JobUnknow;
         killTimer(m_timer);
         m_progress->cancel();
+
+        m_shellPath = m_beforePath;
+        m_mainWindow->statusBar()->showMessage(tr("error: ") + error);
+        page->filePathLineEdit->setEditText(m_shellPath);
+
+        return;
     }
 
-
+    m_mainWindow->statusBar()->showMessage(tr("operation success!"));
     if(m_workWidget == WorkFileTreeView)
     {
         if(!items.isEmpty())
@@ -168,7 +170,6 @@ void SftpServer::handleJobFinished(QSsh::SftpJobId id, const QString &error)
         switch(m_jobType)
         {
         case JobListDir:
-//            page->fileWidget->refreshDirectory(m_fileInfoList);
             break;
         case JobCreateDir:
             // refresh directory
@@ -214,13 +215,12 @@ void SftpServer::handleJobFinished(QSsh::SftpJobId id, const QString &error)
 
 void SftpServer::handleFileInfo(QSsh::SftpJobId id, const QList<QSsh::SftpFileInfo> &fileInfoList)
 {
-    //qDebug() << "handleFileInfo";
-
+    qDebug() << "handleFileInfo";
 
     if(id != m_jobListDirId)
     {
-        //qDebug() << id;
-        //qDebug() << "id != m_jobListDirId";
+        qDebug() << id;
+        qDebug() << "id != m_jobListDirId";
         return;
     }
 
@@ -287,9 +287,9 @@ void SftpServer::handleFileInfo(QSsh::SftpJobId id, const QList<QSsh::SftpFileIn
     /************* FileWidget ******************/
     if(m_workWidget == WorkFileWidget)
     {
+        m_fileWidgetModel->removeRows(0, page->fileWidget->m_model->rowCount(QModelIndex()));
         page->fileWidget->refreshDirectory(fileInfoList);
-//        m_fileInfoList.append(fileInfoList);
-        page->filePathLineEdit->setCurrentText(m_shellPath);
+        page->filePathLineEdit->setEditText(m_shellPath);
     }
 
 
@@ -374,6 +374,7 @@ void SftpServer::handleOpenClicked(const QString &fileName,const QString &fileTy
 
     if(fileType == getFolderType())
     {
+        m_beforePath = m_shellPath;     //记录改变前的路径
         m_shellPath = m_shellPath + fileName + "/";
         //qDebug() << "Current Shell Path : " << m_shellPath;
 
@@ -421,6 +422,7 @@ void SftpServer::handleUpClicked()
 
     QString parentPath = path.left(path.lastIndexOf("/") + 1);
 
+    m_beforePath = m_shellPath;     //记录改变前的路径
     // update the shellPath
     m_shellPath = parentPath;
     //qDebug() << "m_shellPath : " << m_shellPath;
@@ -433,6 +435,7 @@ void SftpServer::handleHomeClicked()
 {
     //qDebug() << "handleHomeClicked";
 
+    m_beforePath = m_shellPath;     //记录改变前的路径
     // update shellPath to homePath
     m_shellPath = homePath;
 
@@ -479,7 +482,6 @@ void SftpServer::handleRefreshClicked()
 
     m_jobType = JobListDir;
     m_workWidget = WorkFileWidget;
-    m_fileWidgetModel->removeRows(0, page->fileWidget->m_model->rowCount(QModelIndex()));
     m_jobListDirId = m_channel->listDirectory(m_shellPath);
 }
 
@@ -685,6 +687,7 @@ void SftpServer::lineEditChanged(QString pathChanged)
 
     //qDebug() << "Path Changed : " << pathChanged;
 
+    m_beforePath = m_shellPath;     //记录改变前的路径
     m_shellPath = pathChanged;
 
     handleRefreshClicked();
