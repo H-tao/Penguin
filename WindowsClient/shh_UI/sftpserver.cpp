@@ -133,9 +133,7 @@ void SftpServer::handleChannelInitializationFailed(const QString &reason)
 
 void SftpServer::handleJobFinished(QSsh::SftpJobId id, const QString &error)
 {
-    qDebug() << "handleJobFinished";
-    qDebug() << "m_shellPath: " << m_shellPath;
-    qDebug() << "m_currentPath" << m_currentPath;
+//    qDebug() << "handleJobFinished";
 
     if(!error.isEmpty())
     {
