@@ -52,7 +52,6 @@ public:
     void initPage();
     void initTreeView();
     void initProgressDialog();
-    void upload(QString localPath);
 
 public slots:
     void handleConnected();
@@ -71,7 +70,7 @@ public slots:
     void handleDownloadClicked(const QString &fileName, const QString &fileType, const QString &fileSize);
     void handleRefreshClicked();
     void handleDeleteClicked(const QString &fileName, const QString &fileType);
-    void handleUploadClicked();
+    void handleUploadClicked(QString localPath);
     void handleRenameClicked(const QString &fileName);
     void handleNewFolderClicked();
     void handleNewFileClicked();

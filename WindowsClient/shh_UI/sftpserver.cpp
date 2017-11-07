@@ -328,7 +328,7 @@ void SftpServer::initPage()
             this, SLOT(handleDownloadClicked(QString,QString,QString)));
     connect(page->fileWidget, SIGNAL(refreshClicked()), this, SLOT(handleRefreshClicked()));
     connect(page->fileWidget, SIGNAL(deleteClicked(QString,QString)), this, SLOT(handleDeleteClicked(QString,QString)));
-    connect(page->fileWidget, SIGNAL(uploadClicked()), this, SLOT(handleUploadClicked()));
+    connect(page->fileWidget, SIGNAL(uploadClicked(QString)), this, SLOT(handleUploadClicked(QString)));
     connect(page->fileWidget, SIGNAL(renameClicked(QString)), this, SLOT(handleRenameClicked(QString)));
     connect(page->fileWidget, SIGNAL(newFolderClicked()), this, SLOT(handleNewFolderClicked()));
     connect(page->fileWidget, SIGNAL(newFileClicked()), this, SLOT(handleNewFileClicked()));
@@ -504,18 +504,7 @@ void SftpServer::handleDeleteClicked(const QString &fileName, const QString &fil
     handleRefreshClicked();
 }
 
-void SftpServer::handleUploadClicked()
-{
-    //qDebug() << "handleUploadClicked";
-
-    QString localPath = QFileDialog::getOpenFileName(page->fileWidget, tr("Upload File"),
-                                                     QDir::currentPath(), tr("All File (*.*)"));
-
-    //qDebug() << "Upload local file : " << localPath;
-    upload(localPath);
-}
-
-void SftpServer::upload(QString localPath)
+void SftpServer::handleUploadClicked(QString localPath)
 {
     if(QFileInfo(localPath).isSymLink())
     {
@@ -532,7 +521,7 @@ void SftpServer::upload(QString localPath)
     }
 
     // Jude if the same name have existed
-    if(page->fileWidget->isFileExisted(m_currentLocalFilePath))
+    if(page->fileWidget->isFileExisted(fileName))
     {
         if(QMessageBox::No == QMessageBox::warning(page->fileWidget, tr("Upload"),
                                                    tr("This file has existed, are you sure to replace it?"),
@@ -602,10 +591,11 @@ void SftpServer::handleNewFolderClicked()
     {
         return;
     }
+    QString fileName = dialog.getText();
 
     /************ 注意：存在同名文件或文件夹均不能创建成功 ***************/
     // Jude if the same name have existed
-    if(page->fileWidget->isFolderExisted(dialog.getText()))
+    if(page->fileWidget->isFileExisted(fileName))
     {
         QMessageBox::critical(page->fileWidget, tr("error"),
                               tr("This folder has existed in current path"),
@@ -613,7 +603,7 @@ void SftpServer::handleNewFolderClicked()
         return;
     }
 
-    m_selectName = dialog.getText();
+    m_selectName = fileName;
     m_workWidget = WorkFileWidget;
     m_jobType = JobCreateDir;
     m_channel->createDirectory(m_shellPath + m_selectName);
@@ -633,9 +623,10 @@ void SftpServer::handleNewFileClicked()
         return;
     }
 
+    QString fileName = dialog.getText();
     /************ 注意：存在同名文件或文件夹均不能创建成功 ***************/
     // Jude if the same name have existed
-    if(page->fileWidget->isFileExisted(dialog.getText()))
+    if(page->fileWidget->isFileExisted(fileName))
     {
         QMessageBox::critical(page->fileWidget, tr("error"),
                               tr("This name has existed in current path"),
@@ -643,7 +634,7 @@ void SftpServer::handleNewFileClicked()
         return;
     }
 
-    m_selectName = dialog.getText();
+    m_selectName = fileName;
     m_workWidget = WorkFileWidget;
     m_jobType = JobCreateFile;
     m_channel->createFile(m_shellPath + m_selectName, QSsh::SftpOverwriteExisting);
@@ -698,7 +689,6 @@ void SftpServer::searchEditChanged(QString fileName)
     {
         QMessageBox::warning(page->fileWidget, tr("提示"),
                              tr("Can't find '%1' in this directory!").arg(fileName), QMessageBox::Ok);
-        page->searchEdit->lineEdit()->selectedText();
     }
     if(target.size() >= 1)
     {

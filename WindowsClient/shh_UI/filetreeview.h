@@ -13,6 +13,7 @@
 #include <QFileIconProvider>
 #include <QTemporaryFile>
 #include <QString>
+#include <QFileDialog>
 #include <QDebug>
 #include <QList>
 #include <QEvent>
@@ -20,6 +21,8 @@
 #include <QMouseEvent>
 #include <QDropEvent>
 #include <QDrag>
+#include <QDragEnterEvent>
+#include <QDragLeaveEvent>
 #include <QTreeView>
 #include <QHeaderView>
 #include <QModelIndex>
@@ -38,7 +41,6 @@ public:
     void openFileSystem();      //打开文件资源系统
     void refreshDirectory(const QList<QSsh::SftpFileInfo> &fiList);
     bool isFileExisted(QString fileName);
-    bool isFolderExisted(QString fileName);
     void setThisFileInfo();
     void sortByColumn(int column, Qt::SortOrder order);
 
@@ -47,7 +49,7 @@ public:
 signals:
     void openFileSystemClicked();
     void openClicked(QString fileName, QString fileType, QString fileSize);
-    void uploadClicked();
+    void uploadClicked(QString localPath);
     void downloadClicked(QString fileName, QString fileType, QString fileSize);
     void upClicked();
     void homeClicked();
@@ -77,6 +79,10 @@ protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseDoubleClickEvent(QMouseEvent *event);
     void keyPressEvent(QKeyEvent *event);
+    virtual void dropEvent(QDropEvent *event);
+    virtual void dragEnterEvent(QDragEnterEvent *event);
+    virtual void dragLeaveEvent(QDragLeaveEvent *event);
+    virtual void dragMoveEvent(QDragMoveEvent *event);
 
 private:
     QList<QSsh::SftpFileInfo> fileInfoList;

@@ -29,23 +29,13 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QTextEdit" name="statusTextEdit">
-   <property name="geometry">
-    <rect>
-     <x>140</x>
-     <y>160</y>
-     <width>161</width>
-     <height>71</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QWidget" name="layoutWidget_5">
    <property name="geometry">
     <rect>
      <x>60</x>
      <y>160</y>
-     <width>75</width>
-     <height>22</height>
+     <width>231</width>
+     <height>73</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_5">
@@ -61,13 +51,19 @@
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::MinimumExpanding</enum>
+      </property>
       <property name="sizeHint" stdset="0">
        <size>
-        <width>13</width>
+        <width>16</width>
         <height>20</height>
        </size>
       </property>
      </spacer>
+    </item>
+    <item>
+     <widget class="QTextEdit" name="statusTextEdit"/>
     </item>
    </layout>
   </widget>
@@ -251,7 +247,7 @@
       <item>
        <widget class="QLineEdit" name="protocolLineEdit">
         <property name="text">
-         <string>Aa123456</string>
+         <string>Hzw123123</string>
         </property>
         <property name="echoMode">
          <enum>QLineEdit::Password</enum>
@@ -263,7 +259,6 @@
    </layout>
   </widget>
   <zorder>buttonBox</zorder>
-  <zorder>statusTextEdit</zorder>
   <zorder>layoutWidget</zorder>
   <zorder>layoutWidget_5</zorder>
  </widget>

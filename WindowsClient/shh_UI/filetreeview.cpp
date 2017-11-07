@@ -1,10 +1,14 @@
 #include "filetreeview.h"
+#include <QMimeData>
 
 FileTreeView::FileTreeView(QWidget *parent) :
     QTreeView(parent)
 {
     this->initialize();
     this->initOperaMenu();
+    this->setAcceptDrops(true);
+    this->setDragEnabled(true);
+    this->setSelectionMode(QAbstractItemView::ExtendedSelection);
 }
 
 FileTreeView::~FileTreeView()
@@ -168,7 +172,9 @@ void FileTreeView::clickedOpen()
 
 void FileTreeView::clickedUpload()
 {
-    emit uploadClicked();
+    QString localPath = QFileDialog::getOpenFileName(this, tr("Upload File"),
+                                                     QDir::currentPath(), tr("All File (*.*)"));
+    emit uploadClicked(localPath);
 }
 
 void FileTreeView::clickedDownload()
@@ -226,30 +232,9 @@ bool FileTreeView::isFileExisted(QString fileName)
         return false;
     else
     {
-        // 获得文件类型
-        QString fileType = m_model->data(m_model->index(list.at(0)->row(), 3, QModelIndex()), Qt::DisplayRole).toString();
-        // 重名文件不为文件夹,存在重名文件
-        if(fileType != getFolderType())
-            return true;
-        else
-            return false;
-    }
-}
-
-bool FileTreeView::isFolderExisted(QString fileName)
-{
-    QList<QStandardItem *> list = m_model->findItems(fileName, Qt::MatchExactly);
-    if(list.isEmpty())
-        return false;
-    else
-    {
-        // 获得文件类型
-        QString fileType = m_model->data(m_model->index(list.at(0)->row(), 3, QModelIndex()), Qt::DisplayRole).toString();
-        // 重名文件为文件夹,存在重名文件
-        if(fileType == getFolderType())
-            return true;
-        else
-            return false;
+        QStandardItem *item = list.at(0);
+        this->setCurrentIndex(item->index());
+        return true;
     }
 }
 
@@ -313,4 +298,49 @@ void FileTreeView::sortByColumn(int column, Qt::SortOrder order)
             break;
         }
     }
+}
+
+void FileTreeView::dropEvent(QDropEvent *event)
+{
+    qDebug() << "FileTreeView::dropEvent";
+    event->acceptProposedAction();
+
+    qDebug() << event->mimeData()->urls()[0].toLocalFile();
+    emit uploadClicked(event->mimeData()->urls()[0].toLocalFile());
+}
+
+void FileTreeView::dragEnterEvent(QDragEnterEvent *event)
+{
+    qDebug() <<"FileTreeView::dragEnterEvent";
+    QList<QUrl> urlList = event->mimeData()->urls();
+
+    if(urlList.count() != 1)
+    {
+        event->ignore();
+        return;
+    }
+
+    QString strPath = urlList[0].toLocalFile();
+    qDebug()<<"drop path: "<<strPath;
+
+    if(!QFileInfo(strPath).isFile())
+    {
+        event->ignore();
+        qDebug() << "Isn't file";
+        return;
+    }
+
+    event->setDropAction(Qt::MoveAction);
+    event->acceptProposedAction();
+}
+
+void FileTreeView::dragLeaveEvent(QDragLeaveEvent *event)
+{
+    qDebug() << "FileTreeView::dragLeaveEvent";
+}
+
+void FileTreeView::dragMoveEvent(QDragMoveEvent *event)
+{
+    event->setDropAction(Qt::MoveAction);
+    event->acceptProposedAction();
 }
