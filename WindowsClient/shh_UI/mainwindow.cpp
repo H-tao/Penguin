@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     initStyle();
     initWindowMenu();
+    this->setAcceptDrops(true);
 }
 
 MainWindow::~MainWindow()

@@ -247,6 +247,11 @@ void FileTreeView::mousePressEvent(QMouseEvent *event)
     QTreeView::mousePressEvent(event);
 }
 
+void FileTreeView::mouseReleaseEvent(QMouseEvent *event)
+{
+
+}
+
 void FileTreeView::mouseDoubleClickEvent(QMouseEvent *event)
 {
     this->setThisFileInfo();
@@ -343,4 +348,5 @@ void FileTreeView::dragMoveEvent(QDragMoveEvent *event)
 {
     event->setDropAction(Qt::MoveAction);
     event->acceptProposedAction();
+    event->accept();
 }
