@@ -456,9 +456,9 @@ void SftpServer::handleDownloadClicked(const QString &fileName, const QString &f
     m_currentLocalFilePath = QFileDialog::getSaveFileName(page->fileWidget, tr("Download File"),
                                                       QDir::currentPath() + "/" + fileName, tr("All Files (*.*"));
 
+    qDebug() << "Local File : " << m_currentLocalFilePath;
     if(m_currentLocalFilePath.isEmpty())
         return;
-    //qDebug() << "Local File : " << m_currentLocalFilePath;
 
     // download file
     m_jobType = JobDownloadFile;

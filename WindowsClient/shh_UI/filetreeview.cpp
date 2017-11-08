@@ -1,5 +1,7 @@
 #include "filetreeview.h"
+#include <function.h>
 #include <QMimeData>
+#include <QKeySequence>
 
 FileTreeView::FileTreeView(QWidget *parent) :
     QTreeView(parent)
@@ -8,7 +10,7 @@ FileTreeView::FileTreeView(QWidget *parent) :
     this->initOperaMenu();
     this->setAcceptDrops(true);
     this->setDragEnabled(true);
-    this->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    this->setSelectionMode(QAbstractItemView::SingleSelection);
 }
 
 FileTreeView::~FileTreeView()
@@ -43,18 +45,18 @@ void FileTreeView::initialize()
 void FileTreeView::initOperaMenu()
 {
     m_pOperaMenu = new QMenu(this);
-    m_pNewMenu = new QMenu(tr("new"),this);
+    m_pNewMenu = new QMenu(tr("new(&N)"),this);
 
-    m_pActOpen = new QAction(tr("open"),this);
-    m_pActUpload = new QAction(tr("upload"),this);
-    m_pActDownload = new QAction(tr("download"),this);
-    m_pActHome = new QAction(tr("home"),this);
-    m_pActNewFolder = new QAction(tr("new folder"),this);
-    m_pActNewFile = new QAction(tr("new file"),this);
-    m_pActUp = new QAction(tr("up"),this);
-    m_pActRename = new QAction(tr("rename"),this);
-    m_pActRefresh = new QAction(tr("refresh"),this);
-    m_pActDelete = new QAction(tr("delete"),this);
+    m_pActOpen = new QAction(tr("open(&O)"),this);
+    m_pActUpload = new QAction(tr("upload(&U)"),this);
+    m_pActDownload = new QAction(tr("download(&L)"),this);
+    m_pActHome = new QAction(tr("home(&H)"),this);
+    m_pActNewFolder = new QAction(tr("new folder(&A)"),this);
+    m_pActNewFile = new QAction(tr("new file(&B)"),this);
+    m_pActUp = new QAction(tr("up(&B)"),this);
+    m_pActRename = new QAction(tr("rename(&M)"),this);
+    m_pActRefresh = new QAction(tr("refresh(&S)"),this);
+    m_pActDelete = new QAction(tr("delete(&D)"),this);
 
     m_pNewMenu->addAction(m_pActNewFolder);
     m_pNewMenu->addAction(m_pActNewFile);
@@ -240,16 +242,17 @@ bool FileTreeView::isFileExisted(QString fileName)
 
 void FileTreeView::mousePressEvent(QMouseEvent *event)
 {
+    QTreeView::mousePressEvent(event);
+
     this->setThisFileInfo();
     if(event->button() == Qt::RightButton)
         emit this->customContextMenuRequested(event->pos());
-
-    QTreeView::mousePressEvent(event);
 }
 
 void FileTreeView::mouseReleaseEvent(QMouseEvent *event)
 {
-
+    QTreeView::mouseReleaseEvent(event);
+    qDebug() << "FileTreeView::mouseReleaseEvent";
 }
 
 void FileTreeView::mouseDoubleClickEvent(QMouseEvent *event)
@@ -310,8 +313,13 @@ void FileTreeView::dropEvent(QDropEvent *event)
     qDebug() << "FileTreeView::dropEvent";
     event->acceptProposedAction();
 
-    qDebug() << event->mimeData()->urls()[0].toLocalFile();
-    emit uploadClicked(event->mimeData()->urls()[0].toLocalFile());
+    QList<QUrl> urlList = event->mimeData()->urls();
+    if(urlList.count() > 0)
+    {
+        qDebug() << event->mimeData()->urls()[0].toLocalFile();
+        emit uploadClicked(event->mimeData()->urls()[0].toLocalFile());
+
+    }
 }
 
 void FileTreeView::dragEnterEvent(QDragEnterEvent *event)
@@ -319,7 +327,14 @@ void FileTreeView::dragEnterEvent(QDragEnterEvent *event)
     qDebug() <<"FileTreeView::dragEnterEvent";
     QList<QUrl> urlList = event->mimeData()->urls();
 
-    if(urlList.count() != 1)
+    if(urlList.count() == 0)
+    {
+        event->setDropAction(Qt::MoveAction);
+        event->acceptProposedAction();
+        return;
+    }
+
+    if(urlList.count() > 1)
     {
         event->ignore();
         return;
@@ -342,6 +357,17 @@ void FileTreeView::dragEnterEvent(QDragEnterEvent *event)
 void FileTreeView::dragLeaveEvent(QDragLeaveEvent *event)
 {
     qDebug() << "FileTreeView::dragLeaveEvent";
+    qDebug() << "thisFileType : " << thisFileType;
+
+    if(thisFileType == "")
+        return;
+
+    //过滤文件夹类型
+    if(thisFileType == getFolderType())
+        return;
+
+    if(thisFileType != "")
+        emit downloadClicked(thisFileName, thisFileType, thisFileSize);
 }
 
 void FileTreeView::dragMoveEvent(QDragMoveEvent *event)
