@@ -14,6 +14,14 @@ MainWindow::MainWindow(QWidget *parent) :
     initStyle();
     initWindowMenu();
     this->setAcceptDrops(true);
+    LinuxColor.insert(30,"black");
+    LinuxColor.insert(31,"red");
+    LinuxColor.insert(32,"green");
+    LinuxColor.insert(33,"yellow");
+    LinuxColor.insert(34,"blue");
+    LinuxColor.insert(35,"purple");
+    LinuxColor.insert(36,"skyblue");
+    LinuxColor.insert(37,"white");
 }
 
 MainWindow::~MainWindow()
@@ -135,6 +143,8 @@ void MainWindow::on_newConnectionAction_triggered()
             //连接发送命令信号和接收
             connect(tabPagePool.at(getCurrentIndex())->textEdit,SIGNAL(arguementDone(QString)),
                     shellPool.at(getCurrentIndex())->ptr,SLOT(showInfoFromRemote(QString)));
+            connect(tabPagePool.at(getCurrentIndex())->textEdit,SIGNAL(arguementDone(QByteArray)),
+                    shellPool.at(getCurrentIndex())->ptr,SLOT(showInfoFromRemote(QByteArray)));
         }
         else
         {
@@ -195,13 +205,9 @@ void MainWindow::outToShell(int winNo, QString arguement)
 {
     if(arguement.isEmpty())
         return;
-    //qDebug() << "Info from remote:" << arguement;
+    colorDeal(arguement);
+    qDebug() << "Info from remote:" << arguement;
     tabPagePool.at(winNo)->textEdit->append(arguement);
-    /*
-    TabPage *tabPage = reinterpret_cast<TabPage*>(ui->tabWidget->widget(winNo));   //TODO
-    tabPage->textEdit->append(arguement);    //将远端命令输出显示
-*/
-    qDebug()<<arguement;
 }
 
 void MainWindow::on_actionTest_triggered()
@@ -234,12 +240,14 @@ void MainWindow::on_action_4_triggered()
 void MainWindow::showInfoFromRemote(QString arguement)
 {
     //qDebug() << "testSlot arguement:" << arguement;
-    arguement.remove('\r');
-    arguement += "\n";
     shellPool.at(getCurrentIndex())->handleIn(arguement);
   //  tabPagePool.at(ui->tabWidget->currentIndex())->textEdit->append(arguement);
 }
+void MainWindow::showInfoFromRemote(QByteArray arguement)
+{
+    shellPool.at(getCurrentIndex())->handleIn(arguement);
 
+}
 void MainWindow::openSftpServer()
 {
     //qDebug() << "openSftpServer clicked";
@@ -323,3 +331,54 @@ void MainWindow::closeTab(int index)
     if(ui->tabWidget->count() == 0)
         close();
 }
+
+void MainWindow::colorDeal(QString &mse)
+{
+    int i=0;
+    int color;
+    int background;
+    QString startHtml1="<span style=\" background:";
+    QString startHtml2=";\"><font color=";
+    QString startHtml3=">";
+    QString endHtml="</font></span>";
+    QString result;
+    bool frist=false;
+    while(i<mse.size())
+    {
+      if(mse.at(i)==0X1B)
+      {
+          if(!frist)
+          {
+            frist=true;
+            mse.remove(i,4);
+            continue;
+          }
+          else
+          {
+              background=(mse.at(i+2).toAscii()-('0'))*10+(mse.at(i+3).toAscii()-'0');
+              color=(mse.at(i+5).toAscii()-'0')*10+(mse.at(i+6).toAscii()-'0');
+              result=startHtml1+LinuxColor.value(background-10)+startHtml2+LinuxColor.value(color)+startHtml3;
+              mse.remove(i,8);
+              mse.insert(i,result);
+              while(1)
+              {
+                  if(mse.at(i)==0X1B)\
+                  {
+                      mse.remove(i,4);
+                      break;
+                  }
+                  i++;
+              }
+              mse.insert(i,endHtml);
+          }
+
+      }
+      if(frist&&mse.at(i)=='\r')
+      {
+          mse.remove(i,2);
+          mse.insert(i,"<br/>");
+      }
+      i++;
+    }
+}
+

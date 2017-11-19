@@ -33,6 +33,7 @@ private:
     QVector<QString> history;
     int hisNum;
     bool enterHistory;
+    bool lastHistory;
 };
 
 #endif // SHELLTEXTEDIT_H

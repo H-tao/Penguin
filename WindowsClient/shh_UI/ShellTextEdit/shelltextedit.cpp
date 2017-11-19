@@ -1,4 +1,5 @@
 #include "shelltextedit.h"
+#include<QDataStream>
 ShellTextEdit::ShellTextEdit(QWidget *parent) :
     QTextEdit(parent)
 {
@@ -7,6 +8,7 @@ ShellTextEdit::ShellTextEdit(QWidget *parent) :
     console="";
 //    setReadOnly(true);
     enterHistory=false;
+    lastHistory=false;
 }
 
 ShellTextEdit::~ShellTextEdit()
@@ -48,13 +50,17 @@ void ShellTextEdit::keyPressEvent(QKeyEvent *e)
     QTextCursor textCursor = this->textCursor();
     textCursor.movePosition(QTextCursor::End);
     this->setTextCursor(textCursor);
-    if(/*e->key()==Qt::Key_Enter||*/e->key()==Qt::Key_Return)
+    if(e->key()==Qt::Key_Return)
     {
         if(arguement.isEmpty()) //命令为空，返回
+        {
+            arguement+="\n";
+            emit arguementDone(arguement);
+            arguement = "";
             return;
-
-        //qDebug() << "Enter Done";
+        }
         history.append(arguement);
+        arguement+="\n";
         enterHistory=true;
         hisNum=history.size();
         emit arguementDone(arguement);
@@ -66,85 +72,51 @@ void ShellTextEdit::keyPressEvent(QKeyEvent *e)
     {
         char chara=e->key()-64;
         arguement+=chara;
-        this->moveCursor(QTextCursor::EndOfLine);
-        insertPlainText("^"+QChar(e->key()));
-        return;
-    }
-    //Alt
-    else if(e->modifiers() == Qt::AltModifier)
-    {  QTextEdit::keyPressEvent(e);
         return;
     }
     //方向键
     else if(e->key() == Qt::Key_Left || e->key() == Qt::Key_Right || e->key() == Qt::Key_Up || e->key() == Qt::Key_Down)
     {
-//        if(e->key()==Qt::Key_Up)
-//        {
-//            if(ptr==history.end())
-//            {
-//                ptr-=2;
-//            }
-//            else
-//            {
-//                ptr--;
-//            }
-//            QTextCursor txtcur=this->textCursor();
-//             txtcur.setPosition(0);
-//             txtcur.movePosition(QTextCursor::EndOfWord,QTextCursor::KeepAnchor);
-//             txtcur.movePosition(QTextCursor::EndOfWord,QTextCursor::KeepAnchor,-1*arguement.size());
-//             txtcur.removeSelectedText();
-//             //qDebug()<<txtcur.selectedText();
-//             insertPlainText(*ptr);
-//             arguement=*ptr;
-//             return;
-//        }
-//        if(e->key()==Qt::Key_Down)
-//        {
-//            if(ptr==history.end())
-//                ptr=history.begin();
-//            else
-//                ptr++;
-//            QTextCursor txtcur= this->textCursor();
-//             txtcur.setPosition(0);
-//             txtcur.movePosition(QTextCursor::EndOfWord,QTextCursor::KeepAnchor);
-//             txtcur.movePosition(QTextCursor::EndOfWord,QTextCursor::KeepAnchor,-1*arguement.size());
-//             txtcur.removeSelectedText();
-//             insertPlainText(*ptr);
-//             arguement=*ptr;
-//             return;
-//        }
-        if(e->key()==Qt::Key_Up)
+        if(e->key()==Qt::Key_Right||e->key()==Qt::Key_Left)
+            QTextEdit::keyPressEvent(e);
+        else if(e->key()==Qt::Key_Up)
         {
-            if(enterHistory==true)
-            {
-                hisNum=history.size();
-                hisNum-=1;
-            }
-            else
+            if(enterHistory)
             {
                 if(hisNum==0)
-                return;
+                    return;
                 hisNum-=1;
-            }
-            clearTheKeyin();
-            arguement=history.at(hisNum);
-            enterHistory=false;
-        }
-        if(e->key()==Qt::Key_Down)
-        {
-            if(enterHistory==true)
-            {
-                return;
+                lastHistory=true;
+                clearTheKeyin();
+                arguement=history.at(hisNum);
             }
             else
             {
-               if(hisNum==history.size()-1)
-                   return;
-               hisNum+=1;
+                return;
             }
-            clearTheKeyin();
-            arguement=history.at(hisNum);
-            enterHistory=false;
+
+
+        }
+       else if(e->key()==Qt::Key_Down)
+        {
+            if(enterHistory)
+            {
+                if(hisNum==history.size()-1)
+                {
+                    lastHistory=false;
+                    return;
+                }
+                hisNum+=1;
+                lastHistory=true;
+                clearTheKeyin();
+                arguement=history.at(hisNum);
+            }
+            else
+            {
+                lastHistory=false;
+                return;
+            }
+
         }
         insertPlainText(arguement);
         return;
@@ -161,8 +133,7 @@ void ShellTextEdit::keyPressEvent(QKeyEvent *e)
     }
     if(e->key()==Qt::Key_Backspace/*e->text() == "\b"*/)         //退格键删除
     {
-        //qDebug()<<e->type()<<"  "<<e->key()<<"  "<<e->modifiers();
-        //命令为空，不可删除，即为ReadOnly
+
         if(arguement.size() == 0)
         {
            e->ignore();
@@ -175,85 +146,24 @@ void ShellTextEdit::keyPressEvent(QKeyEvent *e)
         QTextEdit::keyPressEvent(e);
         arguement.remove(arguement.size()-1,1);
     }
-
-    if(e->key()<='\0x01000060'&&e->key()>='\0X01000000')
+    if(e->key()==Qt::Key_Escape)
     {
-        console+=e->key();
-        emit arguementDone(console);
-        console="";
-    }
-    /***** Esc ******/
-/*
-    if(e->key() == 16777222)
-        arguement = "\u007F";
-    if(e->key() == 16777216)
-        arguement = "\u001B";
-
-    QTextEdit::keyPressEvent(e);    //TODO 极重要，将输入显示到命令行
-
- /*   if(e->modifiers()==Qt::ControlModifier&&e->key()>64&&e->key()<95)
-    {
-        keyReleaseEvent(e);
-        arguement+=(QChar(e->key()-64));
-        this->moveCursor(QTextCursor::EndOfLine);
-        insertPlainText("^"+QChar(e->key()));
-        i+=2;
-    }
-    else if(e->key()==Qt::Key_Enter||e->key()==Qt::Key_Return)
-    {
-        //qDebug() << "Enter Done";
-        emit arguementDone(arguement);
-        arguement = "";
-        //qDebug() << "After \\r arguement：" << arguement;
+        qDebug()<<"Esc键键入";
+        QByteArray t;
+        char a=0X1B;
+        t.append(a);
+        emit arguementDone(t);
         return;
     }
-    else if(e->key()==Qt::Key_Backspace)    //退格键删除
+    else if(e->key()==Qt::Key_Insert)
     {
-        if(i>0)
-        {
-            setReadOnly(false);
-            this->QTextEdit::keyPressEvent(e);
-             arguement.remove(arguement.size() - 1, 1);     //最后一个char位于size()-1
-             //qDebug()<<arguement.at(arguement.size()-1);
-            i--;
-            if(arguement.at(arguement.size()-1)<='\31'){
-                //qDebug()<<"2222222";
-                arguement.remove(arguement.size(),1);
-                this->QTextEdit::keyPressEvent(e);
-                i--;
-            }
-
-            setReadOnly(true);
-        }
-        else
-            return;
+       QByteArray t;
+       char a[4]={'0X1B','0X58','0X32','0X7E'};
+       t.append(a,4);
+        emit arguementDone(t);
+       return;
     }
-    // Control
-    else if(e->modifiers()!=Qt::ControlModifier)
-    {
-        setReadOnly(false);
-        this->QTextEdit::keyPressEvent(e);
-        arguement.append(QChar(e->key()));
-        i++;
-        setReadOnly(true);
-    }
-    // Alt
-    else if(e->modifiers() == Qt::AltModifier)
-    {
-        //qDebug() << "Alt!!!";
-        return;
-    }*/
 }
-/*
-void ShellTextEdit::mousePressEvent(QMouseEvent *e)
-{
-
-}*/
-/*
-void ShellTextEdit::mouseReleaseEvent(QMouseEvent *e)
-{
-
-}*/
 
 void ShellTextEdit::clearTheKeyin()
 {

@@ -15,12 +15,11 @@
 #include <QThread>
 #include <QActionGroup>
 #include <sftpserver.h>
-
+#include<QMap>
 class ShellTextEdit;
 class FileWidget;
 class Shell;
 class SftpServer;
-
 namespace Ui {
 class MainWindow;
 }
@@ -61,6 +60,7 @@ public slots:
     /********** SSH *********/
     void outToShell(int winNo, QString arguement); //输出到
     void showInfoFromRemote(QString arguement);
+    void showInfoFromRemote(QByteArray arguement);
 
     /********** Sftp *********/
     void openSftpServer();
@@ -84,6 +84,8 @@ private:
     QVector<TabPage*> tabPagePool;      //TabPage池
     QVector<SftpServer *> sftpPool;
     ShellTextEdit *textEdit;
+    void colorDeal(QString&);
+    QMap<int,QString> LinuxColor;
 };
 
 #endif // MAINWINDOW_H

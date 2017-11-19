@@ -34,6 +34,7 @@
 #include <QSharedPointer>
 #include<mainwindow.h>
 #include<QByteArray>
+
 namespace QSsh {
 class SshConnection;
 class SshConnectionParameters;
@@ -57,6 +58,7 @@ public:
     int getNo(){return no;}
     MainWindow *ptr;
  void handleIn(QString &mse);
+  void handleIn(QByteArray &mse);
  void disconnect();
  void reconnect();
 private slots:

@@ -47,7 +47,6 @@ Shell::Shell(const QSsh::SshConnectionParameters &parameters,int winNo, QObject 
     returnArgs=false;
     ptr=(MainWindow*)parent;
     writeable=false;
-
     connect(m_connection,SIGNAL(connected()),SLOT(handleConnected()));
     connect(m_connection,SIGNAL(dataAvailable(QString)),this,SLOT(shellData(QString)));
     connect(this,SIGNAL(dataReady(int,QString)),ptr,SLOT(outToShell(int,QString)));
@@ -106,6 +105,14 @@ void Shell::handleIn(QString &mse)
     m_shell->write(mse.toLatin1());
     returnArgs=true;
    }
+}
+void Shell::handleIn(QByteArray &mse)
+{
+    if(writeable)
+    {
+     m_shell->write(mse);
+     returnArgs=true;
+    }
 }
 void Shell::shellData(QString mse)
 {
