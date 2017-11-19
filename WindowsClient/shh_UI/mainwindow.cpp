@@ -343,11 +343,12 @@ void MainWindow::colorDeal(QString &mse)
     QString endHtml="</font></span>";
     QString result;
     bool frist=false;
+    bool br=false;
     while(i<mse.size())
     {
       if(mse.at(i)==0X1B)
       {
-          if(!frist)
+          if(!frist&&!br)
           {
             frist=true;
             mse.remove(i,4);
@@ -355,6 +356,7 @@ void MainWindow::colorDeal(QString &mse)
           }
           else
           {
+              frist=true;
               background=(mse.at(i+2).toAscii()-('0'))*10+(mse.at(i+3).toAscii()-'0');
               color=(mse.at(i+5).toAscii()-'0')*10+(mse.at(i+6).toAscii()-'0');
               result=startHtml1+LinuxColor.value(background-10)+startHtml2+LinuxColor.value(color)+startHtml3;
@@ -373,12 +375,19 @@ void MainWindow::colorDeal(QString &mse)
           }
 
       }
-      if(frist&&mse.at(i)=='\r')
-      {
-          mse.remove(i,2);
-          mse.insert(i,"<br/>");
-      }
-      i++;
-    }
-}
+      if(mse.at(i)=='\r')
+            {
+                if(frist)
+                {
+                    mse.remove(i,2);
+                    mse.insert(i,"<br/>");
+                }
+                else
+                {
+                    br=true;
+                }
+            }
+            i++;
+          }
+ }
 

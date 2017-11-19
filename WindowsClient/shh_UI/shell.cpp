@@ -83,11 +83,12 @@ void Shell::shellOut()
     {
         returnArgs=false;
         m_shell->readLine();
-        ptr->outToShell(this->getNo(),m_shell->readAll());
+        char data[100];
+        while(m_shell->readLine(data,100))
+        ptr->outToShell(this->getNo(),QString::fromLatin1(data,100));
         return;
     }
     ptr->outToShell(this->getNo(),m_shell->readAll());
-    qDebug()<<"asdasd";
 }
 void Shell::handleChannelClosed(int exitStatus)
 {

@@ -158,7 +158,7 @@ void ShellTextEdit::keyPressEvent(QKeyEvent *e)
     else if(e->key()==Qt::Key_Insert)
     {
        QByteArray t;
-       char a[4]={'0X1B','0X58','0X32','0X7E'};
+       char a[4]={0X1B,0X58,0X32,0X7E};
        t.append(a,4);
         emit arguementDone(t);
        return;
