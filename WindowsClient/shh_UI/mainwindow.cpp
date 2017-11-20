@@ -207,7 +207,10 @@ void MainWindow::outToShell(int winNo, QString arguement)
         return;
     colorDeal(arguement);
     qDebug() << "Info from remote:" << arguement;
-    tabPagePool.at(winNo)->textEdit->append(arguement);
+    //tabPagePool.at(winNo)->textEdit->append(arguement);
+    tabPagePool.at(winNo)->textEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
+    tabPagePool.at(winNo)->textEdit->insertHtml(arguement);
+    tabPagePool.at(winNo)->textEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
 }
 
 void MainWindow::on_actionTest_triggered()
