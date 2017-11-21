@@ -205,12 +205,10 @@ void MainWindow::outToShell(int winNo, QString arguement)
 {
     if(arguement.isEmpty())
         return;
-    colorDeal(arguement);
     qDebug() << "Info from remote:" << arguement;
-    //tabPagePool.at(winNo)->textEdit->append(arguement);
-    tabPagePool.at(winNo)->textEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
-    tabPagePool.at(winNo)->textEdit->insertHtml(arguement);
-    tabPagePool.at(winNo)->textEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
+    colorDeal(arguement);
+    tabPagePool.at(winNo)->textEdit->append(arguement);
+
 }
 
 void MainWindow::on_actionTest_triggered()
@@ -345,29 +343,30 @@ void MainWindow::colorDeal(QString &mse)
     QString startHtml3=">";
     QString endHtml="</font></span>";
     QString result;
-    bool frist=false;
-    bool br=false;
+
     while(i<mse.size())
     {
+
       if(mse.at(i)==0X1B)
       {
-          if(!frist&&!br)
+          if(mse.at(i+3)=='m')
           {
-            frist=true;
             mse.remove(i,4);
+
             continue;
           }
           else
           {
-              frist=true;
               background=(mse.at(i+2).toAscii()-('0'))*10+(mse.at(i+3).toAscii()-'0');
+              qDebug()<<"sssssssss"<<mse.at(i+2);
+              qDebug()<<"sssssssss"<<mse.at(i+3);
               color=(mse.at(i+5).toAscii()-'0')*10+(mse.at(i+6).toAscii()-'0');
               result=startHtml1+LinuxColor.value(background-10)+startHtml2+LinuxColor.value(color)+startHtml3;
               mse.remove(i,8);
               mse.insert(i,result);
               while(1)
               {
-                  if(mse.at(i)==0X1B)\
+                  if(mse.at(i)==0X1B)
                   {
                       mse.remove(i,4);
                       break;
@@ -380,15 +379,8 @@ void MainWindow::colorDeal(QString &mse)
       }
       if(mse.at(i)=='\r')
             {
-                if(frist)
-                {
                     mse.remove(i,2);
                     mse.insert(i,"<br/>");
-                }
-                else
-                {
-                    br=true;
-                }
             }
             i++;
           }
