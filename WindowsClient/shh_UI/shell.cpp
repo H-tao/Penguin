@@ -83,9 +83,7 @@ void Shell::shellOut()
     {
         returnArgs=false;
         m_shell->readLine();
-        char data[100];
-        while(m_shell->readLine(data,100))
-        ptr->outToShell(this->getNo(),QString::fromLatin1(data,100));
+        ptr->outToShell(this->getNo(),m_shell->readAll());
         return;
     }
     ptr->outToShell(this->getNo(),m_shell->readAll());
