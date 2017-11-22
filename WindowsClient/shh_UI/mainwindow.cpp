@@ -121,13 +121,23 @@ void MainWindow::on_newConnectionAction_triggered()
     {
 
         QSsh::SshConnectionParameters *sshPara;
-        newCon->setText();
         sshPara=new QSsh::SshConnectionParameters();
-        sshPara->host=newCon->getHost();
-        sshPara->port=newCon->getPort();
-        sshPara->userName=newCon->getuUserName();
-        sshPara->password=newCon->getPassword();
-        sshPara->authenticationType=QSsh::SshConnectionParameters::AuthenticationByPassword;
+        if(newCon->isPasswordConnect())
+        {
+            sshPara->host=newCon->getHost();
+            sshPara->port=newCon->getPort();
+            sshPara->userName=newCon->getuUserName();
+            sshPara->password=newCon->getPassword();
+            sshPara->authenticationType=QSsh::SshConnectionParameters::AuthenticationByPassword;
+        }
+        else
+        {
+            sshPara->host = newCon->getHost();
+            sshPara->port = newCon->getPort();
+            sshPara->userName = newCon->getuUserName();
+            sshPara->privateKeyFile = newCon->getPrivateKey();
+            sshPara->authenticationType = QSsh::SshConnectionParameters::AuthenticationByKey;
+        }
         sshPara->timeout=500;
         if(shellPool.size()<=ui->tabWidget->currentIndex())
         {
@@ -164,7 +174,6 @@ void MainWindow::on_newConnectionAction_triggered()
             connect(tabPagePool.at(shellPool.size()-1)->textEdit,SIGNAL(arguementDone(QString)),
                     shellPool.at(shellPool.size()-1)->ptr,SLOT(showInfoFromRemote(QString)));
         }
-
     }
 //    QSsh::SshConnectionParameters *sshPara;
 //    sshPara=new QSsh::SshConnectionParameters();
