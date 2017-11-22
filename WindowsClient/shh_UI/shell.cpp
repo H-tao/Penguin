@@ -51,7 +51,6 @@ Shell::Shell(const QSsh::SshConnectionParameters &parameters,int winNo, QObject 
     connect(m_connection,SIGNAL(dataAvailable(QString)),this,SLOT(shellData(QString)));
     connect(this,SIGNAL(dataReady(int,QString)),ptr,SLOT(outToShell(int,QString)));
     connect(m_connection, SIGNAL(error(QSsh::SshError)),this,SLOT(shellError()));
-    //connect(this,SIGNAL(error(int,QString)),ptr,SLOT(outToShell(int,QString)));
     connect(this,SIGNAL(error(int,QString)),ptr,SLOT(errorHandle(int,QString)));
 }
 
@@ -67,7 +66,6 @@ void Shell::run()
 
 void Shell::handleConnected()
 {
-
     m_shell=m_connection->createRemoteShell();
     m_shell->start();
     connect(m_shell.data(),SIGNAL(started()),this,SLOT(shellConnect()));
@@ -75,6 +73,9 @@ void Shell::handleConnected()
     connect(m_shell.data(),SIGNAL(readyRead()),this,SLOT(shellOut()));
     connect(m_shell.data(), SIGNAL(closed(int)), this,SLOT(handleChannelClosed(int)));
     connect(this,SIGNAL(discon(int,QString)),ptr,SLOT(outToShell(int,QString)));
+    emit print(no);
+
+
 }
 
 void Shell::shellOut()

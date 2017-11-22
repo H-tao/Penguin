@@ -76,11 +76,13 @@ private:
     int no;
     bool writeable;
     bool returnArgs;
+    bool success;
 signals:
     void connection(int,QString);
     void dataReady(int,QString);
     void error(int,QString);
     void discon(int,QString);
+    void print(int);
 };
 
 #endif // SHELL_H

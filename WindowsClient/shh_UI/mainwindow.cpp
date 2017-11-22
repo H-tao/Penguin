@@ -142,8 +142,9 @@ void MainWindow::on_newConnectionAction_triggered()
         if(shellPool.size()<=ui->tabWidget->currentIndex())
         {
             //当前的页面无连接
-            shellPool.append(new Shell(*sshPara,ui->tabWidget->currentIndex(),this));
-            //qDebug()<<"55566";
+            Shell *tempShell;
+            shellPool.append(tempShell=new Shell(*sshPara,ui->tabWidget->currentIndex(),this));
+
             paraPool.append(sshPara);
 
             //获得数据
@@ -151,41 +152,21 @@ void MainWindow::on_newConnectionAction_triggered()
             //改变标签名
             ui->tabWidget->setTabText(getCurrentIndex(),newCon->getuUserName());
             //连接发送命令信号和接收
-            connect(tabPagePool.at(getCurrentIndex())->textEdit,SIGNAL(arguementDone(QString)),
-                    shellPool.at(getCurrentIndex())->ptr,SLOT(showInfoFromRemote(QString)));
-            connect(tabPagePool.at(getCurrentIndex())->textEdit,SIGNAL(arguementDone(QByteArray)),
-                    shellPool.at(getCurrentIndex())->ptr,SLOT(showInfoFromRemote(QByteArray)));
+
         }
         else
         {
-            on_addTabAction_triggered();/*
-            shellPool.replace(ui->tabWidget->currentIndex(),new Shell(*sshPara,ui->tabWidget->currentIndex(),this));
-            paraPool.replace(getCurrentIndex(),sshPara);
-            */
+            on_addTabAction_triggered();
             shellPool.append(new Shell(*sshPara,shellPool.size(),this));
             paraPool.append(sshPara);
-            //qDebug()<<"6666";
-
-            //获得数据
             shellPool.at(shellPool.size()-1)->run();
             //改变标签名
             ui->tabWidget->setTabText(shellPool.size()-1,newCon->getuUserName());
             //连接发送命令信号和接收
-            connect(tabPagePool.at(shellPool.size()-1)->textEdit,SIGNAL(arguementDone(QString)),
-                    shellPool.at(shellPool.size()-1)->ptr,SLOT(showInfoFromRemote(QString)));
         }
+        connect(shellPool.at(shellPool.size()-1),SIGNAL(print(int)),this,SLOT(LinkToTab(int)));
     }
-//    QSsh::SshConnectionParameters *sshPara;
-//    sshPara=new QSsh::SshConnectionParameters();
-//    sshPara->host="39.108.78.252";
-//    sshPara->port=22;
-//    sshPara->userName="thishzw";
-//    sshPara->password="Hzw5820212";
-//    sshPara->authenticationType=QSsh::SshConnectionParameters::AuthenticationByPassword;
-//    sshPara->timeout=500;
-//    shellPool.append(new Shell(*sshPara,this));
-//    shellPool.at(shellPool.size()-1)->run();
-    //获得数据
+
 
     delete newCon;
 }
@@ -308,6 +289,7 @@ int MainWindow::getCurrentIndex()
 
 void MainWindow::errorHandle(int winNo, QString error)
 {
+    qDebug()<<"paraPool"<<paraPool.size()<<shellPool.size();
     paraPool.remove(winNo);
     shellPool.remove(winNo);
     QMessageBox::warning(this,"连接出错",error,QMessageBox::Ok);
@@ -395,3 +377,10 @@ void MainWindow::colorDeal(QString &mse)
           }
  }
 
+void MainWindow::LinkToTab(int win)
+{
+    connect(tabPagePool.at(win)->textEdit,SIGNAL(arguementDone(QString)),
+            shellPool.at(win)->ptr,SLOT(showInfoFromRemote(QString)));
+    connect(tabPagePool.at(win)->textEdit,SIGNAL(arguementDone(QByteArray)),
+            shellPool.at(win)->ptr,SLOT(showInfoFromRemote(QByteArray)));
+}

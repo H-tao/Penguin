@@ -71,6 +71,7 @@ public slots:
 private slots:
     void errorHandle(int,QString);
     void closeTab(int index);
+    void LinkToTab(int win);
 
 private:
 
