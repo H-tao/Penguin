@@ -12,9 +12,11 @@ NewConnection::NewConnection(QWidget *parent) :
     ui->connectionWayComboBox->setEditable(false);
 
     // 默认密码连接
-    ui->keyPasswordLineEdit->setEnabled(false);
-    ui->keyPathLineEdit->setEnabled(false);
-    ui->openFileBtn->setEnabled(false);
+    ui->keyPasswordLineEdit->setVisible(false);
+    ui->keyPathLineEdit->setVisible(false);
+    ui->openFileBtn->setVisible(false);
+    ui->label_2->setVisible(false);
+    ui->label_3->setVisible(false);
 
     connect(ui->openFileBtn, &QPushButton::clicked, this, &NewConnection::openKeyFile);
     connect(ui->connectionWayComboBox, &QComboBox::currentTextChanged, this, &NewConnection::connectWayChanged);
@@ -82,15 +84,22 @@ void NewConnection::connectWayChanged()
 {
     if(ui->connectionWayComboBox->currentText() == "密码")
     {
-        ui->keyPasswordLineEdit->setEnabled(false);
-        ui->keyPathLineEdit->setEnabled(false);
-        ui->openFileBtn->setEnabled(false);
+        ui->keyPasswordLineEdit->setVisible(false);
+        ui->keyPathLineEdit->setVisible(false);
+        ui->openFileBtn->setVisible(false);
+        ui->label_2->setVisible(false);
+        ui->label_3->setVisible(false);
+        ui->protocolLabel->setVisible(true);
+        ui->passwordLineEdit->setVisible(true);
     }
     else
     {
-        ui->keyPasswordLineEdit->setEnabled(true);
-        ui->keyPathLineEdit->setEnabled(true);
-        ui->openFileBtn->setEnabled(true);
-        ui->passwordLineEdit->setEnabled(false);
+        ui->keyPasswordLineEdit->setVisible(true);
+        ui->keyPathLineEdit->setVisible(true);
+        ui->openFileBtn->setVisible(true);
+        ui->label_2->setVisible(true);
+        ui->label_3->setVisible(true);
+        ui->passwordLineEdit->setVisible(false);
+        ui->protocolLabel->setVisible(false);
     }
 }
