@@ -53,6 +53,9 @@ public:
     void initTreeView();
     void initProgressDialog();
 
+signals:
+    void openFileName(const QString &fileName, const QString &fileType, const qint64 &fileSize);
+
 public slots:
     void handleConnected();
     void handleError();
@@ -118,6 +121,12 @@ private:
     QQueue<QueueItem *> items;
     QList<QSsh::SftpChannel::Ptr> channels;
     QSsh::SftpChannel::Ptr channel_2;
+
+    // comming be opened file
+    QString commingFileName;
+    QString commingFileType;
+    qint64 commingFileSize;
+    bool isOpenFile = false;
 };
 
 #endif // SFTPSERVER_H

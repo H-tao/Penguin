@@ -133,7 +133,7 @@ void SftpServer::handleChannelInitializationFailed(const QString &reason)
 
 void SftpServer::handleJobFinished(QSsh::SftpJobId id, const QString &error)
 {
-//    qDebug() << "handleJobFinished";
+    qDebug() << "handleJobFinished";
 
     if(!error.isEmpty())
     {
@@ -190,6 +190,13 @@ void SftpServer::handleJobFinished(QSsh::SftpJobId id, const QString &error)
             handleRefreshClicked();
             break;
         case JobDownloadFile:
+            if(isOpenFile)
+            {
+                qDebug() << "emit openFileName(commingFileName, commingFileType, commingFileSize)";
+                emit openFileName(commingFileName, commingFileType, commingFileSize);
+                isOpenFile = false;
+                break;
+            }
             killTimer(m_timer);
             m_progress->setValue(100);
             QTest::qSleep(1000);
@@ -381,18 +388,32 @@ void SftpServer::handleOpenClicked(const QString &fileName,const QString &fileTy
     }
     else
     {
-        //qDebug() << "Not a file, can't open, choose to download!";
-        if(QMessageBox::Yes ==
-                QMessageBox::question(page->fileWidget, tr("open"),
-                                      tr("This file is not a folder, do you want to download?"),
-                                      QMessageBox::Yes | QMessageBox::No, QMessageBox::No))
-        {
-            handleDownloadClicked(fileName, fileType, fileSize);
-        }
-        else
-        {
-//            page->fileWidget->currentItem()->setSelected(true);
-        }
+        qDebug() << fileType;
+        qDebug() << fileSize;
+
+        // download file
+        m_jobType = JobDownloadFile;
+        m_workWidget = WorkFileWidget;
+        m_channel->downloadFile(m_shellPath + fileName, QDir::currentPath() + fileName, QSsh::SftpOverwriteExisting);
+
+        commingFileName = QDir::currentPath() + fileName;
+        commingFileSize = getSizeToByte(fileSize);
+        commingFileType = fileType;
+        isOpenFile = true;
+
+        qDebug() << commingFileName;
+//        //qDebug() << "Not a file, can't open, choose to download!";
+//        if(QMessageBox::Yes ==
+//                QMessageBox::question(page->fileWidget, tr("open"),
+//                                      tr("This file is not a folder, do you want to download?"),
+//                                      QMessageBox::Yes | QMessageBox::No, QMessageBox::No))
+//        {
+//            handleDownloadClicked(fileName, fileType, fileSize);
+//        }
+//        else
+//        {
+////            page->fileWidget->currentItem()->setSelected(true);
+//        }
         return;
     }
 }
@@ -454,7 +475,7 @@ void SftpServer::handleDownloadClicked(const QString &fileName, const QString &f
     }
 
     m_currentLocalFilePath = QFileDialog::getSaveFileName(page->fileWidget, tr("Download File"),
-                                                      QDir::currentPath() + "/" + fileName, tr("All Files (*.*"));
+                                                      QDir::currentPath() + "/" + fileName, tr("All Files (*"));
 
     qDebug() << "Local File : " << m_currentLocalFilePath;
     if(m_currentLocalFilePath.isEmpty())
