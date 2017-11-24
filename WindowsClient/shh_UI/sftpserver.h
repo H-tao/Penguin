@@ -18,7 +18,9 @@
 #include "function.h"
 #include "mainwindow.h"
 #include "filenamedialog.h"
-
+#include "textedit.h"
+#include<QByteArray>
+#include<QVector>
 class MainWindow;
 
 using Channel_Type = typename QSsh::SftpChannel::Ptr;
@@ -81,6 +83,8 @@ public slots:
     void lineEditChanged(QString pathChanged);
     void searchEditChanged(QString fileName);
 
+    void openTextEdit(QString,QString,qint64);
+    void SaveOpenFile(QString,QString,int);
     Channel_Type *createNewChannel(Channel_Type *channel);
 
 private:
@@ -127,6 +131,7 @@ private:
     QString commingFileType;
     qint64 commingFileSize;
     bool isOpenFile = false;
+    QVector<QString>openningFileName;
 };
 
 #endif // SFTPSERVER_H

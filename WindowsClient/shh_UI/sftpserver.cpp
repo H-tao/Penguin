@@ -37,6 +37,8 @@ SftpServer::SftpServer(const QSsh::SshConnectionParameters &parameters, int serv
     m_connection->connectToHost();
 
 //    page->openFileSystem();
+
+    connect(this,SIGNAL(openFileName(QString,QString,qint64)),this,SLOT(openTextEdit(QString,QString,qint64)));
 }
 
 SftpServer::~SftpServer()
@@ -388,32 +390,14 @@ void SftpServer::handleOpenClicked(const QString &fileName,const QString &fileTy
     }
     else
     {
-        qDebug() << fileType;
-        qDebug() << fileSize;
-
-        // download file
         m_jobType = JobDownloadFile;
         m_workWidget = WorkFileWidget;
-        m_channel->downloadFile(m_shellPath + fileName, QDir::currentPath() + fileName, QSsh::SftpOverwriteExisting);
-
-        commingFileName = QDir::currentPath() + fileName;
+        m_channel->downloadFile(m_shellPath + fileName, QDir::currentPath() +"/"+ fileName, QSsh::SftpOverwriteExisting);
+        openningFileName.append(m_shellPath+fileName);
+        commingFileName = QDir::currentPath()+"/" + fileName;
         commingFileSize = getSizeToByte(fileSize);
         commingFileType = fileType;
         isOpenFile = true;
-
-        qDebug() << commingFileName;
-//        //qDebug() << "Not a file, can't open, choose to download!";
-//        if(QMessageBox::Yes ==
-//                QMessageBox::question(page->fileWidget, tr("open"),
-//                                      tr("This file is not a folder, do you want to download?"),
-//                                      QMessageBox::Yes | QMessageBox::No, QMessageBox::No))
-//        {
-//            handleDownloadClicked(fileName, fileType, fileSize);
-//        }
-//        else
-//        {
-////            page->fileWidget->currentItem()->setSelected(true);
-//        }
         return;
     }
 }
@@ -716,4 +700,24 @@ void SftpServer::searchEditChanged(QString fileName)
         QStandardItem *item = target.at(0);
         page->fileWidget->setCurrentIndex(item->index());
     }
+}
+
+void SftpServer::openTextEdit(QString FileName, QString FileType, qint64 FileSize)
+{
+    TextEdit *p;
+    p= new TextEdit(this,openningFileName.size()-1);
+    p->show();
+    p->run(FileName,FileType);
+    connect(p,SIGNAL(SaveOpenFile(QString,QString,int)),this,SLOT(SaveOpenFile(QString,QString,int)));
+}
+
+void SftpServer::SaveOpenFile(QString file,QString type, int number)
+{
+    QString filePath=openningFileName.at(number);
+   // m_channel->removeFile(filePath);
+    m_workWidget = WorkFileWidget;
+    m_jobType = JobUploadFile;
+    channel_2->uploadFile(file,filePath, QSsh::SftpOverwriteExisting);
+    handleRefreshClicked();
+
 }
