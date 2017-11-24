@@ -66,6 +66,7 @@ void Shell::run()
 
 void Shell::handleConnected()
 {
+
     m_shell=m_connection->createRemoteShell();
     m_shell->start();
     connect(m_shell.data(),SIGNAL(started()),this,SLOT(shellConnect()));
@@ -74,8 +75,6 @@ void Shell::handleConnected()
     connect(m_shell.data(), SIGNAL(closed(int)), this,SLOT(handleChannelClosed(int)));
     connect(this,SIGNAL(discon(int,QString)),ptr,SLOT(outToShell(int,QString)));
     emit print(no);
-
-
 }
 
 void Shell::shellOut()
@@ -124,7 +123,8 @@ void Shell::shellError()
 }
 void Shell::shellConnect()
 {
-    emit connection(this->getNo(),"成功建立Shell");;
+    emit connection(this->getNo(),"成功建立Shell");
+    emit connSuccess();
     writeable=true;
 }
 void Shell::disconnect()

@@ -58,7 +58,7 @@ public:
 
 signals:
     void openFileName(const QString &fileName, const QString &fileType, const qint64 &fileSize);
-
+    void connSuccess();
 public slots:
     void handleConnected();
     void handleError();

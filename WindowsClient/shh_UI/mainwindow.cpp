@@ -56,7 +56,9 @@ void MainWindow::initWindowMenu()
     ui->windowMenu->addAction(pOpenSftpAct);
     ui->windowMenu->addAction(pCloseSftpAct);
     ui->windowMenu->addAction(pOpenTreeView);
-
+    pOpenSftpAct->setVisible(false);
+    pCloseSftpAct->setVisible(false);
+    pOpenTreeView->setVisible(false);
     connect(pOpenSftpAct, SIGNAL(triggered(bool)), this, SLOT(openSftpServer()));
     connect(pCloseSftpAct, SIGNAL(triggered(bool)), this, SLOT(closeSftpServer()));
     connect(pOpenTreeView, SIGNAL(triggered(bool)), this, SLOT(openTreeView()));
@@ -165,6 +167,9 @@ void MainWindow::on_newConnectionAction_triggered()
             //连接发送命令信号和接收
         }
         connect(shellPool.at(shellPool.size()-1),SIGNAL(print(int)),this,SLOT(LinkToTab(int)));
+        openSftpServer();
+        openTreeView();
+        connect(sftpPool.at(sftpPool.size()-1),SIGNAL(connSuccess()),this,SLOT(OpenSftp()));
     }
 
 
@@ -216,13 +221,18 @@ void MainWindow::on_actionTest_triggered()
 void MainWindow::on_action_6_triggered()//断开连接
 {
    int winNo=ui->tabWidget->currentIndex();
+   closeSftpServer();
+   delete sftpPool.at(winNo);
    shellPool.at(winNo)->disconnect();
    delete shellPool.at(winNo);
+
 }
 
 void MainWindow::on_action_4_triggered()
 {
    int winNo=ui->tabWidget->currentIndex();
+   closeSftpServer();
+   delete sftpPool.at(winNo);
    if(winNo>shellPool.size()-1 && winNo>tabPagePool.size()-1)
        return ;
    shellPool.at(winNo)->reconnect();
@@ -383,4 +393,9 @@ void MainWindow::LinkToTab(int win)
             shellPool.at(win)->ptr,SLOT(showInfoFromRemote(QString)));
     connect(tabPagePool.at(win)->textEdit,SIGNAL(arguementDone(QByteArray)),
             shellPool.at(win)->ptr,SLOT(showInfoFromRemote(QByteArray)));
+}
+
+void MainWindow::OpenSftp()
+{
+    on_openFileSystemAction_triggered();
 }

@@ -101,6 +101,7 @@ void SftpServer::handleConnected()
     connect(channel_2.data(), SIGNAL(closed()), this, SLOT(handleChannelClosed()));
 
     channel_2->initialize();
+    emit connSuccess();
 }
 
 void SftpServer::handleError()

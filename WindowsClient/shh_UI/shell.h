@@ -83,6 +83,7 @@ signals:
     void error(int,QString);
     void discon(int,QString);
     void print(int);
+    void connSuccess();
 };
 
 #endif // SHELL_H

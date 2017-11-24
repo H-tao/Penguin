@@ -56,6 +56,8 @@ private slots:
 
     void on_action_4_triggered();
 
+    void OpenSftp();
+
 public slots:
     /********** SSH *********/
     void outToShell(int winNo, QString arguement); //输出到
