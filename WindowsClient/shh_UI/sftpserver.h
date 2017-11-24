@@ -1,6 +1,7 @@
 #ifndef SFTPSERVER_H
 #define SFTPSERVER_H
 
+#include <QDesktopWidget>
 #include <QWidget>
 #include <QQueue>
 #include "tabpage.h"

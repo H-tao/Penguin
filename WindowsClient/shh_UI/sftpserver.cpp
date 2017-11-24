@@ -706,6 +706,8 @@ void SftpServer::openTextEdit(QString FileName, QString FileType, qint64 FileSiz
 {
     TextEdit *p;
     p= new TextEdit(this,openningFileName.size()-1);
+    QRect deskRect = QApplication::desktop()->availableGeometry();
+    p->move((QApplication::desktop()->width() - p->width())/2,(QApplication::desktop()->height() - p->height())/2);
     p->show();
     p->run(FileName,FileType);
     connect(p,SIGNAL(SaveOpenFile(QString,QString,int)),this,SLOT(SaveOpenFile(QString,QString,int)));
