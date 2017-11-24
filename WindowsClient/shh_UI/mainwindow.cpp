@@ -168,7 +168,6 @@ void MainWindow::on_newConnectionAction_triggered()
         }
         connect(shellPool.at(shellPool.size()-1),SIGNAL(print(int)),this,SLOT(LinkToTab(int)));
         openSftpServer();
-        openTreeView();
         connect(sftpPool.at(sftpPool.size()-1),SIGNAL(connSuccess()),this,SLOT(OpenSftp()));
     }
 
