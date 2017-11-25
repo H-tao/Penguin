@@ -133,6 +133,9 @@ private:
     qint64 commingFileSize;
     bool isOpenFile = false;
     QVector<QString>openningFileName;
+
+protected:
+    void timerEvent(QTimerEvent *event);
 };
 
 #endif // SFTPSERVER_H

@@ -237,6 +237,25 @@ void SftpServer::handleFileInfo(QSsh::SftpJobId id, const QList<QSsh::SftpFileIn
         return;
     }
 
+    // 通过timeEvent获得上传文件的信息，更新进度条
+    if((m_jobType == JobUploadFile) && (id == m_jobUploadId))
+    {
+        int progress = 100*(fileInfoList[0].size / m_currentSize);
+        m_progress->setValue(progress);
+        if(progress >= 100)
+        {
+            killTimer(m_timer);
+            //暂停一秒
+            QTest::qSleep(1000);
+            m_progress->cancel();
+
+            m_selectName = fileInfoList[0].name;
+            m_jobType = JobListDir;
+            m_jobListDirId = m_channel->listDirectory(m_shellPath);
+
+        }
+    }
+
     /************* FileTreeView ******************/
     if(m_workWidget == WorkFileTreeView)
     {
@@ -723,4 +742,24 @@ void SftpServer::SaveOpenFile(QString file,QString type, int number)
     channel_2->uploadFile(file,filePath, QSsh::SftpOverwriteExisting);
     handleRefreshClicked();
 
+}
+
+void SftpServer::timerEvent(QTimerEvent *event)
+{
+    qDebug()<<"timer:"<<event->timerId();
+
+    if(JobDownloadFile == m_jobType)
+    {
+        int iProgress = QFileInfo(m_currentLocalFilePath).size()*100/m_currentSize;
+        if(iProgress > 99)
+        {
+            iProgress = 99;
+        }
+        m_progress->setValue(iProgress);
+    }
+
+    if(JobUploadFile == m_jobType)
+    {
+        m_jobUploadId = m_channel->statFile(m_currentRemoteFilePath);
+    }
 }
