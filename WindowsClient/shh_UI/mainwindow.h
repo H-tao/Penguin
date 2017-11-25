@@ -16,6 +16,7 @@
 #include <QActionGroup>
 #include <sftpserver.h>
 #include<QMap>
+#include<QRegExp>
 class ShellTextEdit;
 class FileWidget;
 class Shell;

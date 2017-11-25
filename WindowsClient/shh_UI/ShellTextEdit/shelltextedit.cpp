@@ -148,7 +148,6 @@ void ShellTextEdit::keyPressEvent(QKeyEvent *e)
     }
     if(e->key()==Qt::Key_Escape)
     {
-        qDebug()<<"Esc键键入";
         QByteArray t;
         char a=0X1B;
         t.append(a);

@@ -46,7 +46,7 @@ void TabPage::initStyle()
 //打开文件管理系统
 void TabPage::openFileSystem()
 {
-    qDebug() << "TabPage::openFileSystem";
+   // qDebug() << "TabPage::openFileSystem";
     //如果文件管理系统已经打开
     if(isOpenFileSystem)
     {

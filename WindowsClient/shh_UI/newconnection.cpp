@@ -6,7 +6,7 @@ NewConnection::NewConnection(QWidget *parent) :
     ui(new Ui::NewConnection)
 {
     ui->setupUi(this);
-
+    this->setWindowTitle("新建连接");
     ui->connectionWayComboBox->addItem("密码");
     ui->connectionWayComboBox->addItem("公钥");
     ui->connectionWayComboBox->setEditable(false);

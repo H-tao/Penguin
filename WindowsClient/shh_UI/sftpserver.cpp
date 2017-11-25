@@ -68,7 +68,7 @@ Channel_Type* SftpServer::createNewChannel(Channel_Type * channel)
 
 void SftpServer::handleConnected()
 {
-    qDebug() << "SftpServer::handleConnected";
+    //qDebug() << "SftpServer::handleConnected";
     //qDebug() << "Create Channel";
     //qDebug() << "Connection opened:" << m_connection->connectionParameters().host
              //<< ":" << m_connection->connectionParameters().port;
@@ -136,7 +136,7 @@ void SftpServer::handleChannelInitializationFailed(const QString &reason)
 
 void SftpServer::handleJobFinished(QSsh::SftpJobId id, const QString &error)
 {
-    qDebug() << "handleJobFinished";
+   // qDebug() << "handleJobFinished";
 
     if(!error.isEmpty())
     {
@@ -195,7 +195,7 @@ void SftpServer::handleJobFinished(QSsh::SftpJobId id, const QString &error)
         case JobDownloadFile:
             if(isOpenFile)
             {
-                qDebug() << "emit openFileName(commingFileName, commingFileType, commingFileSize)";
+                //qDebug() << "emit openFileName(commingFileName, commingFileType, commingFileSize)";
                 emit openFileName(commingFileName, commingFileType, commingFileSize);
                 isOpenFile = false;
                 break;
@@ -223,12 +223,12 @@ void SftpServer::handleJobFinished(QSsh::SftpJobId id, const QString &error)
 
 void SftpServer::handleFileInfo(QSsh::SftpJobId id, const QList<QSsh::SftpFileInfo> &fileInfoList)
 {
-    qDebug() << "handleFileInfo";
+   // qDebug() << "handleFileInfo";
 
     if(id != m_jobListDirId)
     {
-        qDebug() << id;
-        qDebug() << "id != m_jobListDirId";
+        //qDebug() << id;
+        //qDebug() << "id != m_jobListDirId";
         return;
     }
 
@@ -389,7 +389,7 @@ void SftpServer::initProgressDialog()
 
 void SftpServer::handleOpenFileWidgetClicked()
 {
-    qDebug() << "handleOpenFileWidgetClicked()";
+    //qDebug() << "handleOpenFileWidgetClicked()";
 
     //list
     handleRefreshClicked();
@@ -481,7 +481,7 @@ void SftpServer::handleDownloadClicked(const QString &fileName, const QString &f
     m_currentLocalFilePath = QFileDialog::getSaveFileName(page->fileWidget, tr("Download File"),
                                                       QDir::currentPath() + "/" + fileName, tr("All Files (*"));
 
-    qDebug() << "Local File : " << m_currentLocalFilePath;
+    //qDebug() << "Local File : " << m_currentLocalFilePath;
     if(m_currentLocalFilePath.isEmpty())
         return;
 
@@ -501,7 +501,7 @@ void SftpServer::handleDownloadClicked(const QString &fileName, const QString &f
 
 void SftpServer::handleRefreshClicked()
 {
-    qDebug() << "handleRefreshClicked";
+    //qDebug() << "handleRefreshClicked";
 
     m_jobType = JobListDir;
     m_workWidget = WorkFileWidget;
@@ -746,7 +746,7 @@ void SftpServer::SaveOpenFile(QString file,QString type, int number)
 
 void SftpServer::timerEvent(QTimerEvent *event)
 {
-    qDebug()<<"timer:"<<event->timerId();
+    //qDebug()<<"timer:"<<event->timerId();
 
     if(JobDownloadFile == m_jobType)
     {

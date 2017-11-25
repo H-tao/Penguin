@@ -343,47 +343,50 @@ void MainWindow::colorDeal(QString &mse)
     QString startHtml3=">";
     QString endHtml="</font></span>";
     QString result;
+    QString rxtemp="";
+    rxtemp.append(QChar(0X1B));
+    rxtemp.append("\\[\\d*[mABCD;JKsu\\?]?\\d*[Hlhm]?");
+    QRegExp rx(rxtemp);
 
     while(i<mse.size())
     {
 
-      if(mse.at(i)==0X1B)
-      {
-          if(mse.at(i+3)=='m')
-          {
-            mse.remove(i,4);
 
-            continue;
-          }
-          else
-          {
-              background=(mse.at(i+2).toAscii()-('0'))*10+(mse.at(i+3).toAscii()-'0');
-              qDebug()<<"sssssssss"<<mse.at(i+2);
-              qDebug()<<"sssssssss"<<mse.at(i+3);
-              color=(mse.at(i+5).toAscii()-'0')*10+(mse.at(i+6).toAscii()-'0');
-              result=startHtml1+LinuxColor.value(background-10)+startHtml2+LinuxColor.value(color)+startHtml3;
-              mse.remove(i,8);
-              mse.insert(i,result);
-              while(1)
-              {
-                  if(mse.at(i)==0X1B)
-                  {
-                      mse.remove(i,4);
-                      break;
-                  }
-                  i++;
-              }
-              mse.insert(i,endHtml);
-          }
-
-      }
       if(mse.at(i)=='\r')
+      {
+         mse.remove(i,2);
+         mse.insert(i,"<br/>");
+      }
+       i++;
+     }
+    i=0;
+    while(i<mse.size())
+    {
+        i=rx.indexIn(mse,i);
+        qDebug()<<"sadfsadfsa"<<i;
+        if(i==-1)
+            break;
+        if(mse.at(i+5)=='3'&&mse.at(i+7)=='m')
+        {
+            background=(mse.at(i+2).toAscii()-('0'))*10+(mse.at(i+3).toAscii()-'0');
+            color=(mse.at(i+5).toAscii()-'0')*10+(mse.at(i+6).toAscii()-'0');
+            result=startHtml1+LinuxColor.value(background-10)+startHtml2+LinuxColor.value(color)+startHtml3;
+            mse.remove(i,8);
+            mse.insert(i,result);
+            while(1)
             {
-                    mse.remove(i,2);
-                    mse.insert(i,"<br/>");
+                if(mse.at(i)==0X1B)
+                {
+                    mse.remove(i,4);
+                    break;
+                }
+                i++;
             }
-            i++;
-          }
+            mse.insert(i,endHtml);
+        }
+        i++;
+    }
+    mse.remove(rx);
  }
 
 void MainWindow::LinkToTab(int win)

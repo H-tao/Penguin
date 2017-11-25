@@ -21,6 +21,7 @@ void TextEdit::textChange()
 void TextEdit::run(QString file,QString fileTypes)
 {
     filename=file;
+    this->setWindowTitle(filename);
     this->fileType=fileTypes;
     fp=new QFile(file);
     if(fp->open(QIODevice::ReadWrite|QIODevice::Text))
