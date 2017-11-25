@@ -9,6 +9,8 @@
 #include<QFontDialog>
 #include<QByteArray>
 #include<QMessageBox>
+#include <QFileInfo>
+
 namespace Ui {
 class TextEdit;
 }

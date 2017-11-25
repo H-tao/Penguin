@@ -46,24 +46,22 @@ SftpServer::~SftpServer()
     delete ui;
 }
 
-Channel_Type* SftpServer::createNewChannel(Channel_Type * channel)
+void SftpServer::createNewChannel(Channel_Type &channel)
 {
     //qDebug() << "createNewChannel";
-//    Channel_Type* channel = new Channel_Type;
-//    channel = m_connection->createSftpChannel();
-//    channels.append(channel);
+    channel = m_connection->createSftpChannel();
 
-//    connect(channel->data(), SIGNAL(initialized()),
-//            this, SLOT(handleChannelInitialized()));
-    connect(channel->data(), SIGNAL(initializationFailed(QString)),
+    connect(channel.data(), SIGNAL(initialized()),
+            this, SLOT(handleChannelInitialized()), Qt::DirectConnection);
+    connect(channel.data(), SIGNAL(initializationFailed(QString)),
             this, SLOT(handleChannelInitializationFailed(QString)));
-    connect(channel->data(), SIGNAL(finished(QSsh::SftpJobId, QString)),
+    connect(channel.data(), SIGNAL(finished(QSsh::SftpJobId, QString)),
             this, SLOT(handleJobFinished(QSsh::SftpJobId, QString)), Qt::DirectConnection);
-    connect(channel->data(), SIGNAL(fileInfoAvailable(QSsh::SftpJobId,QList<QSsh::SftpFileInfo>)),
+    connect(channel.data(), SIGNAL(fileInfoAvailable(QSsh::SftpJobId,QList<QSsh::SftpFileInfo>)),
             this, SLOT(handleFileInfo(QSsh::SftpJobId, QList<QSsh::SftpFileInfo>)));
-    connect(channel->data(), SIGNAL(closed()), this, SLOT(handleChannelClosed()));
+    connect(channel.data(), SIGNAL(closed()), this, SLOT(handleChannelClosed()));
 
-    return channel;
+    channel->initialize();
 }
 
 void SftpServer::handleConnected()
@@ -74,33 +72,9 @@ void SftpServer::handleConnected()
              //<< ":" << m_connection->connectionParameters().port;
 
     // Create Sftp Channel and initialized
-    m_channel = m_connection->createSftpChannel();
+    this->createNewChannel(m_channel);
+    this->createNewChannel(channel_2);
 
-    connect(m_channel.data(), SIGNAL(initialized()),
-            this, SLOT(handleChannelInitialized()));
-    connect(m_channel.data(), SIGNAL(initializationFailed(QString)),
-            this, SLOT(handleChannelInitializationFailed(QString)));
-    connect(m_channel.data(), SIGNAL(finished(QSsh::SftpJobId, QString)),
-            this, SLOT(handleJobFinished(QSsh::SftpJobId, QString)), Qt::DirectConnection);
-    connect(m_channel.data(), SIGNAL(fileInfoAvailable(QSsh::SftpJobId,QList<QSsh::SftpFileInfo>)),
-            this, SLOT(handleFileInfo(QSsh::SftpJobId, QList<QSsh::SftpFileInfo>)));
-    connect(m_channel.data(), SIGNAL(closed()), this, SLOT(handleChannelClosed()));
-
-    m_channel->initialize();
-
-    channel_2 = m_connection->createSftpChannel();
-
-    connect(channel_2.data(), SIGNAL(initialized()),
-            this, SLOT(handleChannelInitialized()));
-    connect(channel_2.data(), SIGNAL(initializationFailed(QString)),
-            this, SLOT(handleChannelInitializationFailed(QString)));
-    connect(channel_2.data(), SIGNAL(finished(QSsh::SftpJobId, QString)),
-           this, SLOT(handleJobFinished(QSsh::SftpJobId, QString)), Qt::DirectConnection);
-    connect(channel_2.data(), SIGNAL(fileInfoAvailable(QSsh::SftpJobId,QList<QSsh::SftpFileInfo>)),
-           this, SLOT(handleFileInfo(QSsh::SftpJobId, QList<QSsh::SftpFileInfo>)));
-    connect(channel_2.data(), SIGNAL(closed()), this, SLOT(handleChannelClosed()));
-
-    channel_2->initialize();
     emit connSuccess();
 }
 
@@ -125,6 +99,7 @@ void SftpServer::handleChannelInitialized()
         m_jobType = JobListDir;
         m_workWidget = WorkFileTreeView;
         m_jobListDirId = m_channel->listDirectory(m_currentPath);
+        handleOpenFileWidgetClicked();
     }
 }
 

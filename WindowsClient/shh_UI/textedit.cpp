@@ -20,17 +20,17 @@ void TextEdit::textChange()
 }
 void TextEdit::run(QString file,QString fileTypes)
 {
-    filename=file;
-    this->setWindowTitle(filename);
-    this->fileType=fileTypes;
-    fp=new QFile(file);
+    filename = file;
+    this->fileType = fileTypes;
+    fp = new QFile(file);
     if(fp->open(QIODevice::ReadWrite|QIODevice::Text))
     {
-        textStream=new QTextStream(fp);
-       while(!textStream->atEnd())
-       {
+        textStream = new QTextStream(fp);
+        this->setWindowTitle(QFileInfo(file).fileName());
+        while(!textStream->atEnd())
+        {
            ui->textEdit11->append(textStream->readLine());
-       }
+        }
     }
     else
     {
@@ -42,7 +42,7 @@ void TextEdit::on_action_triggered()
 {
     bool ok;
     QFont font;
-    font=QFontDialog::getFont(&ok);
+    font = QFontDialog::getFont(&ok);
     if(ok)
     ui->textEdit11->setFont(font);
 }
