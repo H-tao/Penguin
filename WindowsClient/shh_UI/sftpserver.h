@@ -86,7 +86,7 @@ public slots:
 
     void openTextEdit(QString,QString,qint64);
     void SaveOpenFile(QString,QString,int);
-    Channel_Type *createNewChannel(Channel_Type *channel);
+    void createNewChannel(Channel_Type &channel);
 
 private:
     Ui::SftpServer *ui;
