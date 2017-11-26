@@ -28,7 +28,17 @@ SOURCES += main.cpp\
     function.cpp \
     filenamedialog.cpp \
     qfiletreeview.cpp \
-    textedit.cpp
+    textedit.cpp \
+    BasisCtrl/pauselabel.cpp \
+    BasisCtrl/picturelabel.cpp \
+    BasisCtrl/stoplabel.cpp \
+    download/downloadlist.cpp \
+    download/downloadwidget.cpp \
+    download/managelistwidget.cpp \
+    tools/tools.cpp \
+    thread/downloadthread.cpp \
+    thread/threadobject.cpp \
+    thread/threadpool.cpp
 
 HEADERS  += mainwindow.h \
     FileSystemWidget/filewidget.h \
@@ -41,7 +51,18 @@ HEADERS  += mainwindow.h \
     function.h \
     filenamedialog.h \
     qfiletreeview.h \
-    textedit.h
+    textedit.h \
+    BasisCtrl/pauselabel.h \
+    BasisCtrl/picturelabel.h \
+    BasisCtrl/stoplabel.h \
+    download/downloadlist.h \
+    download/downloadwidget.h \
+    download/managelistwidget.h \
+    tools/tools.h \
+    stable.h \
+    thread/downloadthread.h \
+    thread/threadobject.h \
+    thread/threadpool.h
 
 
 FORMS    += mainwindow.ui \

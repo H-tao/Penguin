@@ -20,6 +20,9 @@
 #include "mainwindow.h"
 #include "filenamedialog.h"
 #include "textedit.h"
+
+#include "download/downloadwidget.h"
+
 #include<QByteArray>
 #include<QVector>
 class MainWindow;
@@ -45,6 +48,8 @@ public:
     QString m_shellPath;
     QString m_beforePath;
     MainWindow *m_mainWindow;
+
+    DownloadWidget *downloadWidge;
 
     SftpServer(QWidget *parent = 0);
     explicit SftpServer(const QSsh::SshConnectionParameters &parameters, int serverNumber = 0,

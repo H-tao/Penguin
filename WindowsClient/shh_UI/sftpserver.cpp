@@ -72,6 +72,9 @@ void SftpServer::handleConnected()
              //<< ":" << m_connection->connectionParameters().port;
 
     // Create Sftp Channel and initialized
+    downloadWidge = new DownloadWidget(NULL,m_connection);
+
+    downloadWidge->show();
     this->createNewChannel(m_channel);
     this->createNewChannel(channel_2);
 
@@ -445,6 +448,7 @@ void SftpServer::handleDownloadClicked(const QString &fileName, const QString &f
 {
     //qDebug() << "handleDownloadClicked";
     m_currentSize = getSizeToByte(fileSize);
+    QFile *file = new QFile(fileName);
 
     if(fileType == getFolderType())
     {
@@ -463,15 +467,16 @@ void SftpServer::handleDownloadClicked(const QString &fileName, const QString &f
     // download file
     m_jobType = JobDownloadFile;
     m_workWidget = WorkFileWidget;
-    m_channel->downloadFile(m_shellPath + fileName, m_currentLocalFilePath, QSsh::SftpOverwriteExisting);
+    downloadWidge->addTask(m_currentLocalFilePath, file, m_shellPath, m_currentSize);
+//    m_channel->downloadFile(m_shellPath + fileName, m_currentLocalFilePath, QSsh::SftpOverwriteExisting);
 
-    m_progress->setLabelText(tr("Download... ") + fileName +
-                             tr(" to ") + QFileInfo(m_currentLocalFilePath).absolutePath());
+//    m_progress->setLabelText(tr("Download... ") + fileName +
+//                             tr(" to ") + QFileInfo(m_currentLocalFilePath).absolutePath());
 
-    m_progress->reset();
-    m_progress->show();
-    m_progress->setValue(0);
-    m_timer = startTimer(500);
+//    m_progress->reset();
+//    m_progress->show();
+//    m_progress->setValue(0);
+//    m_timer = startTimer(500);
 }
 
 void SftpServer::handleRefreshClicked()

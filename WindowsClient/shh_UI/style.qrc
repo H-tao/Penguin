@@ -26,5 +26,16 @@
         <file>src/style/up_arrow.png</file>
         <file>src/style/triangle_down.png</file>
         <file>src/style/triangle_up.png</file>
+        <file>src/manage/paly_enter.png</file>
+        <file>src/manage/paly_normal.png</file>
+        <file>src/manage/pause_enter.png</file>
+        <file>src/manage/pause_normal.png</file>
+        <file>src/manage/stop_enter_1.png</file>
+        <file>src/manage/stop_enter_2.png</file>
+        <file>src/manage/stop_enter_3.png</file>
+        <file>src/manage/stop_enter_4.png</file>
+        <file>src/manage/stop_enter_5.png</file>
+        <file>src/manage/stop_normal.png</file>
+        <file>src/manage/stop_press.png</file>
     </qresource>
 </RCC>
