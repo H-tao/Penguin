@@ -33,12 +33,20 @@ void TabPage::initStyle()
 //    fileWidget = new FileWidget(ui->fileSystemWidget);  //新增FileWidget
     fileWidget = new FileTreeView(ui->fileSystemWidget);
     ui->fileSystemWidgetLayout->addWidget(fileWidget);
+//    multiDownloadWidget = new DownloadWidget(ui->multiDownloadFrame);
+//    ui->multiDownloadLayout->addWidget(multiDownloadWidget);
+    multiDownloadLayout = new QVBoxLayout(ui->multiDownloadFrame);
+    multiDownloadLayout->setMargin(0);
+    multiDownloadLayout->setSpacing(0);
+    ui->multiDownloadFrame->setLayout(multiDownloadLayout);
 
     maxiBtn = ui->maximizeBtn;
     miniBtn = ui->minimizeBtn;
 
     //设置初始用于显示文件资源管理系统的窗口为不可见
-    ui->fileSystemWidget->setVisible(false);
+    ui->fileSystemAndMultiDownload->setVisible(false);
+//    ui->fileSystemWidget->setVisible(false);
+//    ui->multiDownloadFrame->setVisible(false);
 
 //    filePathLineEdit->setFocusPolicy(Qt::NoFocus);
 }
@@ -74,7 +82,7 @@ void TabPage::showFileSystem()
 {
     if(isShowFileSystem == false)
     {
-       ui->fileSystemWidget->setVisible(true);
+       ui->fileSystemAndMultiDownload->setVisible(true);
        //设置显示文件管理系统的值为真
        isShowFileSystem = true;
        return;
@@ -95,7 +103,7 @@ void TabPage::concealFileSystem()
 
     if(isShowFileSystem == true)
     {
-        ui->fileSystemWidget->setVisible(false);
+        ui->fileSystemAndMultiDownload->setVisible(false);
         isShowFileSystem = false;
         return;
     }

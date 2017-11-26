@@ -73,12 +73,11 @@ void SftpServer::handleConnected()
 
     // Create Sftp Channel and initialized
     downloadWidge = new DownloadWidget(NULL,m_connection);
+    page->multiDownloadLayout->addWidget(downloadWidge);
+//    downloadWidge->show();
 
-    downloadWidge->show();
     this->createNewChannel(m_channel);
     this->createNewChannel(channel_2);
-
-    emit connSuccess();
 }
 
 void SftpServer::handleError()
@@ -93,16 +92,18 @@ void SftpServer::handleDisconnected()
 
 void SftpServer::handleChannelInitialized()
 {
-    //qDebug() << "Initialize channel success!";
+    qDebug() << "Initialize channel success!";
 
     if(isFirstLink)
     {
+        qDebug() << "isFirstLink";
         isFirstLink = false;
         // list dir
         m_jobType = JobListDir;
         m_workWidget = WorkFileTreeView;
         m_jobListDirId = m_channel->listDirectory(m_currentPath);
         handleOpenFileWidgetClicked();
+     //   emit connSuccess();
     }
 }
 

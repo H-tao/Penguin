@@ -8,11 +8,12 @@
 #define TABPAGE_H
 
 #include <QWidget>
-#include <FileSystemWidget/filewidget.h>
-#include <ShellTextEdit/shelltextedit.h>
+#include "FileSystemWidget/filewidget.h"
+#include "ShellTextEdit/shelltextedit.h"
 #include <QComboBox>
 #include <QPushButton>
-#include <filetreeview.h>
+#include "filetreeview.h"
+#include "download/downloadwidget.h"
 
 namespace Ui {
 class TabPage;
@@ -31,6 +32,8 @@ public:
     /**** textEdit、textLine、fileWidget 设置为Public，外部可以访问****/
 //    FileWidget *fileWidget;
     FileTreeView *fileWidget;
+    DownloadWidget *multiDownloadWidget;
+    QVBoxLayout *multiDownloadLayout;
     ShellTextEdit *textEdit;
     QComboBox *filePathLineEdit;
     QComboBox *searchEdit;
