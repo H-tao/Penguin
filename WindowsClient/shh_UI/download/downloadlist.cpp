@@ -103,37 +103,54 @@ void DownloadList::initWidget()
 }
 
 void DownloadList::setWidgetLayout()
-{
-    int height = this->height();
-    int width = this->width();
+{    int height = this->height();
+     int width = this->width();
 
-    //二分之一
-    int height_2 = height / 2;
-    int width_2 = width / 2;
+     //二分之一
+     int height_2 = height / 2;
+     int width_2 = width / 2;
 
-    m_pFileIco->move(5, height_2 - 20);
-    m_pFileIco->resize(QSize(35, 40));
+     //m_pFileIco->move(5, height_2 - 20);
+    //m_pFileIco->resize(QSize(35, 40));
 
-    m_pFileName->resize(QSize(width_2 - 45, 20));
-    m_pFileName->move(45, height_2 - 20);
-    QFontMetrics elideFont(m_pFileName->font());
-    m_pFileName->setText(elideFont.elidedText(m_pFileName->text(), Qt::ElideRight, m_pFileName->width()));
+   //  m_pFileName->resize(QSize(width_2 - 45, 20));
+   //  m_pFileName->move(45, height_2 - 20);
+     qDebug()<<m_pFileName->text()<<"adsfasdfasdf";
+     //QFontMetrics elideFont(m_pFileName->font());
+    // m_pFileName->setText(elideFont.elidedText(m_pFileName->text(), Qt::ElideRight, m_pFileName->width()));
 
-    m_pFileSize->resize(QSize(width_2 - 45, 20));
-    m_pFileSize->move(45, height_2);
 
-    m_pSurplusTime->move(width_2, height_2 - 10);
-    m_pSurplusTime->resize(QSize(55, 20));
+     m_pFileIco->adjustSize();
+     m_pFileName->adjustSize();
+     m_pFileSize->adjustSize();
+     m_pPauseButton->adjustSize();
+     m_pStopButton->adjustSize();
+     m_pCurrentSpeed->adjustSize();
+     m_pFileIco->move(0,height_2 - 20);
+     m_pFileName->adjustSize();
+     m_pFileName->move(m_pFileIco->x()+m_pFileIco->width(),height_2 - 20);
+     m_pFileSize->move(m_pFileName->x(),height_2);
+     m_pSurplusTime->move(m_pFileName->x()+(m_pFileName->width()>m_pFileSize->width()?m_pFileName->width():m_pFileSize->width()),height_2 - 10);
+     m_pStopButton->move(width-5-m_pStopButton->width(), height_2 - 10);
+     m_pPauseButton->move(m_pStopButton->x()-5-m_pPauseButton->width(), height_2 - 10);
+     m_pProgressBar->resize(m_pStopButton->x()-(m_pSurplusTime->x()+m_pSurplusTime->width()),20);
+     m_pProgressBar->move(m_pPauseButton->x()-5-m_pProgressBar->width(), height_2 - 20);
+     m_pCurrentSpeed->move(m_pProgressBar->x()+m_pProgressBar->width()/4,height_2);
+     // m_pFileSize->resize(QSize(width_2 - 45, 20));
+    // m_pFileSize->move(45, height_2);
 
-    m_pStopButton->move(width - 45, height_2 - 10);
+     //m_pSurplusTime->move(width_2, height_2 - 10);
+    // m_pSurplusTime->resize(QSize(55, 20));
 
-    m_pPauseButton->move(width - 100, height_2 - 10);
+    // m_pStopButton->move(width - 45, height_2 - 10);
 
-    m_pProgressBar->move(width_2 + 80, height_2 - 20);
-    m_pProgressBar->resize(width_2 - 200, 20);
+   //  m_pPauseButton->move(width - 100, height_2 - 10);
 
-    m_pCurrentSpeed->move(width_2 + 80, height_2);
-    m_pCurrentSpeed->resize(width_2 - 200, 20);
+    // m_pProgressBar->move(width_2 + 80, height_2 - 20);
+   //  m_pProgressBar->resize(width_2 - 200, 20);
+
+   //  m_pCurrentSpeed->move(width_2 + 80, height_2);
+   //  m_pCurrentSpeed->resize(width_2 - 200, 20);
 }
 
 void DownloadList::destroyWidget()
