@@ -178,10 +178,10 @@ void DownloadWidget::finishedTask(QListWidgetItem *item)
         m_pListWidget->removeItemWidget(item);
         m_pListWidget->takeItem(index);
 
-//        delete widget;
+        delete widget;
         widget = nullptr;
 
-//        delete item;
+        delete item;
         item = nullptr;
     }
 }

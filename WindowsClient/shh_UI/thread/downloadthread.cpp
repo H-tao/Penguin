@@ -2,7 +2,6 @@
 
 #include "../stable.h"
 #include <QMutex>
-#include <QWaitCondition>
 
 DownloadThread::DownloadThread(QSsh::SshConnection *connection, QString localPath, QString remotePath, QObject *parent):
     ThreadObject(parent),
@@ -59,16 +58,22 @@ void DownloadThread::pauseCurrenTask()
 void DownloadThread::run()
 {
     m_bFinished = false;
-    while(!m_bFinished){}
     qDebug() << "DownloadThread::run";
-    m_bFinished = false;
+//    mutex.lock();
+//    if(m_bFinished == false)
+//        channelinit.wait(&mutex);
+//    mutex.unlock();
+//    m_bFinished = false;
 //    channel->downloadFile(remotepath, localpath, QSsh::SftpOverwriteExisting);
     qDebug() << "DownloadThread::remotepath" <<remotepath;
     qDebug() << "DownloadThread::localpath" <<localpath;
-    while(!m_bFinished){}
+    mutex.lock();
+    if(m_bFinished == false)
+        channelinit.wait(&mutex);
+    mutex.unlock();
     QTest::qSleep(1000);
     qDebug() << "closechannel";
-//   channel->closeChannel();
+//    channel->closeChannel();
 }
 void DownloadThread::timerEvent(QTimerEvent *event)
 {
@@ -111,6 +116,7 @@ void DownloadThread::initchannel()
 {
     if(!channel)
     {
+        mutex.lock();
          if(!channel)
          {
          channel = m_connection->createSftpChannel();
@@ -126,6 +132,7 @@ void DownloadThread::initchannel()
          connect(channel.data(), SIGNAL(closed()), this, SLOT(handleChannelClosed()));
 
          channel->initialize();
+         mutex.unlock();
          qDebug() << "channel->initialize();";
          }
     }
@@ -135,7 +142,10 @@ void DownloadThread::handleChannelInitialized()
 {
     qDebug() << "DownloadThread::handleChannelInitialized";
     // do something  initialize success
+    mutex.lock();
     m_bFinished = true;
+    channelinit.wakeAll();
+    mutex.unlock();
     channel->downloadFile(remotepath, localpath, QSsh::SftpOverwriteExisting);
 }
 

@@ -5,6 +5,7 @@
 
 #include "sftpserver.h"
 #include "../thread/threadobject.h"
+#include <QWaitCondition>
 
 class DownloadThread : public ThreadObject
 {
@@ -47,6 +48,7 @@ private:
     int m_iTimerID;
     //增加一个TimerID的锁
     QMutex mutex;
+    QWaitCondition channelinit;
 
     QFile m_file;
     //当前文件大小

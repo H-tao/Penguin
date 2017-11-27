@@ -9,7 +9,6 @@
 #include "function.h"
 #include "../thread/downloadthread.h"
 
-QMutex DownloadList::mutex;
 DownloadList::DownloadList(QListWidget *listWidget, QWidget *parent, QSsh::SshConnection *connection) :
     QWidget(parent),
     m_pFile(nullptr),
@@ -219,8 +218,7 @@ void DownloadList::resizeEvent(QResizeEvent *e)
 
 void DownloadList::timerEvent(QTimerEvent *event)
 {
-//    qint64 currsize = QFileInfo(localPath).size();
-//    updateTask_currentSize(currsize);
+
 }
 
 void DownloadList::updateTask_currentSize(qint64 currentSize)
@@ -236,10 +234,11 @@ void DownloadList::updateTask_currentSize(qint64 currentSize)
     else
         updateProgressBar(m_i64CurrentSize * 1.0 / FileSize * 100);
 
-    if(m_i64CurrentSize == FileSize)
+    if(m_i64CurrentSize == FileSize||m_i64CurrentSize * 1.0 / FileSize * 100 > 99.9)
     {
         if(m_eCurrentStatus == CurrentStatus::RUNNING)
         {
+            m_pDownloadThread->stop();
             delete m_pDownloadThread;
             m_pDownloadThread = nullptr;
         }
@@ -291,6 +290,7 @@ void DownloadList::recvDownloadFile_readyReadDownloadMsg()
 
         m_pDownloadThread = new DownloadThread(m_connection,localPath, remotePath+m_pFile->fileName(), this);
         connect(m_pDownloadThread, &DownloadThread::currentTaskProgress, this, &DownloadList::updateTask_currentSize);
+//        connect(this, &DownloadList::channeldown, m_pDownloadThread, &DownloadThread::stopCurrenTask);
 
         m_pDownloadThread->start();
         ThreadPool::getInstance()->addJob(m_pDownloadThread);
